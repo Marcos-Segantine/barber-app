@@ -17,6 +17,8 @@ export const Footer = () => {
 const style = StyleSheet.create({
     container: {
         marginTop: 20,
+        position: 'absolute',
+        bottom: 10
     },
 
     message: {
