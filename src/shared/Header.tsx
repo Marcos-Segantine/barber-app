@@ -42,11 +42,12 @@ const style = StyleSheet.create({
         flexDirection: "row",
         paddingHorizontal: 16,
         paddingVertical: 16,
+        height: 170,
     },
 
     containerImg: {
         width: "100%",
-        minHeight: 150,
+        minHeight: 100,
         justifyContent: "center",
         alignItems: 'center'
     },
