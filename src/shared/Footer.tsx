@@ -16,6 +16,8 @@ export const Footer = () => {
 
 const style = StyleSheet.create({
     container: {
+        width: "100%",
+        alignItems: "center",
         marginTop: 20,
         position: 'absolute',
         bottom: 10
@@ -30,7 +32,8 @@ const style = StyleSheet.create({
         borderColor: "#E95401",
         borderWidth: 1,
         borderRadius: 5,
-        paddingVertical: 2,
+        paddingVertical: 3,
+        paddingHorizontal: 20,
         marginTop: 11,
         alignItems: 'center'
     },
