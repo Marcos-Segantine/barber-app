@@ -8,13 +8,14 @@ import { Login } from "./screens/Login"
 import { Register } from "./screens/Register"
 import { Services } from "./screens/Services"
 import { Professionals } from "./screens/Professionals"
+import { Calandar } from "./screens/Calandar"
 
 const {Screen, Navigator} = createNativeStackNavigator()
 
 export const App = () => {
   return(
     <NavigationContainer>
-      <Navigator initialRouteName="Professionals">
+      <Navigator initialRouteName="Calandar">
         <Screen 
           name="InitialScreen" 
           component={InitialScreen} 
@@ -49,6 +50,14 @@ export const App = () => {
         <Screen 
           name="Professionals"
           component={Professionals}
+          options={{
+            headerShown: false
+          }}
+        />
+
+        <Screen
+          name="Calandar"
+          component={Calandar}
           options={{
             headerShown: false
           }}
