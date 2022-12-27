@@ -4,13 +4,15 @@ import { Calendar } from "react-native-calendars"
 
 import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
+import { Title } from "../components/Title"
+import { Button } from '../components/Button'
 
 export const Calandar = () => {
     return(
         <View style={style.container}>
             <Header />
 
-            <Text style={style.title}>Selecione um data</Text>
+            <Title title="Selecione um data" />
 
             <Calendar 
                 style={{
@@ -32,10 +34,7 @@ export const Calandar = () => {
                 }}
             />
 
-            <Pressable style={style.comfirmButton}>
-                <Text style={style.textComfirm}>Comfirmar</Text>
-            </Pressable>
-
+            <Button text="Comfirmar" />
             <Footer />
         </View>
     )
@@ -47,25 +46,4 @@ const style = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#1E1E1E",
     },
-
-    title: {
-        fontWeight: '900',
-        fontSize: 24,
-        color: "#FFFFFF"
-    },
-
-    comfirmButton: {
-        backgroundColor: "#E95401",
-        width: "65%",
-        alignItems: "center",
-        marginTop: 60,
-        borderRadius: 10,
-        paddingHorizontal: 55,
-        paddingVertical: 13,
-    },
-
-    textComfirm: {
-        color: "#FFFFFF",
-        fontWeight: '700'
-    }
 })

@@ -2,14 +2,15 @@ import { Text, Pressable, View, StyleSheet, TextInput } from "react-native";
 
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
-
+import { Title } from "../components/Title";
+import { Button } from "../components/Button";
 
 export const Login = ({ navigation }: any) => {
     return(
         <View style={style.container}>
             <Header />
 
-            <Text style={style.title}>Entre agora</Text>
+            <Title title="Entre agora" />
 
             <View style={style.form}>
                 <TextInput
@@ -33,9 +34,7 @@ export const Login = ({ navigation }: any) => {
                     </Pressable>
                 </View>
 
-                <Pressable style={style.submitButton}>
-                    <Text style={style.textSubmitButton}>Entrar</Text>
-                </Pressable>
+                <Button text="Entrar" />
             </View>
 
             <Footer />
@@ -48,12 +47,6 @@ const style = StyleSheet.create({
         flex: 1,
         backgroundColor: '#1E1E1E',
         alignItems: "center"
-    },
-
-    title: {
-        fontSize: 34,
-        fontWeight: '900',
-        color: "#FFFFFF"
     },
 
     form: {
@@ -84,17 +77,4 @@ const style = StyleSheet.create({
     linkHelp: {
         color: "#FFFFFF",
     },
-
-    submitButton: {
-        backgroundColor: "#E95401",
-        marginTop: 50,
-        paddingHorizontal: 85,
-        paddingVertical: 15,
-        borderRadius: 10,
-    },
-
-    textSubmitButton: {
-        color: '#FFFFFF',
-        fontWeight: '700',
-    }
 })

@@ -2,13 +2,15 @@ import { Text, View, StyleSheet, Pressable } from "react-native"
 
 import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
+import { Title } from "../components/Title"
+import { Button } from "../components/Button"
 
 export const Schedules = () => {
     return(
         <View style={style.container}>
             <Header />
 
-            <Text style={style.title}>Selecione um horário</Text>
+            <Title title="Selecione um horário" />
         
             <View style={style.schedules}>
                 <Pressable style={style.schedule}>
@@ -52,10 +54,7 @@ export const Schedules = () => {
                 </Pressable>
             </View>
 
-            <Pressable style={style.comfirmButton}>
-                <Text style={style.textConfirm}>Comfirmar</Text>
-            </Pressable>
-
+            <Button text="Comfirmar" />
             <Footer />  
         </View>
     )
@@ -90,28 +89,5 @@ const style = StyleSheet.create({
         color: "#FFFFFF",
         fontWeight: '700',
         fontSize: 16,
-    },
-
-    comfirmButton: {
-        marginTop: 40,
-        width: "65%",
-        borderWidth: 3,
-        borderRadius: 10,
-        backgroundColor: "#E95401",
-        paddingHorizontal: 56,
-        paddingVertical: 13,
-        alignItems: "center"
-    },
-
-    textConfirm: {
-        color: "#FFFFFF",
-        fontWeight: '700',
-        fontSize: 14,
-    },
-
-    title: {
-        fontSize: 34,
-        fontWeight: '900',
-        color: "#FFFFFF"
     },
 })

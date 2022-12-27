@@ -3,6 +3,7 @@ import Svg, { Path, Defs, Pattern, Use, Image } from "react-native-svg"
 
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
+import { Button } from "../components/Button";
 
 export const InitialScreen = ({navigation} :any) => {
     return(
@@ -39,12 +40,7 @@ export const InitialScreen = ({navigation} :any) => {
                 </Svg>
             </View>
 
-            <Pressable style={style.loginButton} onPress={() => navigation.navigate("Login")}>
-                <Text style={style.loginTextButton}>
-                    Agende seu horário
-                </Text>
-            </Pressable>
-
+            <Button text="Agende seu horário" />
             <Footer />
         </View>
     )
@@ -60,20 +56,4 @@ const style = StyleSheet.create({
     hero : {
         alignItems: "center"
     },
-
-    loginButton: {
-        backgroundColor: '#E95401',
-        width: '70%',
-        borderRadius: 25,
-        paddingHorizontal: 61,
-        paddingVertical: 13,
-        marginTop: 20
-    },
-
-    loginTextButton: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: '600',
-        textAlign: "center"
-    }
 })

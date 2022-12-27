@@ -1,16 +1,16 @@
 import { Text, View, Pressable, StyleSheet, SafeAreaView } from "react-native"
-import Svg, { Path } from "react-native-svg"
 
 import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
-import { ScreenStackHeaderRightView } from "react-native-screens"
+import { Title } from "../components/Title"
+import { Button } from "../components/Button"
 
 export const Services = () => {
     return(
         <SafeAreaView style={style.container}>
             <Header />
-
-            <Text style={style.title}>Selecione o(s) serviços</Text>
+            
+            <Title title="Selecione o(s) serviços" />
 
             <View style={style.services}>
                 <Pressable style={style.service}>
@@ -35,10 +35,7 @@ export const Services = () => {
            
             </View>
 
-            <Pressable style={style.comfirmButton}>
-                <Text style={style.comfirmText}>Comfirmar</Text>
-            </Pressable>
-
+            <Button text="Comfirmar" />
             <Footer/>
         </SafeAreaView>
     )
@@ -49,12 +46,6 @@ const style = StyleSheet.create({
         backgroundColor: "#1E1E1E",
         flex: 1,
         alignItems: 'center',
-    },
-
-    title: {
-        fontWeight: '900',
-        fontSize: 24,
-        color: "#FFFFFF"
     },
 
     services: {
@@ -92,18 +83,4 @@ const style = StyleSheet.create({
         right: 15,
         top: 5,
     },
-
-    comfirmButton: {
-        backgroundColor: "#E95401",
-        borderRadius: 10,
-        paddingHorizontal: 56,
-        paddingVertical: 13,
-        marginTop: 25,
-    },
-
-    comfirmText: {
-        color: "#FFFFFF",
-        fontSize: 14,
-        fontWeight: '700'
-    }
 })

@@ -2,14 +2,14 @@ import { Text, View, StyleSheet } from "react-native"
 
 import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
-
+import { Title } from "../components/Title"
 
 export const Professionals = () => {
     return(
             <View style={style.container}>
                 <Header />
-
-                <Text style={style.title}>Selecione um Profissional</Text>
+                
+                <Title title="Selecione um Profissional" />
 
                 <View style={style.contantProfessionals}>
                     <View style={style.professionals}>
@@ -32,13 +32,6 @@ const style = StyleSheet.create({
         flex: 1,
         backgroundColor: "#1E1E1E",
         alignItems: "center",
-    },
-
-    title: {
-        fontWeight: '900',
-        fontSize: 24,
-        color: "#FFFFFF",
-        marginVertical: 40
     },
 
     contantProfessionals: {

@@ -2,13 +2,15 @@ import { View, Text, StyleSheet, SafeAreaView, TextInput, Pressable } from "reac
 
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
+import { Title } from "../components/Title";
+import { Button } from "../components/Button";
 
 export const Register = ({ navigation }: any) => {
     return(
         <SafeAreaView style={style.container}>
             <Header />
 
-            <Text style={style.title}>Cadastre-se agora</Text>
+            <Title title="Cadastre-se agora" />
 
             <View style={style.form}>
                 <TextInput 
@@ -44,10 +46,7 @@ export const Register = ({ navigation }: any) => {
                 </Pressable>
             </View>
 
-            <Pressable style={style.submitButton}>
-                    <Text style={style.textSubmitButton}>Cadastrar</Text>
-                </Pressable>
-
+            <Button text="Cadastrar" />
             <Footer />
         </SafeAreaView>
     )
@@ -58,13 +57,6 @@ const style = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         backgroundColor: "#1E1E1E"
-    },
-
-    title: {
-        fontSize: 30,
-        marginBottom: 20,
-        fontWeight: '900',
-        color: "#FFFFFF"
     },
 
     form: {
@@ -94,17 +86,4 @@ const style = StyleSheet.create({
     linkHelp: {
         color: "#FFFFFF",
     },
-
-    submitButton: {
-        backgroundColor: "#E95401",
-        marginTop: 20,
-        paddingHorizontal: 85,
-        paddingVertical: 15,
-        borderRadius: 10,
-    },
-
-    textSubmitButton: {
-        color: '#FFFFFF',
-        fontWeight: '700',
-    }
 })

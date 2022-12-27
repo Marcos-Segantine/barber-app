@@ -18,7 +18,7 @@ const {Screen, Navigator} = createNativeStackNavigator()
 export const App = () => {
   return(
     <NavigationContainer>
-      <Navigator initialRouteName="FInalScreen">
+      <Navigator>
         <Screen 
           name="InitialScreen" 
           component={InitialScreen} 
@@ -84,7 +84,7 @@ export const App = () => {
         />
 
         <Screen 
-          name="FInalScreen"
+          name="FinalScreen"
           component={FinalScreen}
           options={{
             headerShown: false
