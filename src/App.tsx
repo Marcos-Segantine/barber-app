@@ -11,13 +11,14 @@ import { Professionals } from "./screens/Professionals"
 import { Calandar } from "./screens/Calandar"
 import { Schedules } from "./screens/Schedules"
 import { ComfirmSchedule } from "./screens/ConfirmSchedule"
+import { FinalScreen } from "./screens/FinalScreen"
 
 const {Screen, Navigator} = createNativeStackNavigator()
 
 export const App = () => {
   return(
     <NavigationContainer>
-      <Navigator initialRouteName="ComfirmSchedule">
+      <Navigator initialRouteName="FInalScreen">
         <Screen 
           name="InitialScreen" 
           component={InitialScreen} 
@@ -25,6 +26,7 @@ export const App = () => {
             headerShown: false
           }} 
         />
+        
         <Screen 
           name="Login" 
           component={Login} 
@@ -76,6 +78,14 @@ export const App = () => {
         <Screen 
           name="ComfirmSchedule"
           component={ComfirmSchedule}
+          options={{
+            headerShown: false
+          }}
+        />
+
+        <Screen 
+          name="FInalScreen"
+          component={FinalScreen}
           options={{
             headerShown: false
           }}
