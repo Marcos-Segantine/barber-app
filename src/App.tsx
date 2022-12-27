@@ -9,13 +9,14 @@ import { Register } from "./screens/Register"
 import { Services } from "./screens/Services"
 import { Professionals } from "./screens/Professionals"
 import { Calandar } from "./screens/Calandar"
+import { Schedules } from "./screens/Schedules"
 
 const {Screen, Navigator} = createNativeStackNavigator()
 
 export const App = () => {
   return(
     <NavigationContainer>
-      <Navigator initialRouteName="Calandar">
+      <Navigator initialRouteName="Schedules">
         <Screen 
           name="InitialScreen" 
           component={InitialScreen} 
@@ -58,6 +59,14 @@ export const App = () => {
         <Screen
           name="Calandar"
           component={Calandar}
+          options={{
+            headerShown: false
+          }}
+        />
+
+        <Screen 
+          name="Schedules"
+          component={Schedules}
           options={{
             headerShown: false
           }}
