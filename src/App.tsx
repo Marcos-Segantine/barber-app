@@ -10,13 +10,14 @@ import { Services } from "./screens/Services"
 import { Professionals } from "./screens/Professionals"
 import { Calandar } from "./screens/Calandar"
 import { Schedules } from "./screens/Schedules"
+import { ComfirmSchedule } from "./screens/ConfirmSchedule"
 
 const {Screen, Navigator} = createNativeStackNavigator()
 
 export const App = () => {
   return(
     <NavigationContainer>
-      <Navigator initialRouteName="Schedules">
+      <Navigator initialRouteName="ComfirmSchedule">
         <Screen 
           name="InitialScreen" 
           component={InitialScreen} 
@@ -67,6 +68,14 @@ export const App = () => {
         <Screen 
           name="Schedules"
           component={Schedules}
+          options={{
+            headerShown: false
+          }}
+        />
+
+        <Screen 
+          name="ComfirmSchedule"
+          component={ComfirmSchedule}
           options={{
             headerShown: false
           }}

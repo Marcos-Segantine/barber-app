@@ -107,7 +107,6 @@ const style = StyleSheet.create({
         color: "#FFFFFF",
         fontWeight: '700',
         fontSize: 14,
-
     },
 
     title: {
