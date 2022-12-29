@@ -18,7 +18,7 @@ const {Screen, Navigator} = createNativeStackNavigator()
 export const App = () => {
   return(
     <NavigationContainer>
-      <Navigator initialRouteName="Register">
+      <Navigator initialRouteName="Login">
         <Screen 
           name="InitialScreen" 
           component={InitialScreen} 

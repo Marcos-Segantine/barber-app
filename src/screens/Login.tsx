@@ -5,7 +5,21 @@ import { Footer } from "../shared/Footer";
 import { Title } from "../components/Title";
 import { Button } from "../components/Button";
 
+import auth from '@react-native-firebase/auth';
+import { useState } from "react";
+
 export const Login = ({ navigation }: any) => {
+
+    const [ email, setEmail ] = useState<string>("")
+    const [ password, setPassword ] = useState<string>("")
+
+    const handleLogin = () => {
+        auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(() => navigation.navigate("Services"))
+            .catch(err => console.log(err))
+        }
+
     return(
         <View style={style.container}>
             <Header />
@@ -14,12 +28,14 @@ export const Login = ({ navigation }: any) => {
 
             <View style={style.form}>
                 <TextInput
+                    onChangeText={text => setEmail(text)}
                     style={style.input} 
                     placeholder="Email"
                     placeholderTextColor={"#FFFFFF80"}
                 />
 
                 <TextInput 
+                    onChangeText={text => setPassword(text)}
                     style={style.input}
                     placeholder="Digite sua senha"
                     placeholderTextColor={"#FFFFFF80"}
@@ -34,7 +50,7 @@ export const Login = ({ navigation }: any) => {
                     </Pressable>
                 </View>
 
-                <Button text="Entrar" />
+                <Button text="Entrar" action={handleLogin} />
             </View>
 
             <Footer />
@@ -64,7 +80,8 @@ const style = StyleSheet.create({
         paddingHorizontal: 13,
         paddingVertical: 17,
         fontWeight: '700',
-        fontSize: 14
+        fontSize: 14,
+        color: "#FFFFFF80"
     },
 
     linksHelpUser: {
