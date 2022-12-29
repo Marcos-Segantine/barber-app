@@ -1,12 +1,13 @@
 import { Text, Pressable, StyleSheet } from "react-native";
 
 interface IButton {
-    text: string
+    text: string,
+    action?: any
 }
 
-export const Button: React.FC<IButton> = ({ text }) => {
+export const Button: React.FC<IButton> = ({ text, action }) => {
     return(
-        <Pressable style={style.button}>
+        <Pressable onPress={action} style={style.button}>
             <Text style={style.text}>{text}</Text>
         </Pressable>
     )

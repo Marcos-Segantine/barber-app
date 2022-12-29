@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "10724457964",
+    "project_id": "customer-management-for-barber",
+    "storage_bucket": "customer-management-for-barber.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10724457964:android:28232882511009a7fcd4c9",
+        "android_client_info": {
+          "package_name": "com.barberapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "10724457964-o7b9idafundq6uhu1ls8upa5c53013gs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOVDvNv3FTJ8wom-OefaiJLY1VXSII7iU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "10724457964-o7b9idafundq6uhu1ls8upa5c53013gs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
