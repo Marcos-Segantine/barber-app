@@ -40,7 +40,7 @@ export const InitialScreen = ({navigation} :any) => {
                 </Svg>
             </View>
 
-            <Button text="Agende seu horário" />
+            <Button text="Agende seu horário" action={() => navigation.navigate("Login")} />
             <Footer />
         </View>
     )

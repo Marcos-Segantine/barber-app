@@ -1,7 +1,7 @@
-import { Text } from "react-native"
-
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+
+import { useContext } from "react"
 
 import { InitialScreen } from "./screens/InitialScreen"
 import { Login } from "./screens/Login"
@@ -13,12 +13,15 @@ import { Schedules } from "./screens/Schedules"
 import { ComfirmSchedule } from "./screens/ConfirmSchedule"
 import { FinalScreen } from "./screens/FinalScreen"
 
-const {Screen, Navigator} = createNativeStackNavigator()
+import { AuthContext } from "./Context/useContext"
 
-export const App = () => {
+const { Screen, Navigator } = createNativeStackNavigator()
+
+export const Routes = () => {
+  
   return(
     <NavigationContainer>
-      <Navigator initialRouteName="Login">
+      <Navigator initialRouteName="InitialScreen">
         <Screen 
           name="InitialScreen" 
           component={InitialScreen} 

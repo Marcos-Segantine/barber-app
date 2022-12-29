@@ -1,17 +1,27 @@
 import { Text, Pressable, View, StyleSheet, TextInput } from "react-native";
 
+import { useContext, useEffect, useState } from "react";
+
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
 import { Title } from "../components/Title";
 import { Button } from "../components/Button";
 
 import auth from '@react-native-firebase/auth';
-import { useState } from "react";
+
+import { firebase } from "@react-native-firebase/auth";
+import { AuthContext, AuthProvider } from "../Context/useContext";
 
 export const Login = ({ navigation }: any) => {
-
+    
     const [ email, setEmail ] = useState<string>("")
     const [ password, setPassword ] = useState<string>("")
+
+    const user = useContext(AuthContext)
+
+    useEffect(() => {
+        if(user) navigation.navigate('Services')
+    }, [])
 
     const handleLogin = () => {
         auth()
