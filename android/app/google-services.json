@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:10724457964:android:28232882511009a7fcd4c9",
+        "mobilesdk_app_id": "1:10724457964:android:1228113ebecc576efcd4c9",
         "android_client_info": {
-          "package_name": "com.barberapp"
+          "package_name": "com.barber"
         }
       },
       "oauth_client": [
