@@ -10,21 +10,20 @@ import { Button } from "../components/Button";
 import auth from '@react-native-firebase/auth';
 import { UserContext } from "../context/UserContext";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export const Login = ({ navigation }) => {
     
     const [ email, setEmail ] = useState("")
     const [ password, setPassword ] = useState("")
 
-    const { setUser } = useContext(UserContext)
-
     const handleLogin = () => {
         auth()
             .signInWithEmailAndPassword(email, password)
-            .then(() => {
-                setUser({
-                    email: email,
-                    password: password
-                })
+            .then(async() => {
+                await AsyncStorage.setItem("@barber_app__email", JSON.stringify(email))
+                await AsyncStorage.setItem("@barber_app__password", JSON.stringify(password))
+
                 navigation.navigate("Services")
             })
             .catch(err => console.log(err))

@@ -8,10 +8,10 @@ import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
 
 export const Header = () => {
-    const navigaation = useNavigation()
+    const navigation = useNavigation()
     
     const handleComaBack = () => {
-        navigaation.goBack()
+        navigation.goBack()
     }
 
     const { user, setUser } = useContext(UserContext)
@@ -20,7 +20,7 @@ export const Header = () => {
         auth().signOut().then(res => {
             setUser(null)
             console.log(user, "USUARIO SAIU <<<<<<<<<<<<<<<<<<<<<<<")
-            navigaation.navigate("Login")
+            navigation.navigate("Login")
         })
     }
 

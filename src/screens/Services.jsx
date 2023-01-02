@@ -5,12 +5,15 @@ import { Footer } from "../shared/Footer"
 import { Title } from "../components/Title"
 import { Button } from "../components/Button"
 
-import { useContext } from "react"
-import { UserContext } from "../context/UserContext"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export const Services = () => {
+    
+    const getLocalStorageData = async() => {
+        const emailUser = await AsyncStorage.getItem("@barber_app__email")
+    }
 
-    const { user } = useContext(UserContext)
+    getLocalStorageData()
 
     return(
         <SafeAreaView style={style.container}>

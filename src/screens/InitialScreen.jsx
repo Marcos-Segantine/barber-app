@@ -1,11 +1,31 @@
 import { Pressable, Text, View, StyleSheet, SafeAreaView } from "react-native";
 import Svg, { Path, Defs, Pattern, Use, Image } from "react-native-svg"
 
+import { useEffect, useState } from "react";
+
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
 import { Button } from "../components/Button";
 
-export const InitialScreen = ({navigation} :any) => {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export const InitialScreen = ({ navigation }) => {
+    const [ isUserAuth, setIsUserAuth ] = useState(false)
+    
+    useEffect(() => {
+        
+        const getLocalStorage = async() => {
+            const userEmail = await AsyncStorage.getItem("@barber_app__email")
+            const userPassword = await AsyncStorage.getItem("@barber_app__password")
+
+            if(JSON.parse(userEmail) === null || JSON.parse(userPassword) === null) setIsUserAuth(false)
+            
+            return setIsUserAuth(true)
+        }
+
+        getLocalStorage()
+    }, [])
+
     return(
         <View style={style.container}>
             <Header />
@@ -40,7 +60,7 @@ export const InitialScreen = ({navigation} :any) => {
                 </Svg>
             </View>
 
-            <Button text="Agende seu horário" action={() => navigation.navigate("Login")} />
+            <Button text="Agende seu horário" action={() => navigation.navigate(isUserAuth ? "Services" : "Login")} />
             <Footer />
         </View>
     )
