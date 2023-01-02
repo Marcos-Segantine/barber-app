@@ -4,15 +4,24 @@ import { Text, View, StyleSheet, Pressable, BackHandler } from "react-native"
 import Svg, { Path, Circle } from "react-native-svg"
 
 import auth from '@react-native-firebase/auth'
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export const Header = () => {
     const navigation = useNavigation()
 
-    const handleLogOut = () => {
-
-        auth().signOut().then(res => {
-            navigation.navigate("Login")
-        })
+    const handleLogOut = async() => {
+    
+        const keys = ['@barber_app__email', '@barber_app__password']
+        try {
+            await AsyncStorage.multiRemove(keys)
+        } catch(e) {
+    
+        }
+            
+        auth().signOut()
+            .then(() => {
+                navigation.navigate("InitialScreen")
+            })
     }
 
     const stateNavigation = useNavigationState(stateNavigation => stateNavigation)
@@ -22,11 +31,10 @@ export const Header = () => {
     const handleComaBack = () => {
         switch (nameRouteNavigation) {
             case "InitialScreen":
-                navigation.goBack(null)
                 break;
 
             case "Login":
-                navigation.goBack();
+                navigation.navigate("InitialScreen");
                 break;
 
             case "Services":

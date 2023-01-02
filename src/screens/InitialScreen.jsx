@@ -18,10 +18,9 @@ export const InitialScreen = ({ navigation }) => {
             const userEmail = await AsyncStorage.getItem("@barber_app__email")
             const userPassword = await AsyncStorage.getItem("@barber_app__password")
 
-            if(JSON.parse(userEmail) === null || JSON.parse(userPassword) === null) setIsUserAuth(false)
+            if(JSON.parse(userEmail) === null || JSON.parse(userPassword) === null) return setIsUserAuth(false)
             
             return setIsUserAuth(true)
-
         }
 
         getLocalStorage()
