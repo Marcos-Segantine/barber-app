@@ -12,33 +12,38 @@ import { Services } from "./src/screens/Services";
 const { Screen, Navigator } = createNativeStackNavigator()
 
 const App = () => {
+
   return (
     <NavigationContainer>
       <UserProvider>
         
-      <Navigator initialRouteName='InitialScreen'>
-              <Screen 
-                name="InitialScreen"
-                component={InitialScreen}
-                options={{
-                    headerShown: false
-                }}
-            />
+      <Navigator 
+        initialRouteName='InitialScreen'
+        >
 
-              <Screen 
-                name="Login"
-                component={Login}
-                options={{
-                    headerShown: false
-                }}
-            />
-            <Screen 
-                name="Services"
-                component={Services}
-                options={{
-                    headerShown: false
-                }}
-            />
+          <Screen 
+            name="InitialScreen"
+            component={InitialScreen}
+            options={{
+                headerShown: false
+            }}
+          />
+
+          <Screen 
+            name="Login"
+            component={Login}
+            options={{
+                headerShown: false
+            }}
+          />
+          <Screen 
+              name="Services"
+              component={Services}
+              options={{
+                  headerShown: false
+              }}
+          />
+
         </Navigator>
 
       </UserProvider>

@@ -8,12 +8,13 @@ import { Button } from "../components/Button"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export const Services = () => {
-    
     const getLocalStorageData = async() => {
         const emailUser = await AsyncStorage.getItem("@barber_app__email")
-    }
+        const passwordUser = await AsyncStorage.getItem("@barber_app__password")
+    };
 
-    getLocalStorageData()
+    getLocalStorageData();
+
 
     return(
         <SafeAreaView style={style.container}>

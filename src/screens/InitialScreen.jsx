@@ -1,4 +1,4 @@
-import { Pressable, Text, View, StyleSheet, SafeAreaView } from "react-native";
+import {  View, StyleSheet, SafeAreaView } from "react-native";
 import Svg, { Path, Defs, Pattern, Use, Image } from "react-native-svg"
 
 import { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ export const InitialScreen = ({ navigation }) => {
             if(JSON.parse(userEmail) === null || JSON.parse(userPassword) === null) setIsUserAuth(false)
             
             return setIsUserAuth(true)
+
         }
 
         getLocalStorage()
@@ -60,7 +61,8 @@ export const InitialScreen = ({ navigation }) => {
                 </Svg>
             </View>
 
-            <Button text="Agende seu horário" action={() => navigation.navigate(isUserAuth ? "Services" : "Login")} />
+            <Button text="Agende seu horário" action={() => navigation.navigate(isUserAuth ? "Services" : "Login")}
+             />
             <Footer />
         </View>
     )

@@ -1,27 +1,42 @@
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useNavigationState } from "@react-navigation/native"
 import { Text, View, StyleSheet, Pressable, BackHandler } from "react-native"
 
-import Svg, { Path, Defs, Pattern, Use, Image, Circle } from "react-native-svg"
+import Svg, { Path, Circle } from "react-native-svg"
 
 import auth from '@react-native-firebase/auth'
-import { useContext } from "react"
-import { UserContext } from "../context/UserContext"
 
 export const Header = () => {
     const navigation = useNavigation()
-    
-    const handleComaBack = () => {
-        navigation.goBack()
-    }
 
-    const { user, setUser } = useContext(UserContext)
     const handleLogOut = () => {
 
         auth().signOut().then(res => {
-            setUser(null)
-            console.log(user, "USUARIO SAIU <<<<<<<<<<<<<<<<<<<<<<<")
             navigation.navigate("Login")
         })
+    }
+
+    const stateNavigation = useNavigationState(stateNavigation => stateNavigation)
+    const indexNavigationScreen = stateNavigation.index
+    const nameRouteNavigation = stateNavigation.routes[indexNavigationScreen].name
+    
+    const handleComaBack = () => {
+        switch (nameRouteNavigation) {
+            case "InitialScreen":
+                navigation.goBack(null)
+                break;
+
+            case "Login":
+                navigation.goBack();
+                break;
+
+            case "Services":
+                navigation.navigate("InitialScreen");
+                break;
+
+            default:
+                navigation.goBack();
+                break;
+        }
     }
 
     return(
