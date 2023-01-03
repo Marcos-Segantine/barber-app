@@ -18,6 +18,7 @@ import { Main } from './src/screens/personal-user-screens/Main';
 import { YourSchedules } from './src/screens/personal-user-screens/YourSchedules';
 import { InfoSchedule } from './src/screens/personal-user-screens/InfoSchedule';
 import { CancelScreen } from './src/screens/personal-user-screens/CancelScreen,';
+import { YourInformation } from './src/screens/personal-user-screens/YourInformation';
 
 const { Screen, Navigator } = createNativeStackNavigator()
 
@@ -28,7 +29,7 @@ const App = () => {
       <UserProvider>
         
       <Navigator 
-        initialRouteName='CancelScreen'
+        initialRouteName='InitialScreen'
         >
 
           <Screen 
@@ -122,6 +123,14 @@ const App = () => {
           <Screen
             name='CancelScreen'
             component={CancelScreen}
+            options={{
+              headerShown: false
+            }}
+          />
+
+          <Screen
+            name='YourInformation'
+            component={YourInformation}
             options={{
               headerShown: false
             }}

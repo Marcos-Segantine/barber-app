@@ -43,7 +43,7 @@ export const Main = ({ navigation }) => {
                     </Text>
                 </Pressable>
 
-                <Pressable style={style.link}>
+                <Pressable style={style.link} onPress={() => navigation.navigate("YourInformation")}>
                     <Text style={style.text}>
                         Suas informações
                     </Text>
