@@ -14,6 +14,11 @@ import { ConfirmSchedule } from './src/screens/ConfirmSchedule'
 import { FinalScreen } from './src/screens/FinalScreen'
 import { Schedules } from './src/screens/Schedules'
 
+import { Main } from './src/screens/personal-user-screens/Main';
+import { YourSchedules } from './src/screens/personal-user-screens/YourSchedules';
+import { InfoSchedule } from './src/screens/personal-user-screens/InfoSchedule';
+import { CancelScreen } from './src/screens/personal-user-screens/CancelScreen,';
+
 const { Screen, Navigator } = createNativeStackNavigator()
 
 const App = () => {
@@ -23,7 +28,7 @@ const App = () => {
       <UserProvider>
         
       <Navigator 
-        initialRouteName='InitialScreen'
+        initialRouteName='CancelScreen'
         >
 
           <Screen 
@@ -90,6 +95,37 @@ const App = () => {
             }}
           />
 
+          <Screen
+            name='Main'
+            component={Main}
+            options={{
+              headerShown: false
+            }}
+          />
+
+          <Screen
+            name='YourSchedules'
+            component={YourSchedules}
+            options={{
+              headerShown: false
+            }}
+          />
+
+          <Screen
+            name='InfoSchedule'
+            component={InfoSchedule}
+            options={{
+              headerShown: false
+            }}
+          />
+
+          <Screen
+            name='CancelScreen'
+            component={CancelScreen}
+            options={{
+              headerShown: false
+            }}
+          />
 
         </Navigator>
 
