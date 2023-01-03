@@ -7,13 +7,10 @@ import { Button } from "../components/Button"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-export const Services = () => {
-    const getLocalStorageData = async() => {
-        const emailUser = await AsyncStorage.getItem("@barber_app__email")
-        const passwordUser = await AsyncStorage.getItem("@barber_app__password")
+export const Services = ({ navigation }) => {
+    const handleComfirmButton = () => {
+        navigation.navigate("Calandar")
     };
-
-    getLocalStorageData();
 
 
     return(
@@ -45,7 +42,7 @@ export const Services = () => {
            
             </View>
 
-            <Button text="Comfirmar" />
+            <Button text="Comfirmar" action={handleComfirmButton} />
             <Footer/>
         </SafeAreaView>
     )

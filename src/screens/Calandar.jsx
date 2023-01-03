@@ -1,4 +1,6 @@
-import { Text, View, StyleSheet, Pressable } from "react-native"
+import {  View, StyleSheet } from "react-native"
+
+import { useState } from "react"
 
 import { Calendar } from "react-native-calendars"
 
@@ -8,13 +10,17 @@ import { Title } from "../components/Title"
 import { Button } from '../components/Button'
 
 export const Calandar = () => {
+    const [ selectedDay, setSelectedDay ] = useState({})
+
     return(
         <View style={style.container}>
             <Header />
 
             <Title title="Selecione um data" />
 
-            <Calendar 
+            <Calendar
+                minDate={String(new Date())}
+                onDayPress={day => setSelectedDay(day.dateString)}
                 style={{
                     width: 350,
                     marginTop: 40,

@@ -23,7 +23,7 @@ const App = () => {
       <UserProvider>
         
       <Navigator 
-        initialRouteName='InitialScreen'
+        initialRouteName='Calandar'
         >
 
           <Screen 
