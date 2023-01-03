@@ -4,7 +4,7 @@ import Svg, { Path, Defs, Pattern, Use, Image } from "react-native-svg"
 import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
 
-export const FinalScreen = () => {
+export const FinalScreen = ({ navigation }) => {
     return(
         <View style={style.container}>
             <Header />
@@ -37,7 +37,7 @@ export const FinalScreen = () => {
                 </Defs>
             </Svg>
 
-            <Pressable style={style.goBackButton}>
+            <Pressable style={style.goBackButton} onPress={() => navigation.navigate("InitialScreen")}>
                 <Text style={style.textGoBack}>Voltar ao inicio</Text>
             </Pressable>
 

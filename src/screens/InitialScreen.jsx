@@ -33,7 +33,7 @@ export const InitialScreen = ({ navigation }) => {
     
     return(
         <View style={style.container}>
-            <Header />
+            <Header isInitialScreen={true} />
             
             <View style={style.hero}>
                 <Svg

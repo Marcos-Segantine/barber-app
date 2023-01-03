@@ -5,7 +5,7 @@ import { Footer } from "../shared/Footer"
 import { Title } from "../components/Title"
 import { Button } from "../components/Button"
 
-export const Schedules = () => {
+export const Schedules = ({ navigation }) => {
     return(
         <View style={style.container}>
             <Header />
@@ -54,7 +54,7 @@ export const Schedules = () => {
                 </Pressable>
             </View>
 
-            <Button text="Comfirmar" />
+            <Button text="Comfirmar" action={() => navigation.navigate("ConfirmSchedule")} />
             <Footer />  
         </View>
     )
