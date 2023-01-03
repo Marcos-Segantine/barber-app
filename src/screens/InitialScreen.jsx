@@ -9,23 +9,28 @@ import { Button } from "../components/Button";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { useNavigationState } from "@react-navigation/native"
+
 export const InitialScreen = ({ navigation }) => {
-    const [ isUserAuth, setIsUserAuth ] = useState(false)
+    const [ isUserAuth, setIsUserAuth ] = useState(false);
     
-    useEffect(() => {
+    const getLocalStorage = async() => {
+        if(
+            JSON.parse(await AsyncStorage.getItem("@barber_app__email")) === null ||
+            JSON.parse(await AsyncStorage.getItem("@barber_app__password")) === null
+        ) setIsUserAuth(false)
         
-        const getLocalStorage = async() => {
-            const userEmail = await AsyncStorage.getItem("@barber_app__email")
-            const userPassword = await AsyncStorage.getItem("@barber_app__password")
-
-            if(JSON.parse(userEmail) === null || JSON.parse(userPassword) === null) return setIsUserAuth(false)
-            
-            return setIsUserAuth(true)
-        }
-
-        getLocalStorage()
-    }, [])
-
+        else setIsUserAuth(true)
+    }
+    
+    (() => {
+        const stateNavigation = useNavigationState(stateNavigation => stateNavigation)
+        const indexNavigationScreen = stateNavigation.index
+        const nameRouteNavigation = stateNavigation.routes[indexNavigationScreen].name
+        
+        if(nameRouteNavigation === 'InitialScreen') getLocalStorage()
+    })();
+    
     return(
         <View style={style.container}>
             <Header />

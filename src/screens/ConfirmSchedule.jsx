@@ -5,7 +5,7 @@ import { Footer } from "../shared/Footer"
 import { Title } from '../components/Title'
 import { Button } from "../components/Button"
 
-export const ComfirmSchedule = () => {
+export const ConfirmSchedule = () => {
     return(
         <View style={style.container}>
             <Header />
