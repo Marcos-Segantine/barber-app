@@ -1,7 +1,7 @@
 import {  View, StyleSheet, SafeAreaView } from "react-native";
 import Svg, { Path, Defs, Pattern, Use, Image } from "react-native-svg"
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
@@ -10,27 +10,51 @@ import { Button } from "../components/Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useNavigationState } from "@react-navigation/native"
+import { UserContext } from "../context/UserContext";
+
+import firestore from '@react-native-firebase/firestore';
 
 export const InitialScreen = ({ navigation }) => {
     const [ isUserAuth, setIsUserAuth ] = useState(false);
+
+    const { setUser } = useContext(UserContext)
+
+    const stateNavigation = useNavigationState(stateNavigation => stateNavigation)
     
-    const getLocalStorage = async() => {
-        if(
-            JSON.parse(await AsyncStorage.getItem("@barber_app__email")) === null ||
-            JSON.parse(await AsyncStorage.getItem("@barber_app__password")) === null
-        ) setIsUserAuth(false)
+    
+    useEffect(() => {
+        const getLocalStorage = async() => {
+            const userEmail = JSON.parse(await AsyncStorage.getItem("@barber_app__email"))
+            const userPassword = JSON.parse(await AsyncStorage.getItem("@barber_app__password"))
+            
+            if(
+                userEmail === null ||
+                userPassword === null
+                ) {
+                    setIsUserAuth(false)
+                }
+                
+                else {
+                    setIsUserAuth(true)
+                    
+                    firestore().collection('users').where('email', '==', userEmail).get().then(res => {
+                        setUser({
+                            name: res._docs[0]._data.name,
+                            email: res._docs[0]._data.email
+                        })
+                    })
+                }
+            }
+            
+            const indexNavigationScreen = stateNavigation.index
+            const nameRouteNavigation = stateNavigation.routes[indexNavigationScreen].name
+            
+            if(nameRouteNavigation === 'InitialScreen') getLocalStorage()
+
+        }, [])
         
-        else setIsUserAuth(true)
-    }
-    
-    (() => {
-        const stateNavigation = useNavigationState(stateNavigation => stateNavigation)
-        const indexNavigationScreen = stateNavigation.index
-        const nameRouteNavigation = stateNavigation.routes[indexNavigationScreen].name
         
-        if(nameRouteNavigation === 'InitialScreen') getLocalStorage()
-    })();
-    
+
     return(
         <View style={style.container}>
             <Header isInitialScreen={true} />
@@ -76,7 +100,7 @@ const style = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#1E1E1E",
-        alignItems: 'center'
+        alignItems: 'center',
     },
     
     hero : {

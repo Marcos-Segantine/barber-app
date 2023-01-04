@@ -19,7 +19,7 @@ export const Main = ({ navigation }) => {
                 try {
                     await AsyncStorage.multiRemove(keys)
                 } catch(e) {
-
+                    console.log(e);
                 }
                     
                 auth().signOut()

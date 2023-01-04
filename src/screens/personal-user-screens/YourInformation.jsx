@@ -6,7 +6,13 @@ import { Footer } from "../../shared/Footer";
 import { Title } from "../../components/Title";
 import { Button } from "../../components/Button";
 
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
+
 export const YourInformation = () => {
+
+    const { user } = useContext(UserContext)
+
     return(
         <View style={style.container}>
             <Header />
@@ -15,18 +21,18 @@ export const YourInformation = () => {
 
             <View style={style.content}>
                 <Pressable style={style.info}>
-                    <Text style={style.text}>Nome: Marcos Segantine Costa </Text>
+                    <Text style={style.text}>Nome: {user ? user.name : "---"} </Text>
                 </Pressable>
 
                 <Pressable style={style.info}>
                     <Text style={style.text}>
-                        Email: msegantine8@gmail.com
+                        Email: {user.email ? user.email : "   ---------"}
                     </Text>
                 </Pressable>
 
                 <Pressable style={style.info}>
                     <Text style={style.text}>
-                        Telefone: (34) 99679-2346
+                        Telefone: {user.phone ? user.phone : "   ---------"}
                     </Text>
                 </Pressable>
             </View>        
