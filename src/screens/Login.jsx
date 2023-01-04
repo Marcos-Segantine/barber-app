@@ -1,6 +1,6 @@
 import { Text, Pressable, View, StyleSheet, TextInput } from "react-native";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
@@ -10,22 +10,33 @@ import { Button } from "../components/Button";
 import auth from '@react-native-firebase/auth';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserContext } from "../context/UserContext";
+
+import firestore from '@react-native-firebase/firestore';
 
 export const Login = ({ navigation }) => {
     
     const [ email, setEmail ] = useState("")
     const [ password, setPassword ] = useState("")
 
-    const handleLogin = () => {
-        auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(async() => {
-                await AsyncStorage.setItem("@barber_app__email", JSON.stringify(email))
-                await AsyncStorage.setItem("@barber_app__password", JSON.stringify(password))
+    const { user, setUser } = useContext(UserContext)
 
-                navigation.navigate("Services")
+    const handleLogin = async() => {
+        
+        auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(async() => {
+            await AsyncStorage.setItem("@barber_app__email", JSON.stringify(email))
+            await AsyncStorage.setItem("@barber_app__password", JSON.stringify(password))
+            
+            const usersCollection = await firestore().collection('users').where('email', '==', email).get()
+            setUser(usersCollection._docs[0]._data)
+
+            navigation.navigate("Services")
             })
             .catch(err => console.log(err))
+        
+            console.log("FUNC");
         }
 
     return(

@@ -1,60 +1,41 @@
 import {  View, StyleSheet, SafeAreaView } from "react-native";
 import Svg, { Path, Defs, Pattern, Use, Image } from "react-native-svg"
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
 import { Button } from "../components/Button";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import { useNavigationState } from "@react-navigation/native"
+import auth from '@react-native-firebase/auth';
 import { UserContext } from "../context/UserContext";
 
 import firestore from '@react-native-firebase/firestore';
 
 export const InitialScreen = ({ navigation }) => {
     const [ isUserAuth, setIsUserAuth ] = useState(false);
-
-    const { setUser } = useContext(UserContext)
-
-    const stateNavigation = useNavigationState(stateNavigation => stateNavigation)
+    const [ userData, setUserData ] = useState({})
     
+    const { user, setUser } = useContext(UserContext)
     
-    useEffect(() => {
-        const getLocalStorage = async() => {
-            const userEmail = JSON.parse(await AsyncStorage.getItem("@barber_app__email"))
-            const userPassword = JSON.parse(await AsyncStorage.getItem("@barber_app__password"))
-            
-            if(
-                userEmail === null ||
-                userPassword === null
-                ) {
-                    setIsUserAuth(false)
-                }
-                
-                else {
-                    setIsUserAuth(true)
-                    
-                    firestore().collection('users').where('email', '==', userEmail).get().then(res => {
-                        setUser({
-                            name: res._docs[0]._data.name,
-                            email: res._docs[0]._data.email
-                        })
-                    })
-                }
-            }
-            
-            const indexNavigationScreen = stateNavigation.index
-            const nameRouteNavigation = stateNavigation.routes[indexNavigationScreen].name
-            
-            if(nameRouteNavigation === 'InitialScreen') getLocalStorage()
+    auth().onAuthStateChanged(async (userAuth) => {
+        const userContext_Temp = Object.assign(user)
 
-        }, [])
-        
-        
+        userAuth ? setIsUserAuth(true) : setIsUserAuth(false)
+        isUserAuth ? 
+        (
+            userContext_Temp.email = userAuth.email,
+            userContext_Temp.uid = userAuth.uid
+        ) : 
+        ""
 
+        firestore().collection('users').where('email', '==', userAuth.email).get().then(res => {
+            userContext_Temp.name = res._docs[0]._data.name
+        })
+        
+        setUser(userContext_Temp);
+    })
+    
     return(
         <View style={style.container}>
             <Header isInitialScreen={true} />

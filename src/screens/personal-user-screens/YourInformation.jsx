@@ -6,11 +6,10 @@ import { Footer } from "../../shared/Footer";
 import { Title } from "../../components/Title";
 import { Button } from "../../components/Button";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 
 export const YourInformation = () => {
-
     const { user } = useContext(UserContext)
 
     return(
@@ -21,7 +20,7 @@ export const YourInformation = () => {
 
             <View style={style.content}>
                 <Pressable style={style.info}>
-                    <Text style={style.text}>Nome: {user ? user.name : "---"} </Text>
+                    <Text style={style.text}>Nome: {user.name ? user.name : "---"} </Text>
                 </Pressable>
 
                 <Pressable style={style.info}>

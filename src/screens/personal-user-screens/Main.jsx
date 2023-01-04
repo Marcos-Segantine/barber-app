@@ -7,13 +7,25 @@ import { Title } from '../../components/Title'
 
 import auth from '@react-native-firebase/auth'
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useContext, useState } from 'react'
+import { UserContext } from '../../context/UserContext'
 
 export const Main = ({ navigation }) => {
+    const [ isUserLogIn, setIsUserLogIn ] = useState(false);
+    const { setUser } = useContext(UserContext);
+
+    (async() => {
+        if( JSON.parse(await AsyncStorage.getItem('@barber_app__email')) &&
+            JSON.parse(await AsyncStorage.getItem('@barber_app__password'))) {
+            setIsUserLogIn(true)
+        }
+        else setIsUserLogIn(false)
+
+    })();
+
 
     const handleLogOut = async() => {
-        if(
-            JSON.parse(await AsyncStorage.getItem('@barber_app__email')) &&
-            JSON.parse(await AsyncStorage.getItem('@barber_app__password'))) 
+        if(isUserLogIn) 
             {
                 const keys = ['@barber_app__email', '@barber_app__password']
                 try {
@@ -24,6 +36,7 @@ export const Main = ({ navigation }) => {
                     
                 auth().signOut()
                     .then(() => {
+                        setUser({})
                         navigation.navigate("InitialScreen")
                     })
                 }
