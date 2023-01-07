@@ -1,4 +1,4 @@
-import {  View, StyleSheet, SafeAreaView } from "react-native";
+import {  View, StyleSheet } from "react-native";
 import Svg, { Path, Defs, Pattern, Use, Image } from "react-native-svg"
 
 import { useContext, useState } from "react";
@@ -7,34 +7,16 @@ import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
 import { Button } from "../components/Button";
 
-import auth from '@react-native-firebase/auth';
 import { UserContext } from "../context/UserContext";
 
-import firestore from '@react-native-firebase/firestore';
-
 export const InitialScreen = ({ navigation }) => {
-    const [ isUserAuth, setIsUserAuth ] = useState(false);
-    const [ userData, setUserData ] = useState({})
-    
-    const { user, setUser } = useContext(UserContext)
-    
-    auth().onAuthStateChanged(async (userAuth) => {
-        const userContext_Temp = Object.assign(user)
+    const { user } = useContext(UserContext);
 
-        userAuth ? setIsUserAuth(true) : setIsUserAuth(false)
-        isUserAuth ? 
-        (
-            userContext_Temp.email = userAuth.email,
-            userContext_Temp.uid = userAuth.uid
-        ) : 
-        ""
-
-        firestore().collection('users').where('email', '==', userAuth.email).get().then(res => {
-            userContext_Temp.name = res._docs[0]._data.name
-        })
-        
-        setUser(userContext_Temp);
-    })
+    const handleButton = async() => {
+        user ?
+        navigation.navigate("Services") :
+        navigation.navigate("Login") 
+    }
     
     return(
         <View style={style.container}>
@@ -70,8 +52,9 @@ export const InitialScreen = ({ navigation }) => {
                 </Svg>
             </View>
 
-            <Button text="Agende seu horário" action={() => navigation.navigate(isUserAuth ? "Services" : "Login")}
+            <Button text="Agende seu horário" action={handleButton}
              />
+
             <Footer />
         </View>
     )

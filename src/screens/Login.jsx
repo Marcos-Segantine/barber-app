@@ -26,17 +26,13 @@ export const Login = ({ navigation }) => {
         auth()
         .signInWithEmailAndPassword(email, password)
         .then(async() => {
-            await AsyncStorage.setItem("@barber_app__email", JSON.stringify(email))
-            await AsyncStorage.setItem("@barber_app__password", JSON.stringify(password))
-            
-            const usersCollection = await firestore().collection('users').where('email', '==', email).get()
-            setUser(usersCollection._docs[0]._data)
+            await AsyncStorage.setItem('@barber_app__email', email)
+            await AsyncStorage.setItem('@barber_app__password', password)
+
 
             navigation.navigate("Services")
-            })
-            .catch(err => console.log(err))
-        
-            console.log("FUNC");
+        })
+        .catch(err => console.log(err))
         }
 
     return(

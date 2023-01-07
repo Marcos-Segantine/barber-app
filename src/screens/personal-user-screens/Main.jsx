@@ -3,45 +3,32 @@ import { View, StyleSheet, Pressable, Text } from 'react-native'
 import { Header } from '../../shared/Header'
 import { Footer } from '../../shared/Footer'
 
+import { useContext } from 'react'
+
 import { Title } from '../../components/Title'
 
 import auth from '@react-native-firebase/auth'
+
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useContext, useState } from 'react'
+
 import { UserContext } from '../../context/UserContext'
 
 export const Main = ({ navigation }) => {
-    const [ isUserLogIn, setIsUserLogIn ] = useState(false);
     const { setUser } = useContext(UserContext);
 
-    (async() => {
-        if( JSON.parse(await AsyncStorage.getItem('@barber_app__email')) &&
-            JSON.parse(await AsyncStorage.getItem('@barber_app__password'))) {
-            setIsUserLogIn(true)
-        }
-        else setIsUserLogIn(false)
-
-    })();
-
-
     const handleLogOut = async() => {
-        if(isUserLogIn) 
-            {
-                const keys = ['@barber_app__email', '@barber_app__password']
-                try {
-                    await AsyncStorage.multiRemove(keys)
-                } catch(e) {
-                    console.log(e);
-                }
-                    
-                auth().signOut()
-                    .then(() => {
-                        setUser({})
-                        navigation.navigate("InitialScreen")
-                    })
-                }
+        if(await AsyncStorage.getItem("@barber_app__email") !== null) 
+        {
+            const keys = ['@barber_app__email', '@barber_app__password']
+            await AsyncStorage.multiRemove(keys)
+                
+            auth().signOut()
+                .then(() => {
+                    setUser(null)
+                    navigation.navigate("InitialScreen")
+                })
+        }
     };
-
 
     return(
         <View style={style.container}>
@@ -79,8 +66,6 @@ export const Main = ({ navigation }) => {
                         Sair
                     </Text>
                 </Pressable>
-
-
             </View>
 
             <Footer />

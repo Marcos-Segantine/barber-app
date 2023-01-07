@@ -13,7 +13,6 @@ export const Services = ({ navigation }) => {
     };
 
     const { user } = useContext(UserContext)
-    console.log(user);
 
     return(
         <SafeAreaView style={style.container}>
