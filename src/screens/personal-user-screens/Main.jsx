@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { UserContext } from '../../context/UserContext'
 
 export const Main = ({ navigation }) => {
-    const { setUser } = useContext(UserContext);
+    const { setUserData } = useContext(UserContext);
 
     const handleLogOut = async() => {
         if(await AsyncStorage.getItem("@barber_app__email") !== null) 
@@ -24,7 +24,7 @@ export const Main = ({ navigation }) => {
                 
             auth().signOut()
                 .then(() => {
-                    setUser(null)
+                    setUserData(null)
                     navigation.navigate("InitialScreen")
                 })
         }

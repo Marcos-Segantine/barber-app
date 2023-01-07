@@ -10,7 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 
 export const YourInformation = () => {
-    const { user } = useContext(UserContext)
+    const { userData } = useContext(UserContext)
 
     return(
         <View style={style.container}>
@@ -20,18 +20,18 @@ export const YourInformation = () => {
 
             <View style={style.content}>
                 <Pressable style={style.info}>
-                    <Text style={style.text}>Nome: {user.name ? user.name : "---"} </Text>
+                    <Text style={style.text}>Nome: {userData ? userData.name : "---"} </Text>
                 </Pressable>
 
                 <Pressable style={style.info}>
                     <Text style={style.text}>
-                        Email: {user.email ? user.email : "   ---------"}
+                        Email: {userData ? userData.email : "   ---------"}
                     </Text>
                 </Pressable>
 
                 <Pressable style={style.info}>
                     <Text style={style.text}>
-                        Telefone: {user.phone ? user.phone : "   ---------"}
+                        Telefone: {userData ? userData.phone : "   ---------"}
                     </Text>
                 </Pressable>
             </View>        

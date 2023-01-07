@@ -17,6 +17,8 @@ export const InitialScreen = ({ navigation }) => {
         navigation.navigate("Services") :
         navigation.navigate("Login") 
     }
+
+    console.log("InitialScreen");
     
     return(
         <View style={style.container}>
