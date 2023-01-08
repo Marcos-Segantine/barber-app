@@ -1,6 +1,6 @@
 import { Text, Pressable, View, StyleSheet, TextInput } from "react-native";
 
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
@@ -10,25 +10,18 @@ import { Button } from "../components/Button";
 import auth from '@react-native-firebase/auth';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserContext } from "../context/UserContext";
-
-import firestore from '@react-native-firebase/firestore';
 
 export const Login = ({ navigation }) => {
     
     const [ email, setEmail ] = useState("")
     const [ password, setPassword ] = useState("")
 
-    const { user, setUser } = useContext(UserContext)
-
     const handleLogin = async() => {
-        
         auth()
         .signInWithEmailAndPassword(email, password)
         .then(async() => {
             await AsyncStorage.setItem('@barber_app__email', email)
             await AsyncStorage.setItem('@barber_app__password', password)
-
 
             navigation.navigate("Services")
         })

@@ -1,7 +1,7 @@
 import {  View, StyleSheet } from "react-native";
 import Svg, { Path, Defs, Pattern, Use, Image } from "react-native-svg"
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 import { Header } from "../shared/Header";
 import { Footer } from "../shared/Footer";
@@ -10,16 +10,14 @@ import { Button } from "../components/Button";
 import { UserContext } from "../context/UserContext";
 
 export const InitialScreen = ({ navigation }) => {
-    const { user } = useContext(UserContext);
+    const { userData } = useContext(UserContext);
 
-    const handleButton = async() => {
-        user ?
+    const handleButton = () => {
+        userData ?
         navigation.navigate("Services") :
         navigation.navigate("Login") 
     }
 
-    console.log("InitialScreen");
-    
     return(
         <View style={style.container}>
             <Header isInitialScreen={true} />

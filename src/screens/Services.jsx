@@ -4,15 +4,11 @@ import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
 import { Title } from "../components/Title"
 import { Button } from "../components/Button"
-import { useC, useContext } from "react"
-import { UserContext } from "../context/UserContext"
 
 export const Services = ({ navigation }) => {
     const handleComfirmButton = () => {
         navigation.navigate("Calandar")
     };
-
-    const { user } = useContext(UserContext)
 
     return(
         <SafeAreaView style={style.container}>

@@ -10,6 +10,7 @@ export const UserProvider = ({ children }) => {
     const [ userData, setUserData ] = useState(null)
 
     auth().onAuthStateChanged(res => {
+        console.log(res);
         res ? 
         setUser(res.uid)
         : 
@@ -24,13 +25,13 @@ export const UserProvider = ({ children }) => {
                 .where('uid', '==', user)
                 .get()
                 .then(res => {
-                    setUserData(res._docs[0]._data)
+                    setUserData(res._docs[0]?._data)
                 })
         )
         :
         setUserData(null)
 
-        console.log(userData, 'CONTEXT');
+        // console.log(userData, 'CONTEXT');
     }, [ user ])
 
     return(

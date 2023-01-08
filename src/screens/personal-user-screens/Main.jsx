@@ -12,12 +12,15 @@ import auth from '@react-native-firebase/auth'
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 import { UserContext } from '../../context/UserContext'
+import { useNavigation } from '@react-navigation/native'
 
-export const Main = ({ navigation }) => {
-    const { setUserData } = useContext(UserContext);
+export const Main = () => {
+    const { userData, setUserData } = useContext(UserContext);
+
+    const navigation = useNavigation()
 
     const handleLogOut = async() => {
-        if(await AsyncStorage.getItem("@barber_app__email") !== null) 
+        if(userData) 
         {
             const keys = ['@barber_app__email', '@barber_app__password']
             await AsyncStorage.multiRemove(keys)

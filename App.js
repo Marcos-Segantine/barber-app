@@ -7,6 +7,7 @@ import { UserProvider } from './src/context/UserContext';
 
 import { InitialScreen } from './src/screens/InitialScreen';
 import { Login } from './src/screens/Login'
+import { Register } from './src/screens/Register';
 import { Services } from "./src/screens/Services";
 import { Professionals } from './src/screens/Professionals';
 import { Calandar } from './src/screens/Calandar'
@@ -28,26 +29,30 @@ const App = () => {
     <NavigationContainer>
       <UserProvider>
         
-      <Navigator 
-        initialRouteName='InitialScreen'
-        >
+      <Navigator>
+        <Screen 
+          name="InitialScreen"
+          component={InitialScreen}
+          options={{
+              headerShown: false
+          }}
+        />
+        <Screen 
+          name="Login"
+          component={Login}
+          options={{
+              headerShown: false
+          }}
+        />
 
-          <Screen 
-            name="InitialScreen"
-            component={InitialScreen}
-            options={{
-                headerShown: false
-            }}
-          />
+         <Screen 
+          name="Register"
+          component={Register}
+          options={{
+              headerShown: false
+          }}
+        />
 
-          <Screen 
-            name="Login"
-            component={Login}
-            options={{
-                headerShown: false
-            }}
-          />
-          
           <Screen 
               name="Services"
               component={Services}

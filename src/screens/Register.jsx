@@ -6,19 +6,35 @@ import { Title } from "../components/Title";
 import { Button } from "../components/Button";
 
 import auth from '@react-native-firebase/auth';
-import { useState } from "react";
+import firestore from '@react-native-firebase/firestore';
 
-export const Register = ({ navigation }: any) => {
-    const [ name, setName ] = useState<string>('')
-    const [ email, setEmail ] = useState<string>('')
-    const [ phone, setPhone ] = useState<string>('')
-    const [ password, setPassword ] = useState<string>('')
-    const [ comfirmPassword, setComfirmPassword ] = useState<string>('')
+import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export const Register = ({ navigation }) => {
+    const [ name, setName ] = useState('')
+    const [ email, setEmail ] = useState('')
+    const [ phone, setPhone ] = useState('')
+    const [ password, setPassword ] = useState('')
+    const [ comfirmPassword, setComfirmPassword ] = useState('')
 
     const handleResgister = () => {
         auth()
             .createUserWithEmailAndPassword(email, password)
-            .then(() => console.log("CADASTRO REALIZADO"))
+            .then(async(res) => {
+                firestore()
+                    .collection('users')
+                    .doc(res.user.uid)
+                    .set({
+                        name: name || 'User teste',
+                        email: email,
+                        uid: res.user.uid
+                    })
+                await AsyncStorage.getItem("@barber_app__email")
+                await AsyncStorage.getItem("@barber_app__password")
+                
+                navigation.navigate("Services")
+            })
             .catch((err) => console.log(err))
     }
 
