@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { UserProvider } from './src/context/UserContext';
+import { ShedulesUserProvider } from './src/context/ShedulesUser';
 
 import { InitialScreen } from './src/screens/InitialScreen';
 import { Login } from './src/screens/Login'
@@ -29,119 +30,121 @@ const App = () => {
     <NavigationContainer>
       <UserProvider>
         
-      <Navigator>
-        <Screen 
-          name="InitialScreen"
-          component={InitialScreen}
-          options={{
-              headerShown: false
-          }}
-        />
-        <Screen 
-          name="Login"
-          component={Login}
-          options={{
-              headerShown: false
-          }}
-        />
-
-         <Screen 
-          name="Register"
-          component={Register}
-          options={{
-              headerShown: false
-          }}
-        />
-
+        <ShedulesUserProvider>
+        <Navigator initialRouteName='Services'>
           <Screen 
-              name="Services"
-              component={Services}
-              options={{
-                  headerShown: false
-              }}
+            name="InitialScreen"
+            component={InitialScreen}
+            options={{
+                headerShown: false
+            }}
+          />
+          <Screen 
+            name="Login"
+            component={Login}
+            options={{
+                headerShown: false
+            }}
           />
 
           <Screen 
-              name="Professionals"
-              component={Professionals}
+            name="Register"
+            component={Register}
+            options={{
+                headerShown: false
+            }}
+          />
+
+            <Screen 
+                name="Services"
+                component={Services}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Screen 
+                name="Professionals"
+                component={Professionals}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Screen
+              name='Calandar'
+              component={Calandar}
               options={{
-                  headerShown: false
+                headerShown: false
               }}
-          />
+            />
 
-          <Screen
-            name='Calandar'
-            component={Calandar}
-            options={{
-              headerShown: false
-            }}
-          />
+            <Screen
+              name='ConfirmSchedule'
+              component={ConfirmSchedule}
+              options={{
+                headerShown: false
+              }}
+            />
 
-          <Screen
-            name='ConfirmSchedule'
-            component={ConfirmSchedule}
-            options={{
-              headerShown: false
-            }}
-          />
+            <Screen
+              name='FinalScreen'
+              component={FinalScreen}
+              options={{
+                headerShown: false
+              }}
+            />
 
-          <Screen
-            name='FinalScreen'
-            component={FinalScreen}
-            options={{
-              headerShown: false
-            }}
-          />
+            <Screen
+              name='Schedules'
+              component={Schedules}
+              options={{
+                headerShown: false
+              }}
+            />
 
-          <Screen
-            name='Schedules'
-            component={Schedules}
-            options={{
-              headerShown: false
-            }}
-          />
+            <Screen
+              name='Main'
+              component={Main}
+              options={{
+                headerShown: false
+              }}
+            />
 
-          <Screen
-            name='Main'
-            component={Main}
-            options={{
-              headerShown: false
-            }}
-          />
+            <Screen
+              name='YourSchedules'
+              component={YourSchedules}
+              options={{
+                headerShown: false
+              }}
+            />
 
-          <Screen
-            name='YourSchedules'
-            component={YourSchedules}
-            options={{
-              headerShown: false
-            }}
-          />
+            <Screen
+              name='InfoSchedule'
+              component={InfoSchedule}
+              options={{
+                headerShown: false
+              }}
+            />
 
-          <Screen
-            name='InfoSchedule'
-            component={InfoSchedule}
-            options={{
-              headerShown: false
-            }}
-          />
+            <Screen
+              name='CancelScreen'
+              component={CancelScreen}
+              options={{
+                headerShown: false
+              }}
+            />
 
-          <Screen
-            name='CancelScreen'
-            component={CancelScreen}
-            options={{
-              headerShown: false
-            }}
-          />
+            <Screen
+              name='YourInformation'
+              component={YourInformation}
+              options={{
+                headerShown: false
+              }}
+            />
 
-          <Screen
-            name='YourInformation'
-            component={YourInformation}
-            options={{
-              headerShown: false
-            }}
-          />
-
-        </Navigator>
+          </Navigator>
+        </ShedulesUserProvider>
 
       </UserProvider>
     </NavigationContainer>
