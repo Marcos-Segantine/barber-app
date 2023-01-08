@@ -1,6 +1,6 @@
 import {  View, StyleSheet } from "react-native"
 
-import { useState } from "react"
+import { useContext, useState } from "react"
 
 import { Calendar } from "react-native-calendars"
 
@@ -8,9 +8,21 @@ import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
 import { Title } from "../components/Title"
 import { Button } from '../components/Button'
+import { ShedulesUserContext } from "../context/ShedulesUser"
 
-export const Calandar = () => {
+export const Calandar = ({ navigation }) => {
     const [ selectedDay, setSelectedDay ] = useState({})
+
+    const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
+    
+    console.log("FOR NOW JUST CHOICE DAY 1");
+
+    const handleButton = () => {
+        shedulesUser.day ?
+            navigation.navigate("Schedules") :
+            console.log("NÃO SELECIONOU UM DIA");
+    }
+    
 
     return(
         <View style={style.container}>
@@ -20,7 +32,7 @@ export const Calandar = () => {
 
             <Calendar
                 minDate={String(new Date())}
-                onDayPress={day => setSelectedDay(day.dateString)}
+                onDayPress={day => setShedulesUser({...shedulesUser, day: day.dateString})}
                 style={{
                     width: 350,
                     marginTop: 40,
@@ -40,7 +52,7 @@ export const Calandar = () => {
                 }}
             />
 
-            <Button text="Comfirmar" />
+            <Button text="Comfirmar" action={handleButton} />
             <Footer />
         </View>
     )

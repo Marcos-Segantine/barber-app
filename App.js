@@ -29,9 +29,9 @@ const App = () => {
   return (
     <NavigationContainer>
       <UserProvider>
-        
+
         <ShedulesUserProvider>
-        <Navigator initialRouteName='Services'>
+        <Navigator initialRouteName='InitialScreen'>
           <Screen 
             name="InitialScreen"
             component={InitialScreen}

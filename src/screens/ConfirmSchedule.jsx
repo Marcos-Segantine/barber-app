@@ -1,11 +1,43 @@
-import { Text, View, StyleSheet, Pressable } from "react-native"
+import { Text, View, StyleSheet } from "react-native"
 
 import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
 import { Title } from '../components/Title'
 import { Button } from "../components/Button"
+import { useContext } from "react"
+import { ShedulesUserContext } from "../context/ShedulesUser"
+
+import firestore from '@react-native-firebase/firestore';
 
 export const ConfirmSchedule = ({ navigation }) => {
+    const { shedulesUser } = useContext(ShedulesUserContext)
+
+    const handleComfirm = async() => {
+        
+        firestore()
+            .collection('schedules_month')
+            .doc('1_2023')
+            .get()
+            .then(({ _data }) => {
+                console.log(_data);
+                _data['01']['09 - 10'] = shedulesUser
+                console.log(_data);
+
+                const newData = _data
+                
+                firestore()
+                    .collection('schedules_month')
+                    .doc('1_2023')
+                    .update(newData)
+                    .then(() => {
+                        console.log('User updated!');
+                    });
+            })
+
+
+            
+    }
+
     return(
         <View style={style.container}>
             <Header />
@@ -16,29 +48,29 @@ export const ConfirmSchedule = ({ navigation }) => {
 
             <Text style={style.subTitle}>Confira todos os dados</Text>
 
-            <View style={style.contentData}>
+            {/* <View style={style.contentData}>
                 <View style={style.data}>
-                    <Text style={style.textData}>Data: 09/09/22</Text>
+                    <Text style={style.textData}>{shedulesUser.day}</Text>
                 </View>
 
                 <View style={style.data}>
-                    <Text style={style.textData}>Data: 09/09/22</Text>
+                    <Text style={style.textData}>{shedulesUser.service}</Text>
                 </View>
 
                 <View style={style.data}>
-                    <Text style={style.textData}>Data: 09/09/22</Text>
+                    <Text style={style.textData}>{shedulesUser.professional}</Text>
                 </View>
 
                 <View style={style.data}>
-                    <Text style={style.textData}>Data: 09/09/22</Text>
+                    <Text style={style.textData}>{shedulesUser.shedule}</Text>
                 </View>
 
                 <View style={style.data}>
                     <Text style={style.textData}>Data: 09/09/22</Text>
                 </View> 
-            </View>
+            </View> */}
 
-            <Button text="Comfirmar" action={() => navigation.navigate("FinalScreen")} />
+            <Button text="Comfirmar" action={handleComfirm} />
             <Footer />
         </View>
     )

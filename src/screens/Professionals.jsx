@@ -1,10 +1,25 @@
-import { Text, View, StyleSheet } from "react-native"
+import { View, StyleSheet, Pressable, Text } from "react-native"
 
 import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
-import { Title } from "../components/Title"
 
-export const Professionals = () => {
+import { useContext } from "react"
+
+import { ShedulesUserContext } from "../context/ShedulesUser"
+
+import { Title } from "../components/Title"
+import { Button } from "../components/Button"
+
+export const Professionals = ({ navigation }) => {
+
+    const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
+
+    const handleButton = () => {
+        shedulesUser.professional ?
+            navigation.navigate("Calandar") :
+            console.log("NAO SELECIONOU UM PROFISSIONAL");    
+    }   
+
     return(
             <View style={style.container}>
                 <Header />
@@ -12,15 +27,20 @@ export const Professionals = () => {
                 <Title title="Selecione um Profissional" />
 
                 <View style={style.contantProfessionals}>
-                    <View style={style.professionals}>
-                    </View>
+                    <Pressable style={style.professionals} onPress={() => setShedulesUser({...shedulesUser, professional: "Barbeiro 1"})}>
+                        <Text style={{color: "#FFFFFF"}}>BArbeiro 1</Text>
+                    </Pressable>
 
-                    <View style={style.professionals}>
-                    </View>
+                    <Pressable style={style.professionals} onPress={() => setShedulesUser({...shedulesUser, professional: "Barbeiro 2"})}>
+                        <Text style={{color: "#FFFFFF"}}>BArbeiro 2</Text>
+                    </Pressable>
 
-                    <View style={style.professionals}>
-                    </View>
+                    <Pressable style={style.professionals} onPress={() => setShedulesUser({...shedulesUser, professional: "Barbeiro 3"})}>
+                        <Text style={{color: "#FFFFFF"}}>BArbeiro 3</Text>
+                    </Pressable>
                 </View>
+
+                <Button text="Comfirmar" action={handleButton} />
 
                 <Footer />
             </View>

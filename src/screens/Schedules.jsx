@@ -4,8 +4,19 @@ import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
 import { Title } from "../components/Title"
 import { Button } from "../components/Button"
+import { useContext } from "react"
+import { ShedulesUserContext } from "../context/ShedulesUser"
 
 export const Schedules = ({ navigation }) => {
+
+    const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
+
+    const handleButton = () => {
+        shedulesUser.shedule ? 
+        navigation.navigate("ConfirmSchedule") :
+        console.log("NAO SELECIONOU HORARIO");
+    }
+
     return(
         <View style={style.container}>
             <Header />
@@ -13,16 +24,16 @@ export const Schedules = ({ navigation }) => {
             <Title title="Selecione um horário" />
         
             <View style={style.schedules}>
-                <Pressable style={style.schedule}>
+                <Pressable style={style.schedule} onPress={() => setShedulesUser({...shedulesUser, shedule: "09:00"})}>
                     <Text style={style.textSchedule}>09:00</Text>
                 </Pressable>
 
-                <Pressable style={style.schedule}>
-                    <Text style={style.textSchedule}>09:00</Text>
+                <Pressable style={style.schedule} onPress={() => setShedulesUser({...shedulesUser, shedule: "10:00"})}>
+                    <Text style={style.textSchedule}>10:00</Text>
                 </Pressable>
 
-                <Pressable style={style.schedule}>
-                    <Text style={style.textSchedule}>09:00</Text>
+                <Pressable style={style.schedule} onPress={() => setShedulesUser({...shedulesUser, shedule: "11:00"})}>
+                    <Text style={style.textSchedule}>11:00</Text>
                 </Pressable>
 
                 <Pressable style={style.schedule}>
@@ -54,7 +65,7 @@ export const Schedules = ({ navigation }) => {
                 </Pressable>
             </View>
 
-            <Button text="Comfirmar" action={() => navigation.navigate("ConfirmSchedule")} />
+            <Button text="Comfirmar" action={handleButton} />
             <Footer />  
         </View>
     )

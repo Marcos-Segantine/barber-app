@@ -4,10 +4,19 @@ import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
 import { Title } from "../components/Title"
 import { Button } from "../components/Button"
+import { useContext } from "react"
+
+import { ShedulesUserContext } from "../context/ShedulesUser"
 
 export const Services = ({ navigation }) => {
+    const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
+
+
     const handleComfirmButton = () => {
-        navigation.navigate("Calandar")
+        shedulesUser.service ? 
+            navigation.navigate("Professionals") :
+            console.log("NAO SELECIONOU UM SERVIÇO");
+        
     };
 
     return(
@@ -17,23 +26,23 @@ export const Services = ({ navigation }) => {
             <Title title="Selecione o(s) serviços" />
 
             <View style={style.services}>
-                <Pressable style={style.service}>
+                <Pressable style={style.service} onPress={() => setShedulesUser({...shedulesUser, service: "Corte"})}>
                     <Text style={style.serviceText}>Corte</Text>
                     <View style={style.serviceCircle}></View>
                 </Pressable>
 
-                <Pressable style={style.service}>
+                <Pressable style={style.service} onPress={() => setShedulesUser({ ...shedulesUser, service: "Barba" })}>
                     <Text style={style.serviceText}>Barba</Text>
                     <View style={style.serviceCircle}></View>
                 </Pressable>
 
                 <Pressable style={style.service}>
-                    <Text style={style.serviceText}>Sobramcelha</Text>
+                    <Text style={style.serviceText} onPress={() => setShedulesUser({ ...shedulesUser, service: "Sobrancelha" })}>sobrancelha</Text>
                     <View style={style.serviceCircle}></View>
                 </Pressable>
 
                 <Pressable style={style.service}>
-                    <Text style={style.serviceText}>Combo</Text>
+                    <Text style={style.serviceText}  onPress={() => setShedulesUser({ ...shedulesUser, service: "Alisamento" })}>Alisamento</Text>
                     <View style={style.serviceCircle}></View>
                 </Pressable>
            

@@ -1,10 +1,24 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-const ShedulesUserContext = createContext(null)
+import { UserContext } from "./UserContext";
+
+export const ShedulesUserContext = createContext(null)
 
 export const ShedulesUserProvider = ({ children }) => {
-    const [ shedulesUser, setShedulesUser ] = useState(null)
+    const { userData } = useContext(UserContext)
     
+    const [ shedulesUser, setShedulesUser ] = useState()
+
+    useEffect(() => {
+        userData ?
+            (
+                // console.log(shedulesUser, "SHEDULES"),
+                setShedulesUser({...userData})
+                ) :    
+            null;
+
+        }, [ userData ])
+
     return(
         <ShedulesUserContext.Provider value={{ shedulesUser, setShedulesUser }}>
             { children }
