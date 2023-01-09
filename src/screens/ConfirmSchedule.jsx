@@ -12,30 +12,58 @@ import firestore from '@react-native-firebase/firestore';
 export const ConfirmSchedule = ({ navigation }) => {
     const { shedulesUser } = useContext(ShedulesUserContext)
 
+    const sheduleMouth = shedulesUser.day.split('').slice(5, 7);
+    const sheduleDay = shedulesUser.day.split('').slice(8).join('')
+    const sheduleHour = shedulesUser.shedule
+
     const handleComfirm = async() => {
         
-        firestore()
-            .collection('schedules_month')
-            .doc('1_2023')
-            .get()
-            .then(({ _data }) => {
-                console.log(_data);
-                _data['01']['09 - 10'] = shedulesUser
-                console.log(_data);
 
-                const newData = _data
-                
-                firestore()
-                    .collection('schedules_month')
-                    .doc('1_2023')
-                    .update(newData)
-                    .then(() => {
-                        console.log('User updated!');
-                    });
-            })
+            firestore()
+                .collection('schedules_month')
+                .doc('01_2023')
+                .get()
+                .then(({ _data }) => {
+                    _data[sheduleDay][shedulesUser.professional][sheduleHour] = shedulesUser
+                    
+                    const newData = _data
 
+                }).catch(error => {
+                    switch(error.message) {
+                        case `Cannot set property '' of undefined`:
+                            console.log("SETTING UNDEFINED ERROR");
+                            
+                            break;
+                        case `Cannot convert undefined value to object`:
+                            firestore()
+                                .collection('schedules_month')
+                                .doc('01_2023')
+                                .get()
+                                .then(({ _data }) => {
+                                    console.log(_data);
+                                    const newData = {..._data, [sheduleDay]: {
+                                        [shedulesUser.professional]: {
+                                            [shedulesUser.shedule]: shedulesUser
+                                        }
+                                    }}
+                                    console.log(newData);
 
-            
+                                    firestore()
+                                    .collection('schedules_month')
+                                    .doc('01_2023')
+                                    .update(newData)
+                                    .then(() => {
+                                        console.log('User updated!');
+                                    });
+                                })
+
+                            break;
+
+                        default:
+                            console.log("OTHER ERROR", error.message);
+                            break;
+                    }
+                })
     }
 
     return(
@@ -48,7 +76,7 @@ export const ConfirmSchedule = ({ navigation }) => {
 
             <Text style={style.subTitle}>Confira todos os dados</Text>
 
-            {/* <View style={style.contentData}>
+            <View style={style.contentData}>
                 <View style={style.data}>
                     <Text style={style.textData}>{shedulesUser.day}</Text>
                 </View>
@@ -68,7 +96,7 @@ export const ConfirmSchedule = ({ navigation }) => {
                 <View style={style.data}>
                     <Text style={style.textData}>Data: 09/09/22</Text>
                 </View> 
-            </View> */}
+            </View>
 
             <Button text="Comfirmar" action={handleComfirm} />
             <Footer />
