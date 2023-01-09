@@ -15,8 +15,6 @@ export const Calandar = ({ navigation }) => {
 
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
     
-    console.log("FOR NOW JUST CHOICE DAY 1");
-
     const handleButton = () => {
         shedulesUser.day ?
             navigation.navigate("Schedules") :

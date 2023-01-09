@@ -24,9 +24,30 @@ export const ConfirmSchedule = ({ navigation }) => {
                 .doc('01_2023')
                 .get()
                 .then(({ _data }) => {
-                    _data[sheduleDay][shedulesUser.professional][sheduleHour] = shedulesUser
+                    _data[sheduleDay][shedulesUser.professional] ?
+                    (
+                        _data[sheduleDay][shedulesUser.professional] = {
+                            ..._data[sheduleDay][shedulesUser.professional],
+                             [sheduleHour]: shedulesUser
+                        }
+                    ) 
+                    :
+                    (
+                        _data[sheduleDay] = {..._data[sheduleDay], [shedulesUser.professional]: {
+                            [sheduleHour]: shedulesUser
+                        }}
+                    )
                     
                     const newData = _data
+
+                    firestore()
+                        .collection('schedules_month')
+                        .doc('01_2023')
+                        .update(newData)
+                        .then(() => {
+                            console.log('User updated!');
+                        });
+
 
                 }).catch(error => {
                     switch(error.message) {
@@ -59,7 +80,19 @@ export const ConfirmSchedule = ({ navigation }) => {
 
                             break;
 
-                        default:
+                        case `Cannot set property '${sheduleHour}' of undefined`:
+                            firestore()
+                                .collection('schedules_month')
+                                .doc('01_2023')
+                                .get()
+                                .then(({ _data }) => {
+                                    console.log("HOUR DAY ERROR");
+                                })
+
+                            break;
+                        
+
+                            default:
                             console.log("OTHER ERROR", error.message);
                             break;
                     }
