@@ -12,16 +12,14 @@ import firestore from '@react-native-firebase/firestore';
 export const ConfirmSchedule = ({ navigation }) => {
     const { shedulesUser } = useContext(ShedulesUserContext)
 
-    const sheduleMouth = shedulesUser.day.split('').slice(5, 7);
+    const sheduleMouth = shedulesUser.day.split('').slice(5, 7).join('');
     const sheduleDay = shedulesUser.day.split('').slice(8).join('')
     const sheduleHour = shedulesUser.shedule
 
     const handleComfirm = async() => {
-        
-
             firestore()
                 .collection('schedules_month')
-                .doc('01_2023')
+                .doc(`${sheduleMouth}_2023`)
                 .get()
                 .then(({ _data }) => {
                     _data[sheduleDay][shedulesUser.professional] ?
@@ -30,7 +28,7 @@ export const ConfirmSchedule = ({ navigation }) => {
                             ..._data[sheduleDay][shedulesUser.professional],
                              [sheduleHour]: shedulesUser
                         }
-                    ) 
+                    )
                     :
                     (
                         _data[sheduleDay] = {..._data[sheduleDay], [shedulesUser.professional]: {
@@ -42,7 +40,7 @@ export const ConfirmSchedule = ({ navigation }) => {
 
                     firestore()
                         .collection('schedules_month')
-                        .doc('01_2023')
+                        .doc(`${sheduleMouth}_2023`)
                         .update(newData)
                         .then(() => {
                             console.log('User updated!');
@@ -51,49 +49,46 @@ export const ConfirmSchedule = ({ navigation }) => {
 
                 }).catch(error => {
                     switch(error.message) {
-                        case `Cannot set property '' of undefined`:
-                            console.log("SETTING UNDEFINED ERROR");
-                            
-                            break;
                         case `Cannot convert undefined value to object`:
                             firestore()
                                 .collection('schedules_month')
-                                .doc('01_2023')
+                                .doc(`${sheduleMouth}_2023`)
                                 .get()
                                 .then(({ _data }) => {
-                                    console.log(_data);
                                     const newData = {..._data, [sheduleDay]: {
                                         [shedulesUser.professional]: {
                                             [shedulesUser.shedule]: shedulesUser
                                         }
                                     }}
-                                    console.log(newData);
 
                                     firestore()
-                                    .collection('schedules_month')
-                                    .doc('01_2023')
-                                    .update(newData)
-                                    .then(() => {
-                                        console.log('User updated!');
-                                    });
-                                })
+                                        .collection('schedules_month')
+                                        .doc(`${sheduleMouth}_2023`)
+                                        .update(newData)
+                                        .then(() => {
+                                            console.log('User updated!');
+                                        }).catch(error => {
+                                            switch (error.message) {
+                                                case "[firestore/not-found] Some requested document was not found.":
+                                                    firestore()
+                                                        .collection('schedules_month')
+                                                        .doc(`${sheduleMouth}_2023`)
+                                                        .set(newData)
+                                                        .then(() => {
+                                                            console.log('User added!');
+                                                        });
+                                                    break;
+                                            
+                                                default:
+                                                    break;
+                                            }
+                                        })
+                                    })
 
                             break;
-
-                        case `Cannot set property '${sheduleHour}' of undefined`:
-                            firestore()
-                                .collection('schedules_month')
-                                .doc('01_2023')
-                                .get()
-                                .then(({ _data }) => {
-                                    console.log("HOUR DAY ERROR");
-                                })
-
-                            break;
-                        
 
                             default:
-                            console.log("OTHER ERROR", error.message);
+                                console.log("OTHER ERROR", error.message);
                             break;
                     }
                 })
