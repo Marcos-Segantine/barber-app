@@ -4,27 +4,32 @@ import { Header } from "../../shared/Header";
 import { Footer } from "../../shared/Footer";
 
 import { Title } from "../../components/Title";
+import { useContext } from "react";
+
+import { UserContext } from "../../context/UserContext";
 
 export const YourSchedules = () => {
+    const { userData } = useContext(UserContext)
+
     return(
         <View style={style.container}>
             <Header />
 
             <Title title={"Seus agendamentos"} />
 
-
             <View style={style.content}>
-                <Pressable style={style.schedulesDay}>
-                    <Text style={style.text}>Dia 09/08</Text>
-                </Pressable>
-                <Pressable style={style.schedulesDay}>
-                    <Text style={style.text}>Dia 09/08</Text>
-                </Pressable>
-                <Pressable style={style.schedulesDay}>
-                    <Text style={style.text}>Dia 09/08</Text>
-                </Pressable>
+                {
+                    userData.shedules.map((item, index) => {
+                        return(
+                            <Pressable style={style.schedulesDay} key={index}>
+                                <Text style={style.text}>Dia: {item.day}</Text>
+                                <Text style={style.text}>Horario: {item.shedule}</Text>
+                                <Text style={style.text}>Serviço: {item.service}</Text>
+                            </Pressable>            
+                        )
+                    })
+                }
             </View>
-            
 
             <Footer />
         </View>

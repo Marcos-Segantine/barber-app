@@ -8,15 +8,28 @@ import { useContext, useState } from "react"
 import { ShedulesUserContext } from "../context/ShedulesUser"
 
 import firestore from '@react-native-firebase/firestore';
-import { useNavigation } from "@react-navigation/native"
+
+import { UserContext } from "../context/UserContext"
 
 export const ConfirmSchedule = ({ navigation }) => {
     const { shedulesUser } = useContext(ShedulesUserContext)
+    const {userData, setUserData} = useContext(UserContext)
+    
     const [ isAllRight, setIsAllRight ] = useState(false)
 
-    const sheduleMouth = shedulesUser.day.split('').slice(5, 7).join('');
-    const sheduleDay = shedulesUser.day.split('').slice(8).join('')
+
+    isAllRight ? 
+        setTimeout(() => {
+            navigation.navigate("FinalScreen")             
+        }, 100)
+        :
+        null
+
+
+    const sheduleMouth = shedulesUser.day?.split('').slice(5, 7).join('');
+    const sheduleDay = shedulesUser.day?.split('').slice(8).join('')
     const sheduleHour = shedulesUser.shedule
+
 
     const addShedule = (_data) => {
         _data[sheduleDay][shedulesUser.professional] ?
@@ -54,6 +67,41 @@ export const ConfirmSchedule = ({ navigation }) => {
                     .update(newData)
                     .then(() => {
                         console.log('User updated!');
+                        let userDataTemp = []
+                        
+                        userData.shedules ?
+                        (
+                            userDataTemp = userData.shedules,
+                            console.log("ENTROU NO 1", userDataTemp),
+                            
+                            userDataTemp.push(
+                                {
+                                    day: shedulesUser.day,
+                                    shedule: shedulesUser.shedule,
+                                    service: shedulesUser.service,
+                                    professional: shedulesUser.professional,
+                                    name: shedulesUser.name,
+                                    email: shedulesUser.email,
+                                    uid: shedulesUser.uid
+                                }
+                            )
+                        )
+                        :
+                        userDataTemp = [
+                            {
+                                day: shedulesUser.day,
+                                shedule: shedulesUser.shedule,
+                                service: shedulesUser.service,
+                                professional: shedulesUser.professional,
+                                name: shedulesUser.name,
+                                email: shedulesUser.email,
+                                uid: shedulesUser.uid
+                            }
+                        ]
+
+                        console.log(userDataTemp, 'usertemp')
+                        setUserData({...userData, shedules: userDataTemp})
+
                         setIsAllRight(true)
                     }).catch(error => {
                         switch (error.message) {
@@ -64,6 +112,41 @@ export const ConfirmSchedule = ({ navigation }) => {
                                     .set(newData)
                                     .then(() => {
                                         console.log('User added!');
+                                        let userDataTemp = []
+                                        
+                                        userData.shedules ?
+                                        (
+                                            userDataTemp = userData.shedules,
+                                            console.log("ENTROU NO 1", userDataTemp),
+                                            
+                                            userDataTemp.push(
+                                                {
+                                                    day: shedulesUser.day,
+                                                    shedule: shedulesUser.shedule,
+                                                    service: shedulesUser.service,
+                                                    professional: shedulesUser.professional,
+                                                    name: shedulesUser.name,
+                                                    email: shedulesUser.email,
+                                                    uid: shedulesUser.uid
+                                                }
+                                            )
+                                        )
+                                        :
+                                        userDataTemp = [
+                                            {
+                                                day: shedulesUser.day,
+                                                shedule: shedulesUser.shedule,
+                                                service: shedulesUser.service,
+                                                professional: shedulesUser.professional,
+                                                name: shedulesUser.name,
+                                                email: shedulesUser.email,
+                                                uid: shedulesUser.uid
+                                            }
+                                        ]
+
+                                        console.log(userDataTemp, 'usertemp')
+                                        setUserData({...userData, shedules: userDataTemp})
+
                                         setIsAllRight(true)
                                     });
                                 break;
@@ -77,45 +160,71 @@ export const ConfirmSchedule = ({ navigation }) => {
     }
 
     const handleComfirm = async() => {
-            firestore()
-                .collection('schedules_month')
-                .doc(`${sheduleMouth}_2023`)
-                .get()
-                .then(({ _data }) => {
-                    const newData = addShedule(_data)
+        firestore()
+            .collection('schedules_month')
+            .doc(`${sheduleMouth}_2023`)
+            .get()
+            .then(({ _data }) => {
+                const newData = addShedule(_data)
 
-                    firestore()
-                        .collection('schedules_month')
-                        .doc(`${sheduleMouth}_2023`)
-                        .update(newData)
-                        .then(() => {
-                            console.log('User updated!');
-                            setIsAllRight(true)
-                        });
+                firestore()
+                    .collection('schedules_month')
+                    .doc(`${sheduleMouth}_2023`)
+                    .update(newData)
+                    .then(() => {
+                        console.log('User updated!');
+                        let userDataTemp = []
+                        
+                        userData.shedules ?
+                        (
+                            userDataTemp = userData.shedules,
+                            console.log("ENTROU NO 1", userDataTemp),
+                            
+                            userDataTemp.push(
+                                {
+                                    day: shedulesUser.day,
+                                    shedule: shedulesUser.shedule,
+                                    service: shedulesUser.service,
+                                    professional: shedulesUser.professional,
+                                    name: shedulesUser.name,
+                                    email: shedulesUser.email,
+                                    uid: shedulesUser.uid
+                                }
+                            )
+                        )
+                        :
+                        userDataTemp = [
+                            {
+                                day: shedulesUser.day,
+                                shedule: shedulesUser.shedule,
+                                service: shedulesUser.service,
+                                professional: shedulesUser.professional,
+                                name: shedulesUser.name,
+                                email: shedulesUser.email,
+                                uid: shedulesUser.uid
+                            }
+                        ]
+
+                        console.log(userDataTemp, 'usertemp')
+                        setUserData({...userData, shedules: userDataTemp})
+
+                        setIsAllRight(true)
+                    });
 
 
-                }).catch(error => {
-                    switch(error.message) {
-                        case `Cannot convert undefined value to object`:
-                                addSheduleWhenUndefined();
-                            break;
+            }).catch(error => {
+                switch(error.message) {
+                    case `Cannot convert undefined value to object`:
+                            addSheduleWhenUndefined();
+                        break;
 
-                            default:
-                                console.log("OTHER ERROR", error.message);
-                            break;
-                    }
-                })
+                        default:
+                            console.log("OTHER ERROR", error.message);
+                        break;
+                }
+            })
 
-    }
-
-    isAllRight ? 
-        (
-            setTimeout(() => {
-                navigation.navigate("FinalScreen") 
-            }, 1000)
-        )
-        :
-        null
+}
 
     return(
         <View style={style.container}>

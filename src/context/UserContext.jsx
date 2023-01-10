@@ -31,6 +31,21 @@ export const UserProvider = ({ children }) => {
         setUserData(null)
     }, [ user ])
 
+    useEffect(() => {
+        // console.log(userData);
+        firestore()
+            .collection('users')
+            .doc(user)
+            .update({...userData})
+            .then(() => {
+                // console.log('User Updated');
+            })
+            .catch(err => {
+                console.log("FOUND AN ERROR", err);
+            })
+    
+        }, [ userData ])
+
     return(
         <UserContext.Provider value={{ userData, setUserData }}>
             { children }
