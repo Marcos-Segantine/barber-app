@@ -4,17 +4,77 @@ import { Header } from "../shared/Header"
 import { Footer } from "../shared/Footer"
 import { Title } from '../components/Title'
 import { Button } from "../components/Button"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { ShedulesUserContext } from "../context/ShedulesUser"
 
 import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from "@react-navigation/native"
 
 export const ConfirmSchedule = ({ navigation }) => {
     const { shedulesUser } = useContext(ShedulesUserContext)
+    const [ isAllRight, setIsAllRight ] = useState(false)
 
     const sheduleMouth = shedulesUser.day.split('').slice(5, 7).join('');
     const sheduleDay = shedulesUser.day.split('').slice(8).join('')
     const sheduleHour = shedulesUser.shedule
+
+    const addShedule = (_data) => {
+        _data[sheduleDay][shedulesUser.professional] ?
+        (
+            _data[sheduleDay][shedulesUser.professional] = {
+                ..._data[sheduleDay][shedulesUser.professional],
+                 [sheduleHour]: shedulesUser
+            }
+        )
+        :
+        (
+            _data[sheduleDay] = {..._data[sheduleDay], [shedulesUser.professional]: {
+                [sheduleHour]: shedulesUser
+            }}
+        )
+
+        return _data;
+    }
+
+    const addSheduleWhenUndefined = (_data) => {
+        firestore()
+            .collection('schedules_month')
+            .doc(`${sheduleMouth}_2023`)
+            .get()
+            .then(({ _data }) => {
+                const newData = {..._data, [sheduleDay]: {
+                    [shedulesUser.professional]: {
+                        [shedulesUser.shedule]: shedulesUser
+                    }
+                }}
+
+                firestore()
+                    .collection('schedules_month')
+                    .doc(`${sheduleMouth}_2023`)
+                    .update(newData)
+                    .then(() => {
+                        console.log('User updated!');
+                        setIsAllRight(true)
+                    }).catch(error => {
+                        switch (error.message) {
+                            case "[firestore/not-found] Some requested document was not found.":
+                                firestore()
+                                    .collection('schedules_month')
+                                    .doc(`${sheduleMouth}_2023`)
+                                    .set(newData)
+                                    .then(() => {
+                                        console.log('User added!');
+                                        setIsAllRight(true)
+                                    });
+                                break;
+                        
+                            default:
+                                break;
+                        }
+                    })
+                })
+
+    }
 
     const handleComfirm = async() => {
             firestore()
@@ -22,21 +82,7 @@ export const ConfirmSchedule = ({ navigation }) => {
                 .doc(`${sheduleMouth}_2023`)
                 .get()
                 .then(({ _data }) => {
-                    _data[sheduleDay][shedulesUser.professional] ?
-                    (
-                        _data[sheduleDay][shedulesUser.professional] = {
-                            ..._data[sheduleDay][shedulesUser.professional],
-                             [sheduleHour]: shedulesUser
-                        }
-                    )
-                    :
-                    (
-                        _data[sheduleDay] = {..._data[sheduleDay], [shedulesUser.professional]: {
-                            [sheduleHour]: shedulesUser
-                        }}
-                    )
-                    
-                    const newData = _data
+                    const newData = addShedule(_data)
 
                     firestore()
                         .collection('schedules_month')
@@ -44,47 +90,14 @@ export const ConfirmSchedule = ({ navigation }) => {
                         .update(newData)
                         .then(() => {
                             console.log('User updated!');
+                            setIsAllRight(true)
                         });
 
 
                 }).catch(error => {
                     switch(error.message) {
                         case `Cannot convert undefined value to object`:
-                            firestore()
-                                .collection('schedules_month')
-                                .doc(`${sheduleMouth}_2023`)
-                                .get()
-                                .then(({ _data }) => {
-                                    const newData = {..._data, [sheduleDay]: {
-                                        [shedulesUser.professional]: {
-                                            [shedulesUser.shedule]: shedulesUser
-                                        }
-                                    }}
-
-                                    firestore()
-                                        .collection('schedules_month')
-                                        .doc(`${sheduleMouth}_2023`)
-                                        .update(newData)
-                                        .then(() => {
-                                            console.log('User updated!');
-                                        }).catch(error => {
-                                            switch (error.message) {
-                                                case "[firestore/not-found] Some requested document was not found.":
-                                                    firestore()
-                                                        .collection('schedules_month')
-                                                        .doc(`${sheduleMouth}_2023`)
-                                                        .set(newData)
-                                                        .then(() => {
-                                                            console.log('User added!');
-                                                        });
-                                                    break;
-                                            
-                                                default:
-                                                    break;
-                                            }
-                                        })
-                                    })
-
+                                addSheduleWhenUndefined();
                             break;
 
                             default:
@@ -92,7 +105,17 @@ export const ConfirmSchedule = ({ navigation }) => {
                             break;
                     }
                 })
+
     }
+
+    isAllRight ? 
+        (
+            setTimeout(() => {
+                navigation.navigate("FinalScreen") 
+            }, 1000)
+        )
+        :
+        null
 
     return(
         <View style={style.container}>
