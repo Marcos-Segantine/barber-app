@@ -19,6 +19,8 @@ export const YourSchedules = () => {
 
             <View style={style.content}>
                 {
+                    userData.shedules ?
+
                     userData.shedules.map((item, index) => {
                         return(
                             <Pressable style={style.schedulesDay} key={index}>
@@ -27,7 +29,8 @@ export const YourSchedules = () => {
                                 <Text style={style.text}>Serviço: {item.service}</Text>
                             </Pressable>            
                         )
-                    })
+                    }) :
+                    <Text style={style.text}>Sem Horarios marcados</Text>
                 }
             </View>
 

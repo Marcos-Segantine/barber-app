@@ -28,6 +28,7 @@ export const Register = ({ navigation }) => {
                     .set({
                         name: name || 'User teste',
                         email: email,
+                        phone: phone,
                         uid: res.user.uid
                     })
                 await AsyncStorage.getItem("@barber_app__email")

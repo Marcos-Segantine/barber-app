@@ -11,12 +11,10 @@ import { ShedulesUserContext } from "../context/ShedulesUser"
 export const Services = ({ navigation }) => {
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
 
-
     const handleComfirmButton = () => {
         shedulesUser.service ? 
             navigation.navigate("Professionals") :
             console.log("NAO SELECIONOU UM SERVIÇO");
-        
     };
 
     return(
