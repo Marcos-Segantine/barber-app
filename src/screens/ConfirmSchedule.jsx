@@ -17,14 +17,12 @@ export const ConfirmSchedule = ({ navigation }) => {
     
     const [ isAllRight, setIsAllRight ] = useState(false)
 
-
     isAllRight ? 
         setTimeout(() => {
             navigation.navigate("FinalScreen")             
         }, 100)
         :
         null
-
 
     const sheduleMouth = shedulesUser.day?.split('').slice(5, 7).join('');
     const sheduleDay = shedulesUser.day?.split('').slice(8).join('')

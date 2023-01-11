@@ -41,7 +41,7 @@ export const UserProvider = ({ children }) => {
                 // console.log('User Updated');
             })
             .catch(err => {
-                console.log("FOUND AN ERROR", err);
+                // console.log("FOUND AN ERROR", err);
             })
     
         }, [ userData ])
