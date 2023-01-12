@@ -1,17 +1,20 @@
-import { Text, View, StyleSheet, Pressable } from "react-native"
+import { Text, View, StyleSheet, Pressable } from "react-native";
 
-import { Header } from "../shared/Header"
-import { Footer } from "../shared/Footer"
+import { Header } from "../../../shared/Header";
+import { Footer } from "../../../shared/Footer";
 
-import ComfirmationSvg from '../assets/ComfirmationSvg'
+import { Title } from "../../../components/Title";
 
-export const FinalScreen = ({ navigation }) => {
+import { CancelSvg } from "../../../assets/CancelSvg";
 
+export const CancelScreen = () => {
     return(
         <View style={style.container}>
             <Header />
 
-            <ComfirmationSvg />
+            <Title title={"Horario Cancelado!"} />
+
+            <CancelSvg />
 
             <Pressable style={style.goBackButton} onPress={() => navigation.navigate("InitialScreen")}>
                 <Text style={style.textGoBack}>Voltar ao inicio</Text>
@@ -24,9 +27,9 @@ export const FinalScreen = ({ navigation }) => {
 
 const style = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: "#1E1E1E",
-        alignItems: "center"
+        flex: 1,
+        alignItems: 'center',
     },
 
     goBackButton: {

@@ -1,10 +1,10 @@
 import { Text, View, Pressable, StyleSheet } from "react-native";
 
-import { Header } from "../../shared/Header";
-import { Footer } from "../../shared/Footer";
+import { Header } from "../../../shared/Header";
+import { Footer } from "../../../shared/Footer";
 
-import { Title } from "../../components/Title";
-import { Button } from "../../components/Button";
+import { Title } from "../../../components/Title";
+import { Button } from "../../../components/Button";
 
 export const InfoSchedule = () => {
     return(

@@ -2,13 +2,13 @@ import {  View, StyleSheet } from "react-native";
 
 import { useContext } from "react";
 
-import { Header } from "../shared/Header";
-import { Footer } from "../shared/Footer";
-import { Button } from "../components/Button";
+import { Header } from "../../../shared/Header";
+import { Footer } from "../../../shared/Footer";
+import { Button } from "../../../components/Button";
 
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../../context/UserContext";
 
-import InitialScreenSvg from '../assets/InitialScreenSvg'
+import InitialScreenSvg from '../../../assets/InitialScreenSvg'
 
 export const InitialScreen = ({ navigation }) => {
     const { userData } = useContext(UserContext);

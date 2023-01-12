@@ -1,12 +1,12 @@
 import { Text, View, Pressable, StyleSheet, SafeAreaView } from "react-native"
 
-import { Header } from "../shared/Header"
-import { Footer } from "../shared/Footer"
-import { Title } from "../components/Title"
-import { Button } from "../components/Button"
+import { Header } from "../../../shared/Header"
+import { Footer } from "../../../shared/Footer"
+import { Title } from "../../../components/Title"
+import { Button } from "../../../components/Button"
 import { useContext } from "react"
 
-import { ShedulesUserContext } from "../context/ShedulesUser"
+import { ShedulesUserContext } from "../../../context/ShedulesUser"
 
 export const Services = ({ navigation }) => {
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)

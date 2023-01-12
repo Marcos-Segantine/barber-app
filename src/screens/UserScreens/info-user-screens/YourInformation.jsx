@@ -1,13 +1,13 @@
 import { Text, View, Pressable, StyleSheet } from "react-native";
 
-import { Header } from "../../shared/Header";
-import { Footer } from "../../shared/Footer";
+import { Header } from "../../../shared/Header";
+import { Footer } from "../../../shared/Footer";
 
-import { Title } from "../../components/Title";
-import { Button } from "../../components/Button";
+import { Title } from "../../../components/Title";
+import { Button } from "../../../components/Button";
 
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../context/UserContext";
+import { useContext } from "react";
+import { UserContext } from "../../../context/UserContext";
 
 export const YourInformation = () => {
     const { userData } = useContext(UserContext)

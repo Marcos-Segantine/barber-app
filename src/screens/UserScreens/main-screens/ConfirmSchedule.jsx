@@ -1,15 +1,15 @@
 import { Text, View, StyleSheet } from "react-native"
 
-import { Header } from "../shared/Header"
-import { Footer } from "../shared/Footer"
-import { Title } from '../components/Title'
-import { Button } from "../components/Button"
+import { Header } from "../../../shared/Header"
+import { Footer } from "../../../shared/Footer"
+import { Title } from '../../../components/Title'
+import { Button } from "../../../components/Button"
 import { useContext, useState } from "react"
-import { ShedulesUserContext } from "../context/ShedulesUser"
+import { ShedulesUserContext } from "../../../context/ShedulesUser"
 
 import firestore from '@react-native-firebase/firestore';
 
-import { UserContext } from "../context/UserContext"
+import { UserContext } from "../../../context/UserContext"
 
 export const ConfirmSchedule = ({ navigation }) => {
     const { shedulesUser } = useContext(ShedulesUserContext)

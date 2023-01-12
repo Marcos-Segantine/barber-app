@@ -1,12 +1,12 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
 
-import { Header } from "../../shared/Header";
-import { Footer } from "../../shared/Footer";
+import { Header } from "../../../shared/Header";
+import { Footer } from "../../../shared/Footer";
 
-import { Title } from "../../components/Title";
+import { Title } from "../../../components/Title";
 import { useContext } from "react";
 
-import { UserContext } from "../../context/UserContext";
+import { UserContext } from "../../../context/UserContext";
 
 export const YourSchedules = () => {
     const { userData } = useContext(UserContext)
@@ -19,7 +19,7 @@ export const YourSchedules = () => {
 
             <View style={style.content}>
                 {
-                    userData.shedules ?
+                    userData?.shedules ?
 
                     userData.shedules.map((item, index) => {
                         return(

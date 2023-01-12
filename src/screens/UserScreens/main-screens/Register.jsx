@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, SafeAreaView, TextInput, Pressable } from "react-native";
 
-import { Header } from "../shared/Header";
-import { Footer } from "../shared/Footer";
-import { Title } from "../components/Title";
-import { Button } from "../components/Button";
+import { Header } from "../../../shared/Header";
+import { Footer } from "../../../shared/Footer";
+import { Title } from "../../../components/Title";
+import { Button } from "../../../components/Button";
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
