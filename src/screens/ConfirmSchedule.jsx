@@ -70,7 +70,6 @@ export const ConfirmSchedule = ({ navigation }) => {
                         userData.shedules ?
                         (
                             userDataTemp = userData.shedules,
-                            console.log("ENTROU NO 1", userDataTemp),
                             
                             userDataTemp.push(
                                 {
@@ -97,7 +96,6 @@ export const ConfirmSchedule = ({ navigation }) => {
                             }
                         ]
 
-                        console.log(userDataTemp, 'usertemp')
                         setUserData({...userData, shedules: userDataTemp})
 
                         setIsAllRight(true)
@@ -115,7 +113,6 @@ export const ConfirmSchedule = ({ navigation }) => {
                                         userData.shedules ?
                                         (
                                             userDataTemp = userData.shedules,
-                                            console.log("ENTROU NO 1", userDataTemp),
                                             
                                             userDataTemp.push(
                                                 {
@@ -142,7 +139,6 @@ export const ConfirmSchedule = ({ navigation }) => {
                                             }
                                         ]
 
-                                        console.log(userDataTemp, 'usertemp')
                                         setUserData({...userData, shedules: userDataTemp})
 
                                         setIsAllRight(true)
@@ -176,7 +172,6 @@ export const ConfirmSchedule = ({ navigation }) => {
                         userData.shedules ?
                         (
                             userDataTemp = userData.shedules,
-                            console.log("ENTROU NO 1", userDataTemp),
                             
                             userDataTemp.push(
                                 {
@@ -203,7 +198,6 @@ export const ConfirmSchedule = ({ navigation }) => {
                             }
                         ]
 
-                        console.log(userDataTemp, 'usertemp')
                         setUserData({...userData, shedules: userDataTemp})
 
                         setIsAllRight(true)

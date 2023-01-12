@@ -13,11 +13,13 @@ import { ShedulesUserContext } from "../context/ShedulesUser"
 import firestore from '@react-native-firebase/firestore';
 
 export const Calandar = ({ navigation }) => {
-    const [ deniedDays, setDeniedDays ] = useState()
-
     const currentDate = new Date()
 
+    const [ deniedDays, setDeniedDays ] = useState()
     const [ month, setMonth ] = useState(currentDate.getMonth() + 1)
+    const [ arrawLeftAvaible, setArrawLeftAvaible ] = useState(false)
+
+    // const currentMonth = currentDate.getMonth() + 1
 
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
 
@@ -72,6 +74,7 @@ export const Calandar = ({ navigation }) => {
                 minDate={String(new Date())}
                 markedDates={deniedDays}
                 onDayPress={day => setShedulesUser({...shedulesUser, day: day.dateString})}
+                disableArrowLeft={arrawLeftAvaible}
                 style={{
                     width: 350,
                     marginTop: 40,
