@@ -7,9 +7,12 @@ import { Title } from "../../../components/Title";
 import { useContext } from "react";
 
 import { UserContext } from "../../../context/UserContext";
+import { useNavigation } from "@react-navigation/native";
 
 export const YourSchedules = () => {
     const { userData } = useContext(UserContext)
+
+    const navigation = useNavigation()
 
     return(
         <View style={style.container}>
@@ -23,10 +26,9 @@ export const YourSchedules = () => {
 
                     userData.shedules.map((item, index) => {
                         return(
-                            <Pressable style={style.schedulesDay} key={index}>
+                            <Pressable style={style.schedulesDay} key={index} onPress={() => navigation.navigate("ScheduleDetail", {item})}>
                                 <Text style={style.text}>Dia: {item.day}</Text>
                                 <Text style={style.text}>Horario: {item.shedule}</Text>
-                                <Text style={style.text}>Serviço: {item.service}</Text>
                             </Pressable>            
                         )
                     }) :

@@ -105,24 +105,26 @@ export const ConfirmSchedule = ({ navigation }) => {
                 ) {
                   _data[sheduleDay][shedulesUser.professional].push(
                     shedulesUser.shedule
-                  )
-                   
-                  newData = _data
-                  
+                  );
+
+                  newData = _data;
+
                   firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .update(newData);
+                    .collection("unavailable_times")
+                    .doc(`${sheduleMouth}_2023`)
+                    .update(newData);
                 } else if (_data[sheduleDay]) {
-                    _data[sheduleDay] = { ..._data[sheduleDay], [shedulesUser.professional]: [`${shedulesUser.shedule}`] }
+                  _data[sheduleDay] = {
+                    ..._data[sheduleDay],
+                    [shedulesUser.professional]: [`${shedulesUser.shedule}`],
+                  };
 
-                    newData = _data
+                  newData = _data;
 
-                    firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .update(newData);
-                      
+                  firestore()
+                    .collection("unavailable_times")
+                    .doc(`${sheduleMouth}_2023`)
+                    .update(newData);
                 } else {
                   (_data = {
                     ..._data,
@@ -183,44 +185,50 @@ export const ConfirmSchedule = ({ navigation }) => {
                       .then(({ _data }) => {
                         let newData;
 
-                if (
-                  _data[sheduleDay] &&
-                  _data[sheduleDay][shedulesUser.professional]
-                ) {
-                  _data[sheduleDay][shedulesUser.professional].push(
-                    shedulesUser.shedule
-                  )
-                   
-                  newData = _data
-                  
-                  firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .update(newData);
-                } else if (_data[sheduleDay]) {
-                    _data[sheduleDay] = { ..._data[sheduleDay], [shedulesUser.professional]: [`${shedulesUser.shedule}`] }
+                        if (
+                          _data[sheduleDay] &&
+                          _data[sheduleDay][shedulesUser.professional]
+                        ) {
+                          _data[sheduleDay][shedulesUser.professional].push(
+                            shedulesUser.shedule
+                          );
 
-                    newData = _data
+                          newData = _data;
 
-                    firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .update(newData);
-                      
-                } else {
-                  (_data = {
-                    ..._data,
-                    [sheduleDay]: {
-                      [shedulesUser.professional]: [`${shedulesUser.shedule}`],
-                    },
-                  }),
-                    (newData = _data),
-                    firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .update(newData);
-                }
-              });
+                          firestore()
+                            .collection("unavailable_times")
+                            .doc(`${sheduleMouth}_2023`)
+                            .update(newData);
+                        } else if (_data[sheduleDay]) {
+                          _data[sheduleDay] = {
+                            ..._data[sheduleDay],
+                            [shedulesUser.professional]: [
+                              `${shedulesUser.shedule}`,
+                            ],
+                          };
+
+                          newData = _data;
+
+                          firestore()
+                            .collection("unavailable_times")
+                            .doc(`${sheduleMouth}_2023`)
+                            .update(newData);
+                        } else {
+                          (_data = {
+                            ..._data,
+                            [sheduleDay]: {
+                              [shedulesUser.professional]: [
+                                `${shedulesUser.shedule}`,
+                              ],
+                            },
+                          }),
+                            (newData = _data),
+                            firestore()
+                              .collection("unavailable_times")
+                              .doc(`${sheduleMouth}_2023`)
+                              .update(newData);
+                        }
+                      });
 
                     setIsAllRight(true);
                   });
@@ -287,24 +295,26 @@ export const ConfirmSchedule = ({ navigation }) => {
                 ) {
                   _data[sheduleDay][shedulesUser.professional].push(
                     shedulesUser.shedule
-                  )
-                   
-                  newData = _data
-                  
+                  );
+
+                  newData = _data;
+
                   firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .update(newData);
+                    .collection("unavailable_times")
+                    .doc(`${sheduleMouth}_2023`)
+                    .update(newData);
                 } else if (_data[sheduleDay]) {
-                    _data[sheduleDay] = { ..._data[sheduleDay], [shedulesUser.professional]: [`${shedulesUser.shedule}`] }
+                  _data[sheduleDay] = {
+                    ..._data[sheduleDay],
+                    [shedulesUser.professional]: [`${shedulesUser.shedule}`],
+                  };
 
-                    newData = _data
+                  newData = _data;
 
-                    firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .update(newData);
-                      
+                  firestore()
+                    .collection("unavailable_times")
+                    .doc(`${sheduleMouth}_2023`)
+                    .update(newData);
                 } else {
                   (_data = {
                     ..._data,

@@ -14,6 +14,7 @@ import { Register } from "./main-screens/Register";
 import { Schedules } from "./main-screens/Schedules";
 import { Services } from "./main-screens/Services";
 import { Main } from "./info-user-screens/Main";
+import { ScheduleDetail } from "./info-user-screens/ScheduleDetail";
 
 const { Screen, Navigator } = createNativeStackNavigator()
 
@@ -126,6 +127,13 @@ export const UserScreens = () => {
             <Screen
                 name='YourInformation'
                 component={YourInformation}
+                options={{
+                headerShown: false
+                }}
+            />
+            <Screen 
+                name="ScheduleDetail"
+                component={ScheduleDetail}
                 options={{
                 headerShown: false
                 }}
