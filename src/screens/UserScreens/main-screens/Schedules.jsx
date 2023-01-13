@@ -4,18 +4,52 @@ import { Header } from "../../../shared/Header"
 import { Footer } from "../../../shared/Footer"
 import { Title } from "../../../components/Title"
 import { Button } from "../../../components/Button"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { ShedulesUserContext } from "../../../context/ShedulesUser"
 
+import firestore from '@react-native-firebase/firestore';
+
 export const Schedules = ({ navigation }) => {
+    const [ avaibleTimesState, setAvaibleTimesState ] = useState()
 
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
+    const sheduleMouth = shedulesUser.day?.split('').slice(5, 7).join('');
 
     const handleButton = () => {
         shedulesUser.shedule ? 
         navigation.navigate("ConfirmSchedule") :
         console.log("NAO SELECIONOU HORARIO");
     }
+
+    useEffect(() => {
+        firestore()
+            .collection("working_hours")
+            .get()
+            .then(({ _docs }) => {
+                const workingTimes = _docs[0]._data
+
+                firestore()
+                    .collection("unavailable_times")
+                    .doc(`${sheduleMouth}_2023`)
+                    .get()
+                    .then(res => {
+                        const unavaibleTimes = res._data
+                        
+                        const sheduleDay = shedulesUser.day?.split('').slice(8).join('')
+                        const professional = shedulesUser.professional
+                        
+                        const avaibleTimes = unavaibleTimes[sheduleDay] && unavaibleTimes[sheduleDay][professional] ?
+                        (
+                            workingTimes.times.filter(time => {
+                                return !unavaibleTimes[sheduleDay][professional].includes(time)
+                            })
+                        ) :
+                        workingTimes.times
+
+                        setAvaibleTimesState(avaibleTimes)
+                    })
+            })
+    }, [])
 
     return(
         <View style={style.container}>
@@ -24,45 +58,20 @@ export const Schedules = ({ navigation }) => {
             <Title title="Selecione um horário" />
         
             <View style={style.schedules}>
-                <Pressable style={style.schedule} onPress={() => setShedulesUser({...shedulesUser, shedule: "09:00"})}>
-                    <Text style={style.textSchedule}>09:00</Text>
-                </Pressable>
-
-                <Pressable style={style.schedule} onPress={() => setShedulesUser({...shedulesUser, shedule: "10:00"})}>
-                    <Text style={style.textSchedule}>10:00</Text>
-                </Pressable>
-
-                <Pressable style={style.schedule} onPress={() => setShedulesUser({...shedulesUser, shedule: "11:00"})}>
-                    <Text style={style.textSchedule}>11:00</Text>
-                </Pressable>
-
-                <Pressable style={style.schedule}>
-                    <Text style={style.textSchedule}>09:00</Text>
-                </Pressable>
-
-                <Pressable style={style.schedule}>
-                    <Text style={style.textSchedule}>09:00</Text>
-                </Pressable>
-
-                <Pressable style={style.schedule}>
-                    <Text style={style.textSchedule}>09:00</Text>
-                </Pressable>
-
-                <Pressable style={style.schedule}>
-                    <Text style={style.textSchedule}>09:00</Text>
-                </Pressable>
-
-                <Pressable style={style.schedule}>
-                    <Text style={style.textSchedule}>09:00</Text>
-                </Pressable>
-
-                <Pressable style={style.schedule}>
-                    <Text style={style.textSchedule}>09:00</Text>
-                </Pressable>
-
-                <Pressable style={style.schedule}>
-                    <Text style={style.textSchedule}>09:00</Text>
-                </Pressable>
+                {
+                    avaibleTimesState ? 
+                    (
+                        avaibleTimesState.map((time, index) => {
+                            return(
+                                <Pressable key={index} style={style.schedule} onPress={() => setShedulesUser({...shedulesUser, shedule: `${time}`})}>
+                                    <Text style={style.textSchedule}>{time}</Text>
+                                </Pressable>
+                            )
+                        })
+                    )
+                    :
+                    null
+                }
             </View>
 
             <Button text="Comfirmar" action={handleButton} />

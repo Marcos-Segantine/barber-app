@@ -19,7 +19,7 @@ const { Screen, Navigator } = createNativeStackNavigator()
 
 export const UserScreens = () => {
     return(
-        <Navigator>
+        <Navigator initialRouteName="InitialScreen">
             <Screen 
                 name="InitialScreen"
                 component={InitialScreen}
