@@ -11,11 +11,32 @@ import firestore from '@react-native-firebase/firestore';
 
 export const Schedules = ({ navigation }) => {
     const [ avaibleTimesState, setAvaibleTimesState ] = useState()
+    const [ monthExists, setMonthExists ] = useState()
 
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
     const sheduleMouth = shedulesUser.day?.split('').slice(5, 7).join('');
 
     const handleButton = () => {
+        if(!monthExists) {
+            const newMonth = `${sheduleMouth}_2023`
+            const sheduleDay = shedulesUser.day?.split('').slice(8).join('')
+            const professional = shedulesUser.professional
+
+            firestore()
+            .collection("working_hours")
+            .get()
+            .then(() => {
+                firestore()
+                    .collection("unavailable_times")
+                    .doc(newMonth)
+                    .set({
+                        [sheduleDay]: {
+                            [professional]: []
+                        }
+                    })
+                })
+
+        }
         shedulesUser.shedule ? 
         navigation.navigate("ConfirmSchedule") :
         console.log("NAO SELECIONOU HORARIO");
@@ -34,19 +55,26 @@ export const Schedules = ({ navigation }) => {
                     .get()
                     .then(res => {
                         const unavaibleTimes = res._data
-                        
+
                         const sheduleDay = shedulesUser.day?.split('').slice(8).join('')
                         const professional = shedulesUser.professional
                         
-                        const avaibleTimes = unavaibleTimes[sheduleDay] && unavaibleTimes[sheduleDay][professional] ?
-                        (
-                            workingTimes.times.filter(time => {
-                                return !unavaibleTimes[sheduleDay][professional].includes(time)
-                            })
-                        ) :
-                        workingTimes.times
 
-                        setAvaibleTimesState(avaibleTimes)
+                        if(unavaibleTimes) {
+                            const avaibleTimes = unavaibleTimes[sheduleDay] && unavaibleTimes[sheduleDay][professional] ?
+                            (
+                                workingTimes.times.filter(time => {
+                                    return !unavaibleTimes[sheduleDay][professional].includes(time)
+                                })
+                            ) :
+                            workingTimes.times
+                            
+                            setAvaibleTimesState(avaibleTimes)
+                        }
+                        else {
+                            setMonthExists(false)
+                            setAvaibleTimesState(workingTimes.times)
+                        }
                     })
             })
     }, [])

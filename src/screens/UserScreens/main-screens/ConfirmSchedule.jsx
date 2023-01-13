@@ -1,344 +1,406 @@
-import { Text, View, StyleSheet } from "react-native"
+import { Text, View, StyleSheet } from "react-native";
 
-import { Header } from "../../../shared/Header"
-import { Footer } from "../../../shared/Footer"
-import { Title } from '../../../components/Title'
-import { Button } from "../../../components/Button"
-import { useContext, useState } from "react"
-import { ShedulesUserContext } from "../../../context/ShedulesUser"
+import { Header } from "../../../shared/Header";
+import { Footer } from "../../../shared/Footer";
+import { Title } from "../../../components/Title";
+import { Button } from "../../../components/Button";
+import { useContext, useState } from "react";
+import { ShedulesUserContext } from "../../../context/ShedulesUser";
 
-import firestore from '@react-native-firebase/firestore';
+import firestore from "@react-native-firebase/firestore";
 
-import { UserContext } from "../../../context/UserContext"
+import { UserContext } from "../../../context/UserContext";
 
 export const ConfirmSchedule = ({ navigation }) => {
-    const { shedulesUser } = useContext(ShedulesUserContext)
-    const {userData, setUserData} = useContext(UserContext)
-    
-    const [ isAllRight, setIsAllRight ] = useState(false)
+  const { shedulesUser } = useContext(ShedulesUserContext);
 
-    isAllRight ? 
-        setTimeout(() => {
-            navigation.navigate("FinalScreen")             
-        }, 100)
-        :
-        null
+  const { userData, setUserData } = useContext(UserContext);
 
-    const sheduleMouth = shedulesUser.day?.split('').slice(5, 7).join('');
-    const sheduleDay = shedulesUser.day?.split('').slice(8).join('')
-    const sheduleHour = shedulesUser.shedule
+  const [isAllRight, setIsAllRight] = useState(false);
 
+  isAllRight
+    ? setTimeout(() => {
+        navigation.navigate("FinalScreen");
+      }, 100)
+    : null;
 
-    const addShedule = (_data) => {
-        _data[sheduleDay][shedulesUser.professional] ?
-        (
-            _data[sheduleDay][shedulesUser.professional] = {
-                ..._data[sheduleDay][shedulesUser.professional],
-                 [sheduleHour]: shedulesUser
-            }
-        )
-        :
-        (
-            _data[sheduleDay] = {..._data[sheduleDay], [shedulesUser.professional]: {
-                [sheduleHour]: shedulesUser
-            }}
-        )
+  const sheduleMouth = shedulesUser.day?.split("").slice(5, 7).join("");
+  const sheduleDay = shedulesUser.day?.split("").slice(8).join("");
+  const sheduleHour = shedulesUser.shedule;
 
-        return _data;
-    }
+  const addShedule = (_data) => {
+    _data[sheduleDay][shedulesUser.professional]
+      ? (_data[sheduleDay][shedulesUser.professional] = {
+          ..._data[sheduleDay][shedulesUser.professional],
+          [sheduleHour]: shedulesUser,
+        })
+      : (_data[sheduleDay] = {
+          ..._data[sheduleDay],
+          [shedulesUser.professional]: {
+            [sheduleHour]: shedulesUser,
+          },
+        });
 
-    const addSheduleWhenUndefined = (_data) => {
+    return _data;
+  };
+
+  const addSheduleWhenUndefined = (_data) => {
+    firestore()
+      .collection("schedules_month")
+      .doc(`${sheduleMouth}_2023`)
+      .get()
+      .then(({ _data }) => {
+        const newData = {
+          ..._data,
+          [sheduleDay]: {
+            [shedulesUser.professional]: {
+              [shedulesUser.shedule]: shedulesUser,
+            },
+          },
+        };
+
         firestore()
-            .collection('schedules_month')
-            .doc(`${sheduleMouth}_2023`)
-            .get()
-            .then(({ _data }) => {
-                const newData = {..._data, [sheduleDay]: {
-                    [shedulesUser.professional]: {
-                        [shedulesUser.shedule]: shedulesUser
-                    }
-                }}
+          .collection("schedules_month")
+          .doc(`${sheduleMouth}_2023`)
+          .update(newData)
+          .then(() => {
+            console.log("User updated!");
+            let userDataTemp = [];
 
-                firestore()
-                    .collection('schedules_month')
-                    .doc(`${sheduleMouth}_2023`)
-                    .update(newData)
-                    .then(() => {
-                        console.log('User updated!');
-                        let userDataTemp = []
-                        
-                        userData.shedules ?
-                        (
-                            userDataTemp = userData.shedules,
-                            
-                            userDataTemp.push(
-                                {
-                                    day: shedulesUser.day,
-                                    shedule: shedulesUser.shedule,
-                                    service: shedulesUser.service,
-                                    professional: shedulesUser.professional,
-                                    name: shedulesUser.name,
-                                    email: shedulesUser.email,
-                                    uid: shedulesUser.uid
-                                }
-                            )
-                        )
-                        :
-                        userDataTemp = [
-                            {
-                                day: shedulesUser.day,
-                                shedule: shedulesUser.shedule,
-                                service: shedulesUser.service,
-                                professional: shedulesUser.professional,
-                                name: shedulesUser.name,
-                                email: shedulesUser.email,
-                                uid: shedulesUser.uid
-                            }
-                        ]
+            userData.shedules
+              ? ((userDataTemp = userData.shedules),
+                userDataTemp.push({
+                  day: shedulesUser.day,
+                  shedule: shedulesUser.shedule,
+                  service: shedulesUser.service,
+                  professional: shedulesUser.professional,
+                  name: shedulesUser.name,
+                  email: shedulesUser.email,
+                  uid: shedulesUser.uid,
+                }))
+              : (userDataTemp = [
+                  {
+                    day: shedulesUser.day,
+                    shedule: shedulesUser.shedule,
+                    service: shedulesUser.service,
+                    professional: shedulesUser.professional,
+                    name: shedulesUser.name,
+                    email: shedulesUser.email,
+                    uid: shedulesUser.uid,
+                  },
+                ]);
 
-                        setUserData({...userData, shedules: userDataTemp})
+            setUserData({ ...userData, shedules: userDataTemp });
 
-                        firestore()
-                            .collection("unavailable_times")
-                            .doc(`${sheduleMouth}_2023`)
-                            .get()
-                            .then(({ _data }) => {
-                                const unvaibledTime__Temp = _data[sheduleDay][shedulesUser.professional]
-                                unvaibledTime__Temp.push(shedulesUser.shedule)
+            firestore()
+              .collection("unavailable_times")
+              .doc(`${sheduleMouth}_2023`)
+              .get()
+              .then(({ _data }) => {
+                let newData;
 
-                                _data[sheduleDay][shedulesUser.professional] = unvaibledTime__Temp
+                if (
+                  _data[sheduleDay] &&
+                  _data[sheduleDay][shedulesUser.professional]
+                ) {
+                  _data[sheduleDay][shedulesUser.professional].push(
+                    shedulesUser.shedule
+                  )
+                   
+                  newData = _data
+                  
+                  firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .update(newData);
+                } else if (_data[sheduleDay]) {
+                    _data[sheduleDay] = { ..._data[sheduleDay], [shedulesUser.professional]: [`${shedulesUser.shedule}`] }
 
-                                const newData = _data
+                    newData = _data
 
-                                firestore()
-                                    .collection("unavailable_times")
-                                    .doc(`${sheduleMouth}_2023`)
-                                    .update(newData)
-                            })
-
-                        setIsAllRight(true)
-                    }).catch(error => {
-                        switch (error.message) {
-                            case "[firestore/not-found] Some requested document was not found.":
-                                firestore()
-                                    .collection('schedules_month')
-                                    .doc(`${sheduleMouth}_2023`)
-                                    .set(newData)
-                                    .then(() => {
-                                        console.log('User added!');
-                                        let userDataTemp = []
-                                        
-                                        userData.shedules ?
-                                        (
-                                            userDataTemp = userData.shedules,
-                                            
-                                            userDataTemp.push(
-                                                {
-                                                    day: shedulesUser.day,
-                                                    shedule: shedulesUser.shedule,
-                                                    service: shedulesUser.service,
-                                                    professional: shedulesUser.professional,
-                                                    name: shedulesUser.name,
-                                                    email: shedulesUser.email,
-                                                    uid: shedulesUser.uid
-                                                }
-                                            )
-                                        )
-                                        :
-                                        userDataTemp = [
-                                            {
-                                                day: shedulesUser.day,
-                                                shedule: shedulesUser.shedule,
-                                                service: shedulesUser.service,
-                                                professional: shedulesUser.professional,
-                                                name: shedulesUser.name,
-                                                email: shedulesUser.email,
-                                                uid: shedulesUser.uid
-                                            }
-                                        ]
-
-                                        setUserData({...userData, shedules: userDataTemp})
-
-                                        firestore()
-                                            .collection("unavailable_times")
-                                            .doc(`${sheduleMouth}_2023`)
-                                            .get()
-                                            .then(({ _data }) => {
-                                                const unvaibledTime__Temp = _data[sheduleDay][shedulesUser.professional]
-                                                unvaibledTime__Temp.push(shedulesUser.shedule)
-
-                                                _data[sheduleDay][shedulesUser.professional] = unvaibledTime__Temp
-
-                                const newData = _data
-
-                                                firestore()
-                                                    .collection("unavailable_times")
-                                                    .doc(`${sheduleMouth}_2023`)
-                                                    .update(newData)
-                                            })
-
-                                        setIsAllRight(true)
-                                    });
-                                break;
-                        
-                            default:
-                                break;
-                        }
-                    })
-                })
-
-    }
-
-    const handleComfirm = async() => {
-        firestore()
-            .collection('schedules_month')
-            .doc(`${sheduleMouth}_2023`)
-            .get()
-            .then(({ _data }) => {
-                const newData = addShedule(_data)
-
-                firestore()
-                    .collection('schedules_month')
-                    .doc(`${sheduleMouth}_2023`)
-                    .update(newData)
-                    .then(() => {
-                        console.log('User updated!');
-                        let userDataTemp = []
-                        
-                        userData.shedules ?
-                        (
-                            userDataTemp = userData.shedules,
-                            
-                            userDataTemp.push(
-                                {
-                                    day: shedulesUser.day,
-                                    shedule: shedulesUser.shedule,
-                                    service: shedulesUser.service,
-                                    professional: shedulesUser.professional,
-                                    name: shedulesUser.name,
-                                    email: shedulesUser.email,
-                                    uid: shedulesUser.uid
-                                }
-                            )
-                        )
-                        :
-                        userDataTemp = [
-                            {
-                                day: shedulesUser.day,
-                                shedule: shedulesUser.shedule,
-                                service: shedulesUser.service,
-                                professional: shedulesUser.professional,
-                                name: shedulesUser.name,
-                                email: shedulesUser.email,
-                                uid: shedulesUser.uid
-                            }
-                        ]
-
-                        setUserData({...userData, shedules: userDataTemp})
-
-                        firestore()
-                            .collection("unavailable_times")
-                            .doc(`${sheduleMouth}_2023`)
-                            .get()
-                            .then(({ _data }) => {
-                                const unvaibledTime__Temp = _data[sheduleDay][shedulesUser.professional]
-                                unvaibledTime__Temp.push(shedulesUser.shedule)
-
-                                _data[sheduleDay][shedulesUser.professional] = unvaibledTime__Temp
-
-                                const newData = _data
-
-                                firestore()
-                                    .collection("unavailable_times")
-                                    .doc(`${sheduleMouth}_2023`)
-                                    .update(newData)
-                            })
-
-                        setIsAllRight(true)
-                    });
-
-
-            }).catch(error => {
-                switch(error.message) {
-                    case `Cannot convert undefined value to object`:
-                            addSheduleWhenUndefined();
-                        break;
-
-                        default:
-                            console.log("OTHER ERROR", error.message);
-                        break;
+                    firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .update(newData);
+                      
+                } else {
+                  (_data = {
+                    ..._data,
+                    [sheduleDay]: {
+                      [shedulesUser.professional]: [`${shedulesUser.shedule}`],
+                    },
+                  }),
+                    (newData = _data),
+                    firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .update(newData);
                 }
-            })
+              });
 
-}
+            setIsAllRight(true);
+          })
+          .catch((error) => {
+            switch (error.message) {
+              case "[firestore/not-found] Some requested document was not found.":
+                firestore()
+                  .collection("schedules_month")
+                  .doc(`${sheduleMouth}_2023`)
+                  .set(newData)
+                  .then(() => {
+                    console.log("User added!");
+                    let userDataTemp = [];
 
-    return(
-        <View style={style.container}>
-            <Header />
+                    userData.shedules
+                      ? ((userDataTemp = userData.shedules),
+                        userDataTemp.push({
+                          day: shedulesUser.day,
+                          shedule: shedulesUser.shedule,
+                          service: shedulesUser.service,
+                          professional: shedulesUser.professional,
+                          name: shedulesUser.name,
+                          email: shedulesUser.email,
+                          uid: shedulesUser.uid,
+                        }))
+                      : (userDataTemp = [
+                          {
+                            day: shedulesUser.day,
+                            shedule: shedulesUser.shedule,
+                            service: shedulesUser.service,
+                            professional: shedulesUser.professional,
+                            name: shedulesUser.name,
+                            email: shedulesUser.email,
+                            uid: shedulesUser.uid,
+                          },
+                        ]);
 
-            <Title 
-                title="O seu agendamento:"
-            />
+                    setUserData({ ...userData, shedules: userDataTemp });
 
-            <Text style={style.subTitle}>Confira todos os dados</Text>
+                    firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .get()
+                      .then(({ _data }) => {
+                        let newData;
 
-            <View style={style.contentData}>
-                <View style={style.data}>
-                    <Text style={style.textData}>{shedulesUser.day}</Text>
-                </View>
+                if (
+                  _data[sheduleDay] &&
+                  _data[sheduleDay][shedulesUser.professional]
+                ) {
+                  _data[sheduleDay][shedulesUser.professional].push(
+                    shedulesUser.shedule
+                  )
+                   
+                  newData = _data
+                  
+                  firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .update(newData);
+                } else if (_data[sheduleDay]) {
+                    _data[sheduleDay] = { ..._data[sheduleDay], [shedulesUser.professional]: [`${shedulesUser.shedule}`] }
 
-                <View style={style.data}>
-                    <Text style={style.textData}>{shedulesUser.service}</Text>
-                </View>
+                    newData = _data
 
-                <View style={style.data}>
-                    <Text style={style.textData}>{shedulesUser.professional}</Text>
-                </View>
+                    firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .update(newData);
+                      
+                } else {
+                  (_data = {
+                    ..._data,
+                    [sheduleDay]: {
+                      [shedulesUser.professional]: [`${shedulesUser.shedule}`],
+                    },
+                  }),
+                    (newData = _data),
+                    firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .update(newData);
+                }
+              });
 
-                <View style={style.data}>
-                    <Text style={style.textData}>{shedulesUser.shedule}</Text>
-                </View>
+                    setIsAllRight(true);
+                  });
+                break;
 
-                <View style={style.data}>
-                    <Text style={style.textData}>Data: 09/09/22</Text>
-                </View> 
-            </View>
+              default:
+                break;
+            }
+          });
+      });
+  };
 
-            <Button text="Comfirmar" action={handleComfirm} />
-            <Footer />
+  const handleComfirm = async () => {
+    firestore()
+      .collection("schedules_month")
+      .doc(`${sheduleMouth}_2023`)
+      .get()
+      .then(({ _data }) => {
+        const newData = addShedule(_data);
+
+        firestore()
+          .collection("schedules_month")
+          .doc(`${sheduleMouth}_2023`)
+          .update(newData)
+          .then(() => {
+            console.log("User updated!");
+            let userDataTemp = [];
+
+            userData.shedules
+              ? ((userDataTemp = userData.shedules),
+                userDataTemp.push({
+                  day: shedulesUser.day,
+                  shedule: shedulesUser.shedule,
+                  service: shedulesUser.service,
+                  professional: shedulesUser.professional,
+                  name: shedulesUser.name,
+                  email: shedulesUser.email,
+                  uid: shedulesUser.uid,
+                }))
+              : (userDataTemp = [
+                  {
+                    day: shedulesUser.day,
+                    shedule: shedulesUser.shedule,
+                    service: shedulesUser.service,
+                    professional: shedulesUser.professional,
+                    name: shedulesUser.name,
+                    email: shedulesUser.email,
+                    uid: shedulesUser.uid,
+                  },
+                ]);
+
+            setUserData({ ...userData, shedules: userDataTemp });
+
+            firestore()
+              .collection("unavailable_times")
+              .doc(`${sheduleMouth}_2023`)
+              .get()
+              .then(({ _data }) => {
+                let newData;
+
+                if (
+                  _data[sheduleDay] &&
+                  _data[sheduleDay][shedulesUser.professional]
+                ) {
+                  _data[sheduleDay][shedulesUser.professional].push(
+                    shedulesUser.shedule
+                  )
+                   
+                  newData = _data
+                  
+                  firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .update(newData);
+                } else if (_data[sheduleDay]) {
+                    _data[sheduleDay] = { ..._data[sheduleDay], [shedulesUser.professional]: [`${shedulesUser.shedule}`] }
+
+                    newData = _data
+
+                    firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .update(newData);
+                      
+                } else {
+                  (_data = {
+                    ..._data,
+                    [sheduleDay]: {
+                      [shedulesUser.professional]: [`${shedulesUser.shedule}`],
+                    },
+                  }),
+                    (newData = _data),
+                    firestore()
+                      .collection("unavailable_times")
+                      .doc(`${sheduleMouth}_2023`)
+                      .update(newData);
+                }
+              });
+
+            setIsAllRight(true);
+          });
+      })
+      .catch((error) => {
+        switch (error.message) {
+          case `Cannot convert undefined value to object`:
+            addSheduleWhenUndefined();
+            break;
+
+          default:
+            console.log("OTHER ERROR", error.message);
+            break;
+        }
+      });
+  };
+
+  return (
+    <View style={style.container}>
+      <Header />
+
+      <Title title="O seu agendamento:" />
+
+      <Text style={style.subTitle}>Confira todos os dados</Text>
+
+      <View style={style.contentData}>
+        <View style={style.data}>
+          <Text style={style.textData}>{shedulesUser.day}</Text>
         </View>
-    )
-}
+
+        <View style={style.data}>
+          <Text style={style.textData}>{shedulesUser.service}</Text>
+        </View>
+
+        <View style={style.data}>
+          <Text style={style.textData}>{shedulesUser.professional}</Text>
+        </View>
+
+        <View style={style.data}>
+          <Text style={style.textData}>{shedulesUser.shedule}</Text>
+        </View>
+
+        <View style={style.data}>
+          <Text style={style.textData}>Data: 09/09/22</Text>
+        </View>
+      </View>
+
+      <Button text="Comfirmar" action={handleComfirm} />
+      <Footer />
+    </View>
+  );
+};
 
 const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        backgroundColor: "#1E1E1E",
-    },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#1E1E1E",
+  },
 
-    subTitle: {
-        fontSize: 12,
-        color: "#FFFFFF60"
-    },
+  subTitle: {
+    fontSize: 12,
+    color: "#FFFFFF60",
+  },
 
-    contentData: {
-        width: "85%",
-        marginTop: 30
-    },
+  contentData: {
+    width: "85%",
+    marginTop: 30,
+  },
 
-    data: {
-        borderColor: '#E95401',
-        borderRadius: 20,
-        borderWidth: 2,
-        paddingVertical: 15,
-        alignItems: "center",
-        marginVertical: 5,
-    },
+  data: {
+    borderColor: "#E95401",
+    borderRadius: 20,
+    borderWidth: 2,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginVertical: 5,
+  },
 
-    textData: {
-        color: "#FFFFFF",
-        fontWeight: '700',
-        fontSize: 16,
-    },
-})
+  textData: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 16,
+  },
+});
