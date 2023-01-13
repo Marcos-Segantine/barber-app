@@ -98,6 +98,24 @@ export const ConfirmSchedule = ({ navigation }) => {
 
                         setUserData({...userData, shedules: userDataTemp})
 
+                        firestore()
+                            .collection("unavailable_times")
+                            .doc(`${sheduleMouth}_2023`)
+                            .get()
+                            .then(({ _data }) => {
+                                const unvaibledTime__Temp = _data[sheduleDay][shedulesUser.professional]
+                                unvaibledTime__Temp.push(shedulesUser.shedule)
+
+                                _data[sheduleDay][shedulesUser.professional] = unvaibledTime__Temp
+
+                                const newData = _data
+
+                                firestore()
+                                    .collection("unavailable_times")
+                                    .doc(`${sheduleMouth}_2023`)
+                                    .update(newData)
+                            })
+
                         setIsAllRight(true)
                     }).catch(error => {
                         switch (error.message) {
@@ -140,6 +158,24 @@ export const ConfirmSchedule = ({ navigation }) => {
                                         ]
 
                                         setUserData({...userData, shedules: userDataTemp})
+
+                                        firestore()
+                                            .collection("unavailable_times")
+                                            .doc(`${sheduleMouth}_2023`)
+                                            .get()
+                                            .then(({ _data }) => {
+                                                const unvaibledTime__Temp = _data[sheduleDay][shedulesUser.professional]
+                                                unvaibledTime__Temp.push(shedulesUser.shedule)
+
+                                                _data[sheduleDay][shedulesUser.professional] = unvaibledTime__Temp
+
+                                const newData = _data
+
+                                                firestore()
+                                                    .collection("unavailable_times")
+                                                    .doc(`${sheduleMouth}_2023`)
+                                                    .update(newData)
+                                            })
 
                                         setIsAllRight(true)
                                     });
@@ -199,6 +235,24 @@ export const ConfirmSchedule = ({ navigation }) => {
                         ]
 
                         setUserData({...userData, shedules: userDataTemp})
+
+                        firestore()
+                            .collection("unavailable_times")
+                            .doc(`${sheduleMouth}_2023`)
+                            .get()
+                            .then(({ _data }) => {
+                                const unvaibledTime__Temp = _data[sheduleDay][shedulesUser.professional]
+                                unvaibledTime__Temp.push(shedulesUser.shedule)
+
+                                _data[sheduleDay][shedulesUser.professional] = unvaibledTime__Temp
+
+                                const newData = _data
+
+                                firestore()
+                                    .collection("unavailable_times")
+                                    .doc(`${sheduleMouth}_2023`)
+                                    .update(newData)
+                            })
 
                         setIsAllRight(true)
                     });
