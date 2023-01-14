@@ -11,73 +11,57 @@ import firestore from '@react-native-firebase/firestore';
 
 export const Schedules = ({ navigation }) => {
     const [ avaibleTimesState, setAvaibleTimesState ] = useState()
-    const [ monthExists, setMonthExists ] = useState()
-
+    
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
+
     const sheduleMouth = shedulesUser.day?.split('').slice(5, 7).join('');
-
-    const handleButton = () => {
-        if(!monthExists) {
-            const newMonth = `${sheduleMouth}_2023`
-            const sheduleDay = shedulesUser.day?.split('').slice(8).join('')
-            const professional = shedulesUser.professional
-
-            firestore()
-            .collection("working_hours")
-            .get()
-            .then(() => {
-                firestore()
-                    .collection("unavailable_times")
-                    .doc(newMonth)
-                    .set({
-                        [sheduleDay]: {
-                            [professional]: []
-                        }
-                    })
-                })
-
-        }
-        shedulesUser.shedule ? 
-        navigation.navigate("ConfirmSchedule") :
-        console.log("NAO SELECIONOU HORARIO");
-    }
-
+    const sheduleDay = shedulesUser.day?.split("").slice(8).join("");
+    const sheduleHour = shedulesUser.shedule;
+    const sheduleProfessional = shedulesUser.professional
+    
     useEffect(() => {
+        console.log("USE EFECT");
         firestore()
-            .collection("working_hours")
-            .get()
-            .then(({ _docs }) => {
-                const workingTimes = _docs[0]._data
+        .collection("working_hours")
+        .get()
+        .then(({ _docs }) => {
+            const currentDay = _docs[0]._data.times
+            const workingTimes = currentDay
 
                 firestore()
                     .collection("unavailable_times")
                     .doc(`${sheduleMouth}_2023`)
                     .get()
-                    .then(res => {
-                        const unavaibleTimes = res._data
+                    .then(({ _data }) => {
+                        // If month does't exists
+                        if(_data === undefined) {
+                            setAvaibleTimesState(workingTimes)
+                            return
+                        }
 
-                        const sheduleDay = shedulesUser.day?.split('').slice(8).join('')
-                        const professional = shedulesUser.professional
-                        
-
-                        if(unavaibleTimes) {
-                            const avaibleTimes = unavaibleTimes[sheduleDay] && unavaibleTimes[sheduleDay][professional] ?
+                        const thereAreProfessionalRegisterInDay = _data[sheduleDay] ? _data[sheduleDay][sheduleProfessional] : null
+                    
+                        let avaibleTimesState__Temp
+                        thereAreProfessionalRegisterInDay ?
                             (
-                                workingTimes.times.filter(time => {
-                                    return !unavaibleTimes[sheduleDay][professional].includes(time)
-                                })
+                                avaibleTimesState__Temp = workingTimes.filter(time => {
+                                    return !_data[sheduleDay][sheduleProfessional].includes(time)
+                                }),
+                                setAvaibleTimesState(avaibleTimesState__Temp)
                             ) :
-                            workingTimes.times
-                            
-                            setAvaibleTimesState(avaibleTimes)
-                        }
-                        else {
-                            setMonthExists(false)
-                            setAvaibleTimesState(workingTimes.times)
-                        }
+                            (
+                                setAvaibleTimesState(workingTimes)
+                            )
+
                     })
-            })
+                })
     }, [])
+
+    const handleButton = () => {
+        shedulesUser.shedule ?
+            navigation.navigate("ConfirmSchedule") :
+            console.log("TIME NOT SELECTED");
+    } 
 
     return(
         <View style={style.container}>

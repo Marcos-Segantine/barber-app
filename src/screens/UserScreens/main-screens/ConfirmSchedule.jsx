@@ -12,7 +12,7 @@ import firestore from "@react-native-firebase/firestore";
 import { UserContext } from "../../../context/UserContext";
 
 export const ConfirmSchedule = ({ navigation }) => {
-  const { shedulesUser } = useContext(ShedulesUserContext);
+  const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext);
 
   const { userData, setUserData } = useContext(UserContext);
 
@@ -24,219 +24,151 @@ export const ConfirmSchedule = ({ navigation }) => {
       }, 100)
     : null;
 
-  const sheduleMouth = shedulesUser.day?.split("").slice(5, 7).join("");
-  const sheduleDay = shedulesUser.day?.split("").slice(8).join("");
-  const sheduleHour = shedulesUser.shedule;
+  const sheduleMouth = shedulesUser?.day?.split("").slice(5, 7).join("");
+  const sheduleDay = shedulesUser?.day?.split("").slice(8).join("");
+  const sheduleHour = shedulesUser?.shedule;
+  const sheduleProfessional = shedulesUser?.professional;
 
-  const addShedule = (_data) => {
-    _data[sheduleDay][shedulesUser.professional]
-      ? (_data[sheduleDay][shedulesUser.professional] = {
-          ..._data[sheduleDay][shedulesUser.professional],
-          [sheduleHour]: shedulesUser,
+  const addScheduleWhenDayAlredyUse = (_data) => {
+    console.log("addScheduleWhenDayAlredyUse CALLED THIS ONE");
+
+    _data[sheduleDay][sheduleProfessional]
+      ? (_data[sheduleDay][sheduleProfessional] = {
+          ..._data[sheduleDay][sheduleProfessional],
+          [sheduleHour]: { ...shedulesUser },
         })
       : (_data[sheduleDay] = {
           ..._data[sheduleDay],
-          [shedulesUser.professional]: {
-            [sheduleHour]: shedulesUser,
+          [sheduleProfessional]: {
+            [shedulesUser.shedule]: { ...shedulesUser },
           },
         });
 
-    return _data;
+    firestore()
+      .collection("schedules_month")
+      .doc(`${sheduleMouth}_2023`)
+      .update(_data)
+      .then(() => {
+        firestore()
+          .collection("unavailable_times")
+          .doc(`${sheduleMouth}_2023`)
+          .get()
+          .then(({ _data }) => {
+            console.log(
+              _data[sheduleDay][sheduleProfessional],
+              "_data[sheduleDay][sheduleProfessional]"
+            );
+            _data[sheduleDay][sheduleProfessional]
+              ? _data[sheduleDay][sheduleProfessional].push(
+                  `${shedulesUser.shedule}`
+                )
+              : (_data[sheduleDay] = {
+                  ..._data[sheduleDay],
+                  [sheduleProfessional]: [`${shedulesUser.shedule}`],
+                });
+
+            firestore()
+              .collection("unavailable_times")
+              .doc(`${sheduleMouth}_2023`)
+              .update(_data)
+              .then(() => {
+                console.log("unavailable_times UPDATED!!");
+
+                navigation.navigate("InitialScreen");
+              });
+          });
+      });
   };
 
-  const addSheduleWhenUndefined = (_data) => {
+  const addScheduleWhenDayNotUse = () => {
+    console.log("addScheduleWhenDayNotUse CALLED THIS ONE");
+
     firestore()
       .collection("schedules_month")
       .doc(`${sheduleMouth}_2023`)
       .get()
       .then(({ _data }) => {
-        const newData = {
-          ..._data,
-          [sheduleDay]: {
-            [shedulesUser.professional]: {
-              [shedulesUser.shedule]: shedulesUser,
-            },
-          },
-        };
+        console.log(_data);
 
         firestore()
           .collection("schedules_month")
           .doc(`${sheduleMouth}_2023`)
-          .update(newData)
+          .update({
+            ..._data,
+            [sheduleDay]: {
+              [sheduleProfessional]: {
+                [sheduleHour]: { ...shedulesUser },
+              },
+            },
+          })
           .then(() => {
-            console.log("User updated!");
-            let userDataTemp = [];
-
-            userData.shedules
-              ? ((userDataTemp = userData.shedules),
-                userDataTemp.push({
-                  day: shedulesUser.day,
-                  shedule: shedulesUser.shedule,
-                  service: shedulesUser.service,
-                  professional: shedulesUser.professional,
-                  name: shedulesUser.name,
-                  email: shedulesUser.email,
-                  uid: shedulesUser.uid,
-                }))
-              : (userDataTemp = [
-                  {
-                    day: shedulesUser.day,
-                    shedule: shedulesUser.shedule,
-                    service: shedulesUser.service,
-                    professional: shedulesUser.professional,
-                    name: shedulesUser.name,
-                    email: shedulesUser.email,
-                    uid: shedulesUser.uid,
-                  },
-                ]);
-
-            setUserData({ ...userData, shedules: userDataTemp });
-
             firestore()
               .collection("unavailable_times")
               .doc(`${sheduleMouth}_2023`)
               .get()
               .then(({ _data }) => {
-                let newData;
+                console.log(_data[sheduleDay], "_data");
 
-                if (
-                  _data[sheduleDay] &&
-                  _data[sheduleDay][shedulesUser.professional]
-                ) {
-                  _data[sheduleDay][shedulesUser.professional].push(
-                    shedulesUser.shedule
-                  );
-
-                  newData = _data;
-
-                  firestore()
-                    .collection("unavailable_times")
-                    .doc(`${sheduleMouth}_2023`)
-                    .update(newData);
-                } else if (_data[sheduleDay]) {
-                  _data[sheduleDay] = {
-                    ..._data[sheduleDay],
-                    [shedulesUser.professional]: [`${shedulesUser.shedule}`],
+                // Verify if there aree data at the database with this props
+                if (!_data[sheduleDay]) {
+                  _data = {
+                    [sheduleDay]: {
+                      [sheduleProfessional]: [`${shedulesUser.shedule}`],
+                    },
                   };
 
-                  newData = _data;
-
-                  firestore()
-                    .collection("unavailable_times")
-                    .doc(`${sheduleMouth}_2023`)
-                    .update(newData);
+                  console.log(_data, "_data");
                 } else {
-                  (_data = {
-                    ..._data,
-                    [sheduleDay]: {
-                      [shedulesUser.professional]: [`${shedulesUser.shedule}`],
-                    },
-                  }),
-                    (newData = _data),
-                    firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .update(newData);
-                }
-              });
-
-            setIsAllRight(true);
-          })
-          .catch((error) => {
-            switch (error.message) {
-              case "[firestore/not-found] Some requested document was not found.":
-                firestore()
-                  .collection("schedules_month")
-                  .doc(`${sheduleMouth}_2023`)
-                  .set(newData)
-                  .then(() => {
-                    console.log("User added!");
-                    let userDataTemp = [];
-
-                    userData.shedules
-                      ? ((userDataTemp = userData.shedules),
-                        userDataTemp.push({
-                          day: shedulesUser.day,
-                          shedule: shedulesUser.shedule,
-                          service: shedulesUser.service,
-                          professional: shedulesUser.professional,
-                          name: shedulesUser.name,
-                          email: shedulesUser.email,
-                          uid: shedulesUser.uid,
-                        }))
-                      : (userDataTemp = [
-                          {
-                            day: shedulesUser.day,
-                            shedule: shedulesUser.shedule,
-                            service: shedulesUser.service,
-                            professional: shedulesUser.professional,
-                            name: shedulesUser.name,
-                            email: shedulesUser.email,
-                            uid: shedulesUser.uid,
-                          },
-                        ]);
-
-                    setUserData({ ...userData, shedules: userDataTemp });
-
-                    firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .get()
-                      .then(({ _data }) => {
-                        let newData;
-
-                        if (
-                          _data[sheduleDay] &&
-                          _data[sheduleDay][shedulesUser.professional]
-                        ) {
-                          _data[sheduleDay][shedulesUser.professional].push(
-                            shedulesUser.shedule
-                          );
-
-                          newData = _data;
-
-                          firestore()
-                            .collection("unavailable_times")
-                            .doc(`${sheduleMouth}_2023`)
-                            .update(newData);
-                        } else if (_data[sheduleDay]) {
-                          _data[sheduleDay] = {
-                            ..._data[sheduleDay],
-                            [shedulesUser.professional]: [
-                              `${shedulesUser.shedule}`,
-                            ],
-                          };
-
-                          newData = _data;
-
-                          firestore()
-                            .collection("unavailable_times")
-                            .doc(`${sheduleMouth}_2023`)
-                            .update(newData);
-                        } else {
-                          (_data = {
-                            ..._data,
-                            [sheduleDay]: {
-                              [shedulesUser.professional]: [
-                                `${shedulesUser.shedule}`,
-                              ],
-                            },
-                          }),
-                            (newData = _data),
-                            firestore()
-                              .collection("unavailable_times")
-                              .doc(`${sheduleMouth}_2023`)
-                              .update(newData);
-                        }
+                  _data[sheduleDay][sheduleProfessional]
+                    ? _data[sheduleDay][sheduleProfessional].push(
+                        `${shedulesUser.shedule}`
+                      )
+                    : (_data[sheduleDay] = {
+                        ..._data[sheduleDay],
+                        [sheduleProfessional]: [`${shedulesUser.shedule}`],
                       });
+                }
 
-                    setIsAllRight(true);
+                firestore()
+                  .collection("unavailable_times")
+                  .doc(`${sheduleMouth}_2023`)
+                  .update(_data)
+                  .then(() => {
+                    console.log("unavailable_times collection updated!!");
+
+
+                    navigation.navigate("InitialScreen");
                   });
-                break;
+              });
+          });
+      });
+  };
 
-              default:
-                break;
-            }
+  const addScheduleWhenMonthIsNotUse = () => {
+    console.log("addScheduleWhenMonthIsNotUse CALLED THIS ONE");
+
+    firestore()
+      .collection("schedules_month")
+      .doc(`${sheduleMouth}_2023`)
+      .set({
+        [sheduleDay]: {
+          [sheduleProfessional]: {
+            [sheduleHour]: { ...shedulesUser },
+          },
+        },
+      })
+      .then(() => {
+        console.log("SCHEDULE UPDATED!!");
+        firestore()
+          .collection("unavailable_times")
+          .doc(`${sheduleMouth}_2023`)
+          .set({
+            [sheduleDay]: {
+              [sheduleProfessional]: [`${shedulesUser.shedule}`],
+            },
+          })
+          .then(() => {
+            navigation.navigate("InitialScreen");
           });
       });
   };
@@ -247,102 +179,18 @@ export const ConfirmSchedule = ({ navigation }) => {
       .doc(`${sheduleMouth}_2023`)
       .get()
       .then(({ _data }) => {
-        const newData = addShedule(_data);
-
-        firestore()
-          .collection("schedules_month")
-          .doc(`${sheduleMouth}_2023`)
-          .update(newData)
-          .then(() => {
-            console.log("User updated!");
-            let userDataTemp = [];
-
-            userData.shedules
-              ? ((userDataTemp = userData.shedules),
-                userDataTemp.push({
-                  day: shedulesUser.day,
-                  shedule: shedulesUser.shedule,
-                  service: shedulesUser.service,
-                  professional: shedulesUser.professional,
-                  name: shedulesUser.name,
-                  email: shedulesUser.email,
-                  uid: shedulesUser.uid,
-                }))
-              : (userDataTemp = [
-                  {
-                    day: shedulesUser.day,
-                    shedule: shedulesUser.shedule,
-                    service: shedulesUser.service,
-                    professional: shedulesUser.professional,
-                    name: shedulesUser.name,
-                    email: shedulesUser.email,
-                    uid: shedulesUser.uid,
-                  },
-                ]);
-
-            setUserData({ ...userData, shedules: userDataTemp });
-
-            firestore()
-              .collection("unavailable_times")
-              .doc(`${sheduleMouth}_2023`)
-              .get()
-              .then(({ _data }) => {
-                let newData;
-
-                if (
-                  _data[sheduleDay] &&
-                  _data[sheduleDay][shedulesUser.professional]
-                ) {
-                  _data[sheduleDay][shedulesUser.professional].push(
-                    shedulesUser.shedule
-                  );
-
-                  newData = _data;
-
-                  firestore()
-                    .collection("unavailable_times")
-                    .doc(`${sheduleMouth}_2023`)
-                    .update(newData);
-                } else if (_data[sheduleDay]) {
-                  _data[sheduleDay] = {
-                    ..._data[sheduleDay],
-                    [shedulesUser.professional]: [`${shedulesUser.shedule}`],
-                  };
-
-                  newData = _data;
-
-                  firestore()
-                    .collection("unavailable_times")
-                    .doc(`${sheduleMouth}_2023`)
-                    .update(newData);
-                } else {
-                  (_data = {
-                    ..._data,
-                    [sheduleDay]: {
-                      [shedulesUser.professional]: [`${shedulesUser.shedule}`],
-                    },
-                  }),
-                    (newData = _data),
-                    firestore()
-                      .collection("unavailable_times")
-                      .doc(`${sheduleMouth}_2023`)
-                      .update(newData);
-                }
-              });
-
-            setIsAllRight(true);
-          });
-      })
-      .catch((error) => {
-        switch (error.message) {
-          case `Cannot convert undefined value to object`:
-            addSheduleWhenUndefined();
-            break;
-
-          default:
-            console.log("OTHER ERROR", error.message);
-            break;
+        if (_data === undefined) {
+          addScheduleWhenMonthIsNotUse();
+          return;
         }
+
+        const dayIsAlredyUse = _data[sheduleDay];
+
+        dayIsAlredyUse
+          ? (console.log("DAY AND PROFESSIONAL ALREDY USIGN"),
+            addScheduleWhenDayAlredyUse(_data))
+          : (console.log("DAY AND PROFESSIONAL NOT USE YET"),
+            addScheduleWhenDayNotUse(_data));
       });
   };
 
