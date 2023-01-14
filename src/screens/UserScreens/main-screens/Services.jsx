@@ -1,17 +1,31 @@
-import { Text, View, Pressable, StyleSheet, SafeAreaView } from "react-native"
+import { Text, Pressable, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 
 import { Header } from "../../../shared/Header"
 import { Footer } from "../../../shared/Footer"
 import { Title } from "../../../components/Title"
 import { Button } from "../../../components/Button"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 
 import { ShedulesUserContext } from "../../../context/ShedulesUser"
 
 import { globalStyles } from "../../globalStyles"
 
+import firestore from '@react-native-firebase/firestore';
+
 export const Services = ({ navigation }) => {
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
+    const [ serviceUserSelected, setServiceUserSelected ] = useState()
+    const [ services, setServices ] = useState(null)
+
+    useEffect(() => {
+        firestore()
+            .collection("services")
+            .doc("services")
+            .get()
+            .then(({ _data }) => {
+                setServices(_data)
+            })
+    }, [])
 
     const handleComfirmButton = () => {
         shedulesUser.service ? 
@@ -19,34 +33,37 @@ export const Services = ({ navigation }) => {
             console.log("NAO SELECIONOU UM SERVIÇO");
     };
 
+    console.log(serviceUserSelected, "serviceUserSelected");
+
     return(
         <SafeAreaView style={globalStyles.container}>
             <Header />
             
-            <Title title="Selecione o(s) serviços" />
+            <Title title="Selecione o serviço" />
 
-            <View style={style.services}>
-                <Pressable style={style.service} onPress={() => setShedulesUser({...shedulesUser, service: "Corte"})}>
-                    <Text style={style.serviceText}>Corte</Text>
-                    <View style={style.serviceCircle}></View>
-                </Pressable>
+            <ScrollView style={style.services} contentContainerStyle={{alignItems: "center"}}>
 
-                <Pressable style={style.service} onPress={() => setShedulesUser({ ...shedulesUser, service: "Barba" })}>
-                    <Text style={style.serviceText}>Barba</Text>
-                    <View style={style.serviceCircle}></View>
-                </Pressable>
-
-                <Pressable style={style.service}>
-                    <Text style={style.serviceText} onPress={() => setShedulesUser({ ...shedulesUser, service: "Sobrancelha" })}>sobrancelha</Text>
-                    <View style={style.serviceCircle}></View>
-                </Pressable>
-
-                <Pressable style={style.service}>
-                    <Text style={style.serviceText}  onPress={() => setShedulesUser({ ...shedulesUser, service: "Alisamento" })}>Alisamento</Text>
-                    <View style={style.serviceCircle}></View>
-                </Pressable>
+                {
+                    services ?
+                    (
+                        services.services.map((service, index) =>  {
+                            return(
+                                <Pressable style={serviceUserSelected === service ? style.serviceSelected : style.service} key={index}>
+                                    <Text style={style.serviceText} onPress={() => {
+                                        setShedulesUser({ ...shedulesUser, service: `${service}` })
+                                        setServiceUserSelected(service)
+                                        
+                                    }}>{service}</Text>
+                                </Pressable>
+                            )
+                        })
+                    ) :
+                    (
+                        null
+                    )
+                }
            
-            </View>
+            </ScrollView>
 
             <Button text="Comfirmar" action={handleComfirmButton} waitingData={!!shedulesUser.service} />
             <Footer/>
@@ -56,13 +73,31 @@ export const Services = ({ navigation }) => {
 
 const style = StyleSheet.create({
     services: {
+        flex: 1,
         width: "100%",
-        alignItems: "center",
-        marginTop: 50
+        marginTop: 50,
+        maxHeight: 330,
     },
 
     service: {
-        marginVertical: 15,
+        marginVertical: 7,
+        width: "80%",
+        borderWidth: 3,
+        borderBottomLeftRadius: 25,
+        borderBottomRightRadius: 25,
+        borderTopRightRadius: 25,
+        borderColor: "#E95401",
+        fontWeight: '700',
+        paddingVertical: 5,
+        paddingHorizontal: 25,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
+    serviceSelected: {
+        backgroundColor: "#E95401",
+        marginVertical: 7,
         width: "80%",
         borderWidth: 3,
         borderBottomLeftRadius: 25,
@@ -77,17 +112,7 @@ const style = StyleSheet.create({
 
     serviceText: {
         color: "#FFFFFF",
-        fontSize: 20,
-    },
-
-    serviceCircle: {
-        borderRadius: 30,
-        borderWidth: 3,
-        borderColor: '#E95401',
-        width: '10%',
-        height: 25,
-        position: 'absolute',
-        right: 15,
-        top: 5,
+        fontSize: 23,
+        fontWeight: '700',
     },
 })
