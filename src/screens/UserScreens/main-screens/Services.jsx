@@ -33,8 +33,6 @@ export const Services = ({ navigation }) => {
             console.log("NAO SELECIONOU UM SERVIÇO");
     };
 
-    console.log(serviceUserSelected, "serviceUserSelected");
-
     return(
         <SafeAreaView style={globalStyles.container}>
             <Header />

@@ -262,23 +262,19 @@ export const ConfirmSchedule = ({ navigation }) => {
 
       <View style={style.contentData}>
         <View style={style.data}>
-          <Text style={style.textData}>{shedulesUser.day}</Text>
+          <Text style={style.textData}>Dia: {shedulesUser.day}</Text>
         </View>
 
         <View style={style.data}>
-          <Text style={style.textData}>{shedulesUser.service}</Text>
+          <Text style={style.textData}>Serviço: {shedulesUser.service}</Text>
         </View>
 
         <View style={style.data}>
-          <Text style={style.textData}>{shedulesUser.professional}</Text>
+          <Text style={style.textData}>Profissional: {shedulesUser.professional}</Text>
         </View>
 
         <View style={style.data}>
-          <Text style={style.textData}>{shedulesUser.shedule}</Text>
-        </View>
-
-        <View style={style.data}>
-          <Text style={style.textData}>Data: 09/09/22</Text>
+          <Text style={style.textData}>Horário: {shedulesUser.shedule}</Text>
         </View>
       </View>
 

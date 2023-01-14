@@ -13,16 +13,15 @@ import firestore from '@react-native-firebase/firestore';
 
 export const Schedules = ({ navigation }) => {
     const [ avaibleTimesState, setAvaibleTimesState ] = useState()
-    
+    const [ timeUserSelected, steTimeUserSelected ] = useState()
+
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
 
     const sheduleMouth = shedulesUser.day?.split('').slice(5, 7).join('');
     const sheduleDay = shedulesUser.day?.split("").slice(8).join("");
-    const sheduleHour = shedulesUser.shedule;
     const sheduleProfessional = shedulesUser.professional
     
     useEffect(() => {
-        console.log("USE EFECT");
         firestore()
         .collection("working_hours")
         .get()
@@ -77,7 +76,10 @@ export const Schedules = ({ navigation }) => {
                     (
                         avaibleTimesState.map((time, index) => {
                             return(
-                                <Pressable key={index} style={style.schedule} onPress={() => setShedulesUser({...shedulesUser, shedule: `${time}`})}>
+                                <Pressable key={index} style={timeUserSelected === time ? style.scheduleSeleted : style.schedule} onPress={() => {
+                                    setShedulesUser({...shedulesUser, shedule: `${time}`})
+                                    steTimeUserSelected(time)
+                                }}>
                                     <Text style={style.textSchedule}>{time}</Text>
                                 </Pressable>
                             )
@@ -107,15 +109,27 @@ const style = StyleSheet.create({
         borderColor: "#E95401",
         borderRadius: 20,
         width: "48%",
-        paddingHorizontal: 60,
         paddingVertical: 9,
         marginVertical: 5,
         marginHorizontal: 3,
     },
-
+    
+    scheduleSeleted: {
+        backgroundColor: "#E95401",
+        borderWidth: 3,
+        borderColor: "#E95401",
+        borderRadius: 20,
+        width: "48%",
+        paddingVertical: 9,
+        marginVertical: 5,
+        marginHorizontal: 3,
+    },
+    
     textSchedule: {
         color: "#FFFFFF",
         fontWeight: '700',
         fontSize: 16,
+        textAlign: "center",
+        fontWeight: '700'
     },
 })
