@@ -10,6 +10,8 @@ import { ShedulesUserContext } from "../../../context/ShedulesUser"
 import { Title } from "../../../components/Title"
 import { Button } from "../../../components/Button"
 
+import { globalStyles } from "../../globalStyles"
+
 export const Professionals = ({ navigation }) => {
 
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
@@ -21,7 +23,7 @@ export const Professionals = ({ navigation }) => {
     }   
 
     return(
-            <View style={style.container}>
+            <View style={globalStyles.container}>
                 <Header />
                 
                 <Title title="Selecione um Profissional" />
@@ -40,7 +42,7 @@ export const Professionals = ({ navigation }) => {
                     </Pressable>
                 </View>
 
-                <Button text="Comfirmar" action={handleButton} />
+                <Button text="Comfirmar" action={handleButton} waitingData={!!shedulesUser.professional} />
 
                 <Footer />
             </View>
@@ -48,12 +50,6 @@ export const Professionals = ({ navigation }) => {
 }
 
 const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#1E1E1E",
-        alignItems: "center",
-    },
-
     contantProfessionals: {
         width: "100%",
         flexWrap: "wrap",

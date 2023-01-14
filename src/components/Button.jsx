@@ -1,14 +1,24 @@
 import { Text, Pressable, StyleSheet } from "react-native";
 
-export const Button = ({ text, action }) => {
+export const Button = ({ text, action, waitingData = true }) => {
     return(
-        <Pressable onPress={action} style={style.button}>
-            <Text style={style.text}>{text}</Text>
+        <Pressable onPress={waitingData ? action : () => {}} style={waitingData ? style.button : style.buttonWaitingData}>
+            <Text style={waitingData ? style.text : style.textWaitingData}>{text}</Text>
         </Pressable>
     )
 }
 
 const style = StyleSheet.create({
+    buttonWaitingData: {
+        backgroundColor: "#8B3200",
+        width: "65%",
+        alignItems: "center",
+        marginTop: 40,
+        borderRadius: 10,
+        paddingHorizontal: 55,
+        paddingVertical: 13,
+    },
+    
     button: {
         backgroundColor: "#E95401",
         width: "65%",
@@ -17,6 +27,10 @@ const style = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 55,
         paddingVertical: 13,
+    },
+
+    textWaitingData: {
+        color: "#A4A4A4"
     },
 
     text: {

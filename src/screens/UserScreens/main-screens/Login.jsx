@@ -9,6 +9,8 @@ import { Button } from "../../../components/Button";
 
 import auth from '@react-native-firebase/auth';
 
+import { globalStyles } from "../../globalStyles";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Login = ({ navigation }) => {
@@ -29,7 +31,7 @@ export const Login = ({ navigation }) => {
         }
 
     return(
-        <View style={style.container}>
+        <View style={globalStyles.container}>
             <Header />
 
             <Title title="Entre agora" />
@@ -67,12 +69,6 @@ export const Login = ({ navigation }) => {
 }
 
 const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#1E1E1E',
-        alignItems: "center"
-    },
-
     form: {
         width: '80%',
         alignItems: "center",

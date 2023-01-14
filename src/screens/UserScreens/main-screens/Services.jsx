@@ -8,6 +8,8 @@ import { useContext } from "react"
 
 import { ShedulesUserContext } from "../../../context/ShedulesUser"
 
+import { globalStyles } from "../../globalStyles"
+
 export const Services = ({ navigation }) => {
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
 
@@ -18,7 +20,7 @@ export const Services = ({ navigation }) => {
     };
 
     return(
-        <SafeAreaView style={style.container}>
+        <SafeAreaView style={globalStyles.container}>
             <Header />
             
             <Title title="Selecione o(s) serviços" />
@@ -46,19 +48,13 @@ export const Services = ({ navigation }) => {
            
             </View>
 
-            <Button text="Comfirmar" action={handleComfirmButton} />
+            <Button text="Comfirmar" action={handleComfirmButton} waitingData={!!shedulesUser.service} />
             <Footer/>
         </SafeAreaView>
     )
 }
 
 const style = StyleSheet.create({
-    container: {
-        backgroundColor: "#1E1E1E",
-        flex: 1,
-        alignItems: 'center',
-    },
-
     services: {
         width: "100%",
         alignItems: "center",

@@ -9,6 +9,8 @@ import { ShedulesUserContext } from "../../../context/ShedulesUser";
 
 import firestore from "@react-native-firebase/firestore";
 
+import { globalStyles } from "../../globalStyles";
+
 import { UserContext } from "../../../context/UserContext";
 
 export const ConfirmSchedule = ({ navigation }) => {
@@ -251,7 +253,7 @@ export const ConfirmSchedule = ({ navigation }) => {
   };
 
   return (
-    <View style={style.container}>
+    <View style={globalStyles.container}>
       <Header />
 
       <Title title="O seu agendamento:" />
@@ -287,12 +289,6 @@ export const ConfirmSchedule = ({ navigation }) => {
 };
 
 const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#1E1E1E",
-  },
-
   subTitle: {
     fontSize: 12,
     color: "#FFFFFF60",

@@ -7,6 +7,8 @@ import { Button } from "../../../components/Button"
 import { useContext, useEffect, useState } from "react"
 import { ShedulesUserContext } from "../../../context/ShedulesUser"
 
+import { globalStyles } from "../../globalStyles"
+
 import firestore from '@react-native-firebase/firestore';
 
 export const Schedules = ({ navigation }) => {
@@ -64,7 +66,7 @@ export const Schedules = ({ navigation }) => {
     } 
 
     return(
-        <View style={style.container}>
+        <View style={globalStyles.container}>
             <Header />
 
             <Title title="Selecione um horário" />
@@ -86,19 +88,13 @@ export const Schedules = ({ navigation }) => {
                 }
             </View>
 
-            <Button text="Comfirmar" action={handleButton} />
+            <Button text="Comfirmar" action={handleButton} waitingData={!!shedulesUser.shedule} />
             <Footer />  
         </View>
     )
 }
 
 const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#1E1E1E",
-        alignItems: "center",
-    },
-
     schedules: {
         width: "90%",
         flexDirection: "row",

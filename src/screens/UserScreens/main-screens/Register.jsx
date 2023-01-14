@@ -16,7 +16,10 @@ import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 
 import { useState } from "react";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { globalStyles } from "../../globalStyles";
 
 export const Register = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -57,7 +60,7 @@ export const Register = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={style.container}>
+    <SafeAreaView style={globalStyles.container}>
       <Header />
 
       <Title title="Cadastre-se agora" />
@@ -108,12 +111,6 @@ export const Register = ({ navigation }) => {
 };
 
 const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#1E1E1E",
-  },
-
   form: {
     width: "80%",
     alignItems: "center",

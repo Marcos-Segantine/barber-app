@@ -8,7 +8,10 @@ import { Header } from "../../../shared/Header"
 import { Footer } from "../../../shared/Footer"
 import { Title } from "../../../components/Title"
 import { Button } from '../../../components/Button'
+
 import { ShedulesUserContext } from "../../../context/ShedulesUser"
+
+import { globalStyles } from "../../globalStyles"
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -57,7 +60,7 @@ export const Calandar = ({ navigation }) => {
     }
 
     return(
-        <View style={style.container}>
+        <View style={globalStyles.container}>
             <Header />
 
             <Title title="Selecione um data" />
@@ -72,7 +75,8 @@ export const Calandar = ({ navigation }) => {
                     addMonth()
                   }}
                 minDate={String(new Date())}
-                markedDates={deniedDays}
+                markedDates={{ ...deniedDays, [shedulesUser.day]: {selected: true, marked: true, selectedColor: 'white'} }}
+                // deniedDays
                 onDayPress={day => setShedulesUser({...shedulesUser, day: day.dateString})}
                 disableArrowLeft={arrawLeftAvaible}
                 style={{
@@ -94,16 +98,8 @@ export const Calandar = ({ navigation }) => {
                 }}
             />
 
-            <Button text="Comfirmar" action={handleButton} />
+            <Button text="Comfirmar" action={handleButton} waitingData={!!shedulesUser.day} />
             <Footer />
         </View>
     )
 }
-
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        backgroundColor: "#1E1E1E",
-    },
-})

@@ -10,6 +10,8 @@ import { UserContext } from "../../../context/UserContext";
 
 import InitialScreenSvg from '../../../assets/InitialScreenSvg'
 
+import { globalStyles } from "../../globalStyles";
+
 export const InitialScreen = ({ navigation }) => {
     const { userData } = useContext(UserContext);
 
@@ -20,7 +22,7 @@ export const InitialScreen = ({ navigation }) => {
     }
 
     return(
-        <View style={style.container}>
+        <View style={globalStyles.container}>
             <Header isInitialScreen={true} />
             
             <View style={style.hero}>
@@ -36,12 +38,6 @@ export const InitialScreen = ({ navigation }) => {
 }
 
 const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#1E1E1E",
-        alignItems: 'center',
-    },
-    
     hero : {
         alignItems: "center"
     },
