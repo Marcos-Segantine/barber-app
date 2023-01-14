@@ -80,7 +80,6 @@ export const ScheduleDetail = ({ route, navigation }) => {
       <Title title={dateFormated} />
 
       <View style={style.content}>
-        <Text style={style.info}>Dia: {dateFormated}</Text>
         <Text style={style.info}>Horario: {item.shedule}</Text>
         <Text style={style.info}>Serviço: {item.service}</Text>
         <Text style={style.info}>Barbeiro: {item.professional}</Text>

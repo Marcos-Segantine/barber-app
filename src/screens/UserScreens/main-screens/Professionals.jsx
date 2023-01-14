@@ -3,7 +3,7 @@ import { View, StyleSheet, Pressable, Text } from "react-native"
 import { Header } from "../../../shared/Header"
 import { Footer } from "../../../shared/Footer"
 
-import { useContext } from "react"
+import { useContext, useState } from "react"
 
 import { ShedulesUserContext } from "../../../context/ShedulesUser"
 
@@ -13,6 +13,7 @@ import { Button } from "../../../components/Button"
 import { globalStyles } from "../../globalStyles"
 
 export const Professionals = ({ navigation }) => {
+    const [ professionalUserSelected, setProfessionalUserSelected ] = useState()
 
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
 
@@ -29,16 +30,25 @@ export const Professionals = ({ navigation }) => {
                 <Title title="Selecione um Profissional" />
 
                 <View style={style.contantProfessionals}>
-                    <Pressable style={style.professionals} onPress={() => setShedulesUser({...shedulesUser, professional: "Barbeiro 1"})}>
-                        <Text style={{color: "#FFFFFF"}}>BArbeiro 1</Text>
+                    <Pressable style={professionalUserSelected === 'Barbeiro 1' ? style.professionalsSelected : style.professionals} onPress={() => {
+                        setShedulesUser({...shedulesUser, professional: "Barbeiro 1"})
+                        setProfessionalUserSelected("Barbeiro 1")    
+                    }}>
+                        <Text style={style.professionalName}>BArbeiro 1</Text>
                     </Pressable>
 
-                    <Pressable style={style.professionals} onPress={() => setShedulesUser({...shedulesUser, professional: "Barbeiro 2"})}>
-                        <Text style={{color: "#FFFFFF"}}>BArbeiro 2</Text>
+                    <Pressable style={professionalUserSelected === 'Barbeiro 2' ? style.professionalsSelected : style.professionals} onPress={() => {
+                        setShedulesUser({...shedulesUser, professional: "Barbeiro 2"})
+                        setProfessionalUserSelected("Barbeiro 2")
+                    }}>
+                        <Text style={style.professionalName}>BArbeiro 2</Text>
                     </Pressable>
 
-                    <Pressable style={style.professionals} onPress={() => setShedulesUser({...shedulesUser, professional: "Barbeiro 3"})}>
-                        <Text style={{color: "#FFFFFF"}}>BArbeiro 3</Text>
+                    <Pressable style={professionalUserSelected === 'Barbeiro 3' ? style.professionalsSelected : style.professionals} onPress={() => {
+                        setShedulesUser({...shedulesUser, professional: "Barbeiro 3"})
+                        setProfessionalUserSelected("Barbeiro 3")
+                    }}>
+                        <Text style={style.professionalName}>Barbeiro 3</Text>
                     </Pressable>
                 </View>
 
@@ -63,5 +73,21 @@ const style = StyleSheet.create({
         margin: 10,
         borderColor: '#E95401',
         borderWidth: 2,
+    },
+
+    professionalsSelected: {
+        width: 150,
+        height: 150,
+        margin: 10,
+        borderColor: '#E95401',
+        borderWidth: 5,
+    },
+
+    professionalName: {
+        color: "#FFFFFF",
+        fontWeight: '700',
+        position: 'absolute',
+        bottom: 10,
+        left: 5
     }
 })
