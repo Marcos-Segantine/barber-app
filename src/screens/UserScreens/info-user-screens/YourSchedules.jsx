@@ -4,15 +4,32 @@ import { Header } from "../../../shared/Header";
 import { Footer } from "../../../shared/Footer";
 
 import { Title } from "../../../components/Title";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { UserContext } from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 
+import firestore from '@react-native-firebase/firestore';
+
 export const YourSchedules = () => {
+    const [ schedules, setShedules ] = useState()
+    
     const { userData } = useContext(UserContext)
 
     const navigation = useNavigation()
+
+    useEffect(() => {
+
+        firestore()
+            .collection("schedules_by_user")
+            .doc(userData.uid)
+            .get()
+            .then(({ _data }) => {
+                setShedules(_data.schedules)
+            })
+
+    }, [ navigation.isFocused ])
+
 
     return(
         <View style={style.container}>
@@ -22,12 +39,12 @@ export const YourSchedules = () => {
 
             <View style={style.content}>
                 {
-                    userData?.shedules ?
+                    schedules ?
 
-                    userData.shedules.map((item, index) => {
+                    schedules.map((item, index) => {
                         return(
                             <Pressable style={style.schedulesDay} key={index} onPress={() => navigation.navigate("ScheduleDetail", {item})}>
-                                <Text style={style.text}>Dia: {item.day}</Text>
+                                <Text style={style.text}>Dia: {item.day.split('-').reverse().join('/ ')}</Text>
                                 <Text style={style.text}>Horario: {item.shedule}</Text>
                             </Pressable>            
                         )

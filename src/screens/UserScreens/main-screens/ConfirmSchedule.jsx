@@ -74,6 +74,24 @@ export const ConfirmSchedule = ({ navigation }) => {
               .then(() => {
                 console.log("unavailable_times UPDATED!!");
 
+                firestore()
+                  .collection("schedules_by_user")
+                  .doc(userData.uid)
+                  .get()
+                  .then(({ _data }) => {
+                      console.log(_data);
+
+                      _data.schedules.push({ ...shedulesUser })
+
+                      firestore()
+                        .collection("schedules_by_user")
+                        .doc(userData.uid)
+                        .update(_data)
+                        .then(() => {
+                          console.log("schedules_by_user UPDATED!!");
+                        })
+                  })
+
                 navigation.navigate("InitialScreen");
               });
           });
@@ -137,6 +155,24 @@ export const ConfirmSchedule = ({ navigation }) => {
                     console.log("unavailable_times collection updated!!");
 
 
+                    firestore()
+                  .collection("schedules_by_user")
+                  .doc(userData.uid)
+                  .get()
+                  .then(({ _data }) => {
+                      console.log(_data);
+
+                      _data.schedules.push({ ...shedulesUser })
+
+                      firestore()
+                        .collection("schedules_by_user")
+                        .doc(userData.uid)
+                        .update(_data)
+                        .then(() => {
+                          console.log("schedules_by_user UPDATED!!");
+                        })
+                  })
+
                     navigation.navigate("InitialScreen");
                   });
               });
@@ -168,6 +204,26 @@ export const ConfirmSchedule = ({ navigation }) => {
             },
           })
           .then(() => {
+            console.log("unavailable_times UPDATED!!");
+
+            firestore()
+              .collection("schedules_by_user")
+              .doc(userData.uid)
+              .get()
+              .then(({ _data }) => {
+                  console.log(_data);
+
+                  _data.schedules.push({ ...shedulesUser })
+
+                  firestore()
+                    .collection("schedules_by_user")
+                    .doc(userData.uid)
+                    .update(_data)
+                    .then(() => {
+                      console.log("schedules_by_user UPDATED!!");
+                    })
+              })
+
             navigation.navigate("InitialScreen");
           });
       });

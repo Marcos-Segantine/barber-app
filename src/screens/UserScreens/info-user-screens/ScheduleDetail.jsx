@@ -17,51 +17,60 @@ export const ScheduleDetail = ({ route, navigation }) => {
 
   const dateFormated = item.day.split("-").reverse().join("/");
   const sheduleMouth = item.day?.split("").slice(5, 7).join("");
+  const scheduleDay = item.day.split('').slice(8).join('')
   const professional = item.professional;
 
   const cancelScheduleButton = () => {
     firestore()
-      .collection("users")
-      .doc(item.uid)
+      .collection("schedules_by_user")
+      .doc(userData.uid)
       .get()
       .then(({ _data }) => {
-        const currentSchedules = _data.shedules;
+        const newSchedules__Temp = _data.schedules.filter(itemFilter => {
+          return itemFilter.day !== item.day && itemFilter.shedule !== item.shedule
+        })
 
-        const newSchedulesList = currentSchedules.filter((currentSchedule) => {
-          return (
-            currentSchedule.shedule[item.shedule] !== item.shedule &&
-            currentSchedule.day !== item.day
-          );
-        });
-
-        const newUserData = { ...userData, shedules: newSchedulesList };
-
-        setUserData(newUserData);
+        _data.schedules = newSchedules__Temp
 
         firestore()
-          .collection("users")
-          .doc(item.uid)
-          .update(newUserData)
-          .then(() => {
+          .collection("schedules_by_user")
+          .doc(userData.uid)
+          .update({..._data})
+      })
+
+      firestore()
+        .collection("schedules_month")
+        .doc(`${sheduleMouth}_2023`)
+        .get()
+        .then(({ _data }) => {
+          delete _data[scheduleDay][professional][item.shedule]
+
+          firestore()
+            .collection("schedules_month")
+            .doc(`${sheduleMouth}_2023`)
+            .update({..._data})
+        })
+      
+        firestore()
+          .collection("unavailable_times")
+          .doc(`${sheduleMouth}_2023`)
+          .get()
+          .then(({ _data }) => {
+
+            const newData = _data[scheduleDay][professional].filter(schedule => {
+              return schedule !== item.shedule
+            })
+
+            _data[scheduleDay][professional] = newData
+           
             firestore()
-              .collection("schedules_month")
+              .collection("unavailable_times")
               .doc(`${sheduleMouth}_2023`)
-              .get()
-              .then(({ _data }) => {
-                const day = item.day.split("").splice(8).join("");
-
-                delete _data[day][professional][item.shedule];
-
-                firestore()
-                  .collection("schedules_month")
-                  .doc(`${sheduleMouth}_2023`)
-                  .update(_data)
-                  .then(() => {
-                    navigation.navigate("Main");
-                  });
-              });
-          });
-      });
+              .update({..._data})
+              .then(() => {
+                navigation.navigate("InitialScreen")
+              })
+          })
   };
 
   return (

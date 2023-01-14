@@ -38,7 +38,16 @@ export const Register = ({ navigation }) => {
             password: password,
             phone: phone,
             uid: res.user.uid,
-          });
+          })
+          
+          
+        firestore()
+          .collection("schedules_by_user")
+          .doc(res.user.uid)
+          .set({
+            schedules: []
+          })
+
         await AsyncStorage.getItem("@barber_app__email");
         await AsyncStorage.getItem("@barber_app__password");
 
