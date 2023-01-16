@@ -1,15 +1,11 @@
 import { Text, View, Pressable, StyleSheet } from "react-native";
 
-import { Header } from "../../../shared/Header";
-import { Footer } from "../../../shared/Footer";
-
 import { Title } from "../../../components/Title";
 import { Button } from "../../../components/Button";
 
 export const InfoSchedule = () => {
     return(
         <View style={style.container}>
-            <Header />
             
             <Title title={"Dia 09/09/2022"} />
 
@@ -27,7 +23,6 @@ export const InfoSchedule = () => {
 
             <Button text={"Cancelar horario"} />
 
-            <Footer />
         </View>
     )
 }

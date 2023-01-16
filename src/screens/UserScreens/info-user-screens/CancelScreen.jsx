@@ -1,8 +1,5 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
 
-import { Header } from "../../../shared/Header";
-import { Footer } from "../../../shared/Footer";
-
 import { Title } from "../../../components/Title";
 
 import { CancelSvg } from "../../../assets/CancelSvg";
@@ -10,7 +7,6 @@ import { CancelSvg } from "../../../assets/CancelSvg";
 export const CancelScreen = () => {
     return(
         <View style={style.container}>
-            <Header />
 
             <Title title={"Horario Cancelado!"} />
 
@@ -20,7 +16,6 @@ export const CancelScreen = () => {
                 <Text style={style.textGoBack}>Voltar ao inicio</Text>
             </Pressable>
 
-            <Footer />
         </View>
     )
 }

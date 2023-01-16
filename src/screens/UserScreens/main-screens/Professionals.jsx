@@ -1,8 +1,5 @@
 import { View, StyleSheet, Pressable, Text } from "react-native"
 
-import { Header } from "../../../shared/Header"
-import { Footer } from "../../../shared/Footer"
-
 import { useContext, useState } from "react"
 
 import { ShedulesUserContext } from "../../../context/ShedulesUser"
@@ -25,7 +22,6 @@ export const Professionals = ({ navigation }) => {
 
     return(
             <View style={globalStyles.container}>
-                <Header />
                 
                 <Title title="Selecione um Profissional" />
 
@@ -54,7 +50,6 @@ export const Professionals = ({ navigation }) => {
 
                 <Button text="Comfirmar" action={handleButton} waitingData={!!shedulesUser.professional} />
 
-                <Footer />
             </View>
         )
 }

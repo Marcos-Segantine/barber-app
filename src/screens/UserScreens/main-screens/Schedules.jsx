@@ -1,7 +1,5 @@
 import { Text, View, StyleSheet, Pressable } from "react-native"
 
-import { Header } from "../../../shared/Header"
-import { Footer } from "../../../shared/Footer"
 import { Title } from "../../../components/Title"
 import { Button } from "../../../components/Button"
 import { useContext, useEffect, useState } from "react"
@@ -66,8 +64,6 @@ export const Schedules = ({ navigation }) => {
 
     return(
         <View style={globalStyles.container}>
-            <Header />
-
             <Title title="Selecione um horário" />
         
             <View style={style.schedules}>
@@ -91,7 +87,6 @@ export const Schedules = ({ navigation }) => {
             </View>
 
             <Button text="Comfirmar" action={handleButton} waitingData={!!shedulesUser.shedule} />
-            <Footer />  
         </View>
     )
 }

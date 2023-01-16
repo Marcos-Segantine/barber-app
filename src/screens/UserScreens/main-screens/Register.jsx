@@ -7,8 +7,6 @@ import {
   Pressable,
 } from "react-native";
 
-import { Header } from "../../../shared/Header";
-import { Footer } from "../../../shared/Footer";
 import { Title } from "../../../components/Title";
 import { Button } from "../../../components/Button";
 
@@ -61,8 +59,6 @@ export const Register = ({ navigation }) => {
 
   return (
     <SafeAreaView style={globalStyles.container}>
-      <Header />
-
       <Title title="Cadastre-se agora" />
 
       <View style={style.form}>
@@ -105,7 +101,6 @@ export const Register = ({ navigation }) => {
       </View>
 
       <Button text="Cadastrar" action={handleResgister} />
-      <Footer />
     </SafeAreaView>
   );
 };

@@ -1,8 +1,5 @@
 import { Text, StyleSheet, View } from "react-native";
 
-import { Header } from "../../../shared/Header";
-import { Footer } from "../../../shared/Footer";
-
 import { Title } from "../../../components/Title";
 import { Button } from "../../../components/Button";
 
@@ -75,8 +72,6 @@ export const ScheduleDetail = ({ route, navigation }) => {
 
   return (
     <View style={style.container}>
-      <Header />
-
       <Title title={dateFormated} />
 
       <View style={style.content}>
@@ -86,8 +81,6 @@ export const ScheduleDetail = ({ route, navigation }) => {
       </View>
 
       <Button text="Cancelar Horario" action={cancelScheduleButton} />
-
-      <Footer />
     </View>
   );
 };

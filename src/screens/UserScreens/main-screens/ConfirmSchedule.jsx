@@ -1,7 +1,5 @@
 import { Text, View, StyleSheet } from "react-native";
 
-import { Header } from "../../../shared/Header";
-import { Footer } from "../../../shared/Footer";
 import { Title } from "../../../components/Title";
 import { Button } from "../../../components/Button";
 import { useContext, useState } from "react";
@@ -254,8 +252,6 @@ export const ConfirmSchedule = ({ navigation }) => {
 
   return (
     <View style={globalStyles.container}>
-      <Header />
-
       <Title title="O seu agendamento:" />
 
       <Text style={style.subTitle}>Confira todos os dados</Text>
@@ -279,7 +275,6 @@ export const ConfirmSchedule = ({ navigation }) => {
       </View>
 
       <Button text="Comfirmar" action={handleComfirm} />
-      <Footer />
     </View>
   );
 };

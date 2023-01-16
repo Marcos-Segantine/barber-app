@@ -7,8 +7,8 @@ export const Header = ({ isInitialScreen = false }) => {
     const navigation = useNavigation()
     
     const stateNavigation = useNavigationState(stateNavigation => stateNavigation)
-    const indexNavigationScreen = stateNavigation.index
-    const nameRouteNavigation = stateNavigation.routes[indexNavigationScreen].name;
+    const indexNavigationScreen = stateNavigation ? stateNavigation.index : null
+    const nameRouteNavigation = stateNavigation ? stateNavigation.routes[indexNavigationScreen].name : null
     
     const handleComaBack = () => {
         switch (nameRouteNavigation) {
@@ -120,6 +120,7 @@ const style = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 16,
         height: 170,
+        backgroundColor: "#1E1E1E",
     },
 
     containerImg: {

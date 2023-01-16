@@ -1,8 +1,5 @@
 import { View, StyleSheet, Pressable, Text } from 'react-native'
 
-import { Header } from '../../../shared/Header'
-import { Footer } from '../../../shared/Footer'
-
 import { useContext } from 'react'
 
 import { Title } from '../../../components/Title'
@@ -35,8 +32,6 @@ export const Main = () => {
 
     return(
         <View style={style.container}>
-            <Header />
-
             <Title title={"Olá, Marcos"} />
 
             <View style={style.contentLinks}>
@@ -70,8 +65,6 @@ export const Main = () => {
                     </Text>
                 </Pressable>
             </View>
-
-            <Footer />
         </View>
     )
 }

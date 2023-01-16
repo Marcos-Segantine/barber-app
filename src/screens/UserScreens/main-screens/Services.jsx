@@ -1,7 +1,5 @@
 import { Text, Pressable, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 
-import { Header } from "../../../shared/Header"
-import { Footer } from "../../../shared/Footer"
 import { Title } from "../../../components/Title"
 import { Button } from "../../../components/Button"
 import { useContext, useEffect, useState } from "react"
@@ -35,8 +33,6 @@ export const Services = ({ navigation }) => {
 
     return(
         <SafeAreaView style={globalStyles.container}>
-            <Header />
-            
             <Title title="Selecione o serviço" />
 
             <ScrollView style={style.services} contentContainerStyle={{alignItems: "center"}}>
@@ -64,7 +60,6 @@ export const Services = ({ navigation }) => {
             </ScrollView>
 
             <Button text="Comfirmar" action={handleComfirmButton} waitingData={!!shedulesUser.service} />
-            <Footer/>
         </SafeAreaView>
     )
 }

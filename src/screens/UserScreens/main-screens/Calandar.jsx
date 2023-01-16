@@ -4,8 +4,6 @@ import { useContext, useEffect, useState } from "react"
 
 import { Calendar } from "react-native-calendars"
 
-import { Header } from "../../../shared/Header"
-import { Footer } from "../../../shared/Footer"
 import { Title } from "../../../components/Title"
 import { Button } from '../../../components/Button'
 
@@ -61,7 +59,6 @@ export const Calandar = ({ navigation }) => {
 
     return(
         <View style={globalStyles.container}>
-            <Header />
 
             <Title title="Selecione um data" />
 
@@ -99,7 +96,6 @@ export const Calandar = ({ navigation }) => {
             />
 
             <Button text="Comfirmar" action={handleButton} waitingData={!!shedulesUser.day} />
-            <Footer />
         </View>
     )
 }

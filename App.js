@@ -7,17 +7,23 @@ import { ShedulesUserProvider } from './src/context/ShedulesUser';
 
 import { UserScreens } from './src/screens/UserScreens/routes';
 
+import { Header } from './src/shared/Header';
+import { Footer } from './src/shared/Footer';
+
 const App = () => {
 
   return (
     <NavigationContainer>
       <UserProvider>
+        <Header />
 
         <ShedulesUserProvider>
 
           <UserScreens />
         
         </ShedulesUserProvider>
+
+        <Footer />
 
       </UserProvider>
     </NavigationContainer>

@@ -1,8 +1,5 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
 
-import { Header } from "../../../shared/Header";
-import { Footer } from "../../../shared/Footer";
-
 import { Title } from "../../../components/Title";
 import { useContext, useEffect, useState } from "react";
 
@@ -33,8 +30,6 @@ export const YourSchedules = () => {
 
     return(
         <View style={style.container}>
-            <Header />
-
             <Title title={"Seus agendamentos"} />
 
             <View style={style.content}>
@@ -52,8 +47,6 @@ export const YourSchedules = () => {
                     <Text style={style.text}>Sem Horarios marcados</Text>
                 }
             </View>
-
-            <Footer />
         </View>
     )
 }

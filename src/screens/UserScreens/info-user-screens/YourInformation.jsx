@@ -1,8 +1,5 @@
 import { Text, View, Pressable, StyleSheet } from "react-native";
 
-import { Header } from "../../../shared/Header";
-import { Footer } from "../../../shared/Footer";
-
 import { Title } from "../../../components/Title";
 import { Button } from "../../../components/Button";
 
@@ -14,8 +11,6 @@ export const YourInformation = () => {
 
     return(
         <View style={style.container}>
-            <Header />
-
             <Title title={"Suas informações"} />
 
             <View style={style.content}>
@@ -37,8 +32,6 @@ export const YourInformation = () => {
             </View>        
 
             <Button text={"Alterar informações"} />    
-
-            <Footer />
         </View>
     )
 }
