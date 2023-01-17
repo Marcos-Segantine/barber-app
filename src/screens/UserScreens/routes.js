@@ -20,123 +20,81 @@ const { Screen, Navigator } = createNativeStackNavigator()
 
 export const UserScreens = () => {
     return(
-        <Navigator initialRouteName="InitialScreen">
+        <Navigator 
+            initialRouteName="InitialScreen" 
+            screenOptions={{headerShown: false}}
+        >
             <Screen 
                 name="InitialScreen"
                 component={InitialScreen}
-                options={{
-                    headerShown: false
-                }}
             />
             <Screen 
                 name="Login"
                 component={Login}
-                options={{
-                    headerShown: false
-                }}
             />
 
             <Screen 
                 name="Register"
                 component={Register}
-                options={{
-                    headerShown: false
-                }}
             />
 
             <Screen 
                 name="Services"
                 component={Services}
-                options={{
-                    headerShown: false
-                }}
             />
 
             <Screen 
                 name="Professionals"
                 component={Professionals}
-                options={{
-                    headerShown: false
-                }}
             />
 
             <Screen
                 name='Calandar'
                 component={Calandar}
-                options={{
-                headerShown: false
-                }}
             />
 
             <Screen
                 name='ConfirmSchedule'
                 component={ConfirmSchedule}
-                options={{
-                headerShown: false
-                }}
             />
 
             <Screen
                 name='FinalScreen'
                 component={FinalScreen}
-                options={{
-                headerShown: false
-                }}
             />
 
             <Screen
                 name='Schedules'
                 component={Schedules}
-                options={{
-                headerShown: false
-                }}
             />
 
             <Screen
                 name='Main'
                 component={Main}
-                options={{
-                headerShown: false
-                }}
             />
 
             <Screen
                 name='YourSchedules'
                 component={YourSchedules}
-                options={{
-                headerShown: false
-                }}
             />
 
             <Screen
                 name='InfoSchedule'
                 component={InfoSchedule}
-                options={{
-                headerShown: false
-                }}
             />
 
             <Screen
                 name='CancelScreen'
                 component={CancelScreen}
-                options={{
-                headerShown: false
-                }}
             />
 
             <Screen
                 name='YourInformation'
                 component={YourInformation}
-                options={{
-                headerShown: false
-                }}
             />
             <Screen 
                 name="ScheduleDetail"
                 component={ScheduleDetail}
-                options={{
-                headerShown: false
-                }}
             />
         </Navigator>
     )
