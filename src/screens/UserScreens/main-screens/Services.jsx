@@ -16,6 +16,7 @@ export const Services = ({ navigation }) => {
     const [ services, setServices ] = useState(null)
 
     useEffect(() => {
+        console.log('SERVICES SCREEN LOADED');
         firestore()
             .collection("services")
             .doc("services")
@@ -59,7 +60,7 @@ export const Services = ({ navigation }) => {
            
             </ScrollView>
 
-            <Button text="Comfirmar" action={handleComfirmButton} waitingData={!!shedulesUser.service} />
+            <Button text="Comfirmar" action={handleComfirmButton} waitingData={shedulesUser ? !!shedulesUser.service : false} />
         </SafeAreaView>
     )
 }

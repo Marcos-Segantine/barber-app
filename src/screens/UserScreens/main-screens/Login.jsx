@@ -1,4 +1,4 @@
-import { Text, Pressable, View, StyleSheet, TextInput, SafeAreaView } from "react-native";
+import { Text, Pressable, View, StyleSheet, TextInput, Alert } from "react-native";
 
 import { useContext, useState } from "react";
 
@@ -28,8 +28,6 @@ export const Login = ({ navigation }) => {
         await AsyncStorage.setItem("@barber_app__email", email);
         await AsyncStorage.setItem("@barber_app__password", password);
 
-        console.log("RES FROM AUTH LOGIN", res.user.uid)
-
         firestore()
           .collection("users")
           .where("uid", "==", res.user.uid)
@@ -40,7 +38,9 @@ export const Login = ({ navigation }) => {
 
         navigation.navigate("Services");
       })
-      .catch((err) => console.log(err));
+      .catch(err => {
+       console.log(err);
+    })
   };
 
   return (
