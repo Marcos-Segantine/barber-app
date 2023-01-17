@@ -1,26 +1,42 @@
 import { Text, Pressable, View, StyleSheet, TextInput, SafeAreaView } from "react-native";
 
-import { useState } from "react";
-
-import { Title } from "../../../components/Title";
-import { Button } from "../../../components/Button";
+import { useContext, useState } from "react";
 
 import auth from "@react-native-firebase/auth";
+
+import { Title } from "../../../components/Title";
+import { Button } from '../../../components/Button'
+
+import firestore from '@react-native-firebase/firestore';
 
 import { globalStyles } from "../../globalStyles";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { UserContext } from '../../../context/UserContext'
+
 export const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { setUserData } = useContext(UserContext)
+
   const handleLogin = async () => {
     auth()
       .signInWithEmailAndPassword(email, password)
-      .then(async () => {
+      .then(async (res) => {
         await AsyncStorage.setItem("@barber_app__email", email);
         await AsyncStorage.setItem("@barber_app__password", password);
+
+        console.log("RES FROM AUTH LOGIN", res.user.uid)
+
+        firestore()
+          .collection("users")
+          .where("uid", "==", res.user.uid)
+          .get()
+          .then((res) => {
+            setUserData(res._docs[0]?._data);
+          })
 
         navigation.navigate("Services");
       })

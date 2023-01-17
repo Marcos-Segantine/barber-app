@@ -34,7 +34,7 @@ export const Register = ({ navigation }) => {
           .collection("users")
           .doc(res.user.uid)
           .set({
-            name: name || "User teste",
+            name: name,
             email: email,
             password: password,
             phone: phone,
@@ -49,8 +49,8 @@ export const Register = ({ navigation }) => {
             schedules: []
           })
 
-        await AsyncStorage.getItem("@barber_app__email");
-        await AsyncStorage.getItem("@barber_app__password");
+        await AsyncStorage.setItem("@barber_app__email", email);
+        await AsyncStorage.setItem("@barber_app__password", password);
 
         navigation.navigate("Services");
       })

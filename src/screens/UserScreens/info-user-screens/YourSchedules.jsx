@@ -4,7 +4,7 @@ import { Title } from "../../../components/Title";
 import { useContext, useEffect, useState } from "react";
 
 import { UserContext } from "../../../context/UserContext";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -15,7 +15,11 @@ export const YourSchedules = () => {
 
     const navigation = useNavigation()
 
+    const isFocused = useIsFocused()
+
     useEffect(() => {
+
+        console.log("FOCUDED", "USER -> ", userData);
 
         firestore()
             .collection("schedules_by_user")
@@ -25,7 +29,7 @@ export const YourSchedules = () => {
                 setShedules(_data.schedules)
             })
 
-    }, [ navigation.isFocused ])
+    }, [ isFocused ])
 
 
     return(

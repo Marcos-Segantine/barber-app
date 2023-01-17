@@ -86,7 +86,7 @@ export const Schedules = ({ navigation }) => {
                 }
             </View>
 
-            <Button text="Comfirmar" action={handleButton} waitingData={!!shedulesUser.shedule} />
+            <Button text="Comfirmar" action={handleButton} waitingData={shedulesUser.shedule ? !!shedulesUser.shedule : false} />
         </View>
     )
 }
