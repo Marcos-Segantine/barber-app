@@ -43,12 +43,13 @@ export const Services = ({ navigation }) => {
                     (
                         services.services.map((service, index) =>  {
                             return(
-                                <Pressable style={serviceUserSelected === service ? style.serviceSelected : style.service} key={index}>
-                                    <Text style={style.serviceText} onPress={() => {
-                                        setShedulesUser({ ...shedulesUser, service: `${service}` })
-                                        setServiceUserSelected(service)
-                                        
-                                    }}>{service}</Text>
+                                <Pressable style={serviceUserSelected === service ? style.serviceSelected : style.service} key={index} onPress={() => {
+                                    setShedulesUser({ ...shedulesUser, service: `${service}` })
+                                    setServiceUserSelected(service)
+                                    
+                                }}
+                                >
+                                    <Text style={style.serviceText}>{service}</Text>
                                 </Pressable>
                             )
                         })
@@ -83,7 +84,6 @@ const style = StyleSheet.create({
         borderColor: "#E95401",
         fontWeight: '700',
         paddingVertical: 5,
-        paddingHorizontal: 25,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center"
