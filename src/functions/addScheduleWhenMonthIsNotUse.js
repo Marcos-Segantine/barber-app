@@ -54,7 +54,7 @@ export const addScheduleWhenMonthIsNotUse = (userData, navigation, shedulesUser)
                     })
               })
 
-            navigation.navigate("InitialScreen");
+            navigation.navigate("ConfirmSchedule");
           });
       });
   };

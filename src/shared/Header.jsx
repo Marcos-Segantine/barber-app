@@ -3,6 +3,8 @@ import { useNavigation, useNavigationState } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, Pressable } from "react-native";
 
+import firestore from '@react-native-firebase/firestore';
+
 import Svg, { Path, Circle, Defs, Pattern, Image, Use } from "react-native-svg";
 
 import { UserContext } from '../context/UserContext'
@@ -20,6 +22,30 @@ export const Header = () => {
   );
   const indexNavigationScreen = stateNavigation?.index
   const nameRouteNavigation = stateNavigation?.routes[indexNavigationScreen].name;
+
+    useEffect(() => {
+      const isUserLogIn = async() => {
+        const email = await AsyncStorage.getItem("@barber_app__email")
+
+        return email ? setShowUserIcon(true) : setShowUserIcon(false)
+      }
+
+      isUserLogIn()
+    
+      userData ? 
+      (
+        firestore()
+          .collection("users")
+          .doc(userData.uid)
+          .get()
+          .then(({ _data }) => {
+            isUserLogIn && _data ? setShowUserIcon(true) : setShowUserIcon(false)
+          })
+      ) :
+      (
+        setShowUserIcon(false)
+      )
+    }, [ stateNavigation ])
 
   const handleComaBack = () => {
     switch (nameRouteNavigation) {
@@ -57,17 +83,6 @@ export const Header = () => {
       setShowComeBackIcon(false) : setShowComeBackIcon(true)      
 
   }, [ stateNavigation ]);
-
-  useEffect(() => {
-    const isUserLogIn = async() => {
-      const email = await AsyncStorage.getItem("@barber_app__email")
-
-      email ? setShowUserIcon(true) : setShowUserIcon(false)
-  }
-  
-  isUserLogIn()
-
-  }, [ stateNavigation ])
 
   return (
     <View style={style.container}>

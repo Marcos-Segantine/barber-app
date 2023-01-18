@@ -73,7 +73,7 @@ export const addScheduleWhenDayAlredyUse = (_data, navigation, userData, shedule
                         })
                   })
 
-                navigation.navigate("InitialScreen");
+                navigation.navigate("ConfirmSchedule");
               });
           });
       });

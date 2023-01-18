@@ -85,7 +85,7 @@ export const addScheduleWhenDayNotUse = (userData, navigation, shedulesUser) => 
                         })
                   })
 
-                    navigation.navigate("InitialScreen");
+                    navigation.navigate("ConfirmSchedule");
                   });
               });
           });
