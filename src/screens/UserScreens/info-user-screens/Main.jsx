@@ -32,7 +32,7 @@ export const Main = () => {
 
     return(
         <View style={style.container}>
-            <Title title={`Olá ${userData.name}`} />
+            <Title title={`Olá ${userData?.name}`} />
 
             <View style={style.contentLinks}>
                 <Pressable style={style.link}>

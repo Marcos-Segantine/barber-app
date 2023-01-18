@@ -13,9 +13,9 @@ import { globalStyles } from "../../globalStyles";
 import { getMonth } from "../../../functions/getMonth";
 import { getDay } from "../../../functions/getDay";
 
-import { addScheduleWhenDayAlredyUse } from '../../../functions/addScheduleWhenDayAlredyUse'
-import { addScheduleWhenDayNotUse } from '../../../functions/addScheduleWhenDayNotUse'
-import { addScheduleWhenMonthIsNotUse } from '../../../functions/addScheduleWhenMonthIsNotUse'
+import { addScheduleWhenDayAlredyUse } from "../../../functions/addScheduleWhenDayAlredyUse";
+import { addScheduleWhenDayNotUse } from "../../../functions/addScheduleWhenDayNotUse";
+import { addScheduleWhenMonthIsNotUse } from "../../../functions/addScheduleWhenMonthIsNotUse";
 import { UserContext } from "../../../context/UserContext";
 
 export const ConfirmSchedule = ({ navigation }) => {
@@ -23,7 +23,7 @@ export const ConfirmSchedule = ({ navigation }) => {
 
   const [isAllRight, setIsAllRight] = useState(false);
 
-  const { userData } = useContext(UserContext)
+  const { userData } = useContext(UserContext);
 
   isAllRight
     ? setTimeout(() => {
@@ -31,8 +31,8 @@ export const ConfirmSchedule = ({ navigation }) => {
       }, 100)
     : null;
 
-  const sheduleMouth = getMonth(shedulesUser)
-  const sheduleDay = getDay(shedulesUser)
+  const sheduleMouth = getMonth(shedulesUser);
+  const sheduleDay = getDay(shedulesUser);
 
   const handleComfirm = async () => {
     firestore()
@@ -40,9 +40,7 @@ export const ConfirmSchedule = ({ navigation }) => {
       .doc(`${sheduleMouth}_2023`)
       .get()
       .then(({ _data }) => {
-        console.log(_data, "<<< _DATA");
         if (_data === undefined) {
-          
           addScheduleWhenMonthIsNotUse(userData, navigation, shedulesUser);
           return;
         }
@@ -50,10 +48,13 @@ export const ConfirmSchedule = ({ navigation }) => {
         const dayIsAlredyUse = _data[sheduleDay];
 
         dayIsAlredyUse
-          ? (console.log("DAY AND PROFESSIONAL ALREADY USING"),
-            addScheduleWhenDayAlredyUse(_data, navigation, userData, shedulesUser))
-          : (console.log("DAY AND PROFESSIONAL NOT USE YET"),
-            addScheduleWhenDayNotUse(userData, navigation, shedulesUser));
+          ? addScheduleWhenDayAlredyUse(
+              _data,
+              navigation,
+              userData,
+              shedulesUser
+            )
+          : addScheduleWhenDayNotUse(userData, navigation, shedulesUser);
       });
   };
 
@@ -73,7 +74,9 @@ export const ConfirmSchedule = ({ navigation }) => {
         </View>
 
         <View style={style.data}>
-          <Text style={style.textData}>Profissional: {shedulesUser.professional}</Text>
+          <Text style={style.textData}>
+            Profissional: {shedulesUser.professional}
+          </Text>
         </View>
 
         <View style={style.data}>
