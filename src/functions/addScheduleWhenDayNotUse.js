@@ -1,93 +1,99 @@
-import firestore from "@react-native-firebase/firestore";
+import firestore from '@react-native-firebase/firestore';
 
-import { getDay } from "./getDay";
-import { getHour } from "./getHour";
-import { getMonth } from "./getMonth";
-import { getProfessional } from "./getProfessional";
+import {getDay} from './getDay';
+import {getHour} from './getHour';
+import {getMonth} from './getMonth';
+import {getProfessional} from './getProfessional';
 
-export const addScheduleWhenDayNotUse = (userData, navigation, shedulesUser) => {
-    console.log("addScheduleWhenDayNotUse CALLED THIS ONE");
+import {clearSchedule} from './clearSchedule';
 
-    const scheduleMouth = getMonth(shedulesUser)
-    const scheduleDay = getDay(shedulesUser)
-    const scheduleHour = getHour(shedulesUser)
-    const scheduleProfessional = getProfessional(shedulesUser)
+export const addScheduleWhenDayNotUse = (
+  userData,
+  navigation,
+  shedulesUser,
+  setShedulesUser,
+) => {
+  console.log('addScheduleWhenDayNotUse CALLED THIS ONE');
 
-    firestore()
-      .collection("schedules_month")
-      .doc(`${scheduleMouth}_2023`)
-      .get()
-      .then(({ _data }) => {
-        console.log(_data);
+  const scheduleMouth = getMonth(shedulesUser);
+  const scheduleDay = getDay(shedulesUser);
+  const scheduleHour = getHour(shedulesUser);
+  const scheduleProfessional = getProfessional(shedulesUser);
 
-        firestore()
-          .collection("schedules_month")
-          .doc(`${scheduleMouth}_2023`)
-          .update({
-            ..._data,
-            [scheduleDay]: {
-              [scheduleProfessional]: {
-                [scheduleHour]: { ...shedulesUser },
-              },
+  firestore()
+    .collection('schedules_month')
+    .doc(`${scheduleMouth}_2023`)
+    .get()
+    .then(({_data}) => {
+      console.log(_data);
+
+      firestore()
+        .collection('schedules_month')
+        .doc(`${scheduleMouth}_2023`)
+        .update({
+          ..._data,
+          [scheduleDay]: {
+            [scheduleProfessional]: {
+              [scheduleHour]: {...shedulesUser},
             },
-          })
-          .then(() => {
-            firestore()
-              .collection("unavailable_times")
-              .doc(`${scheduleMouth}_2023`)
-              .get()
-              .then(({ _data }) => {
-                console.log(_data[scheduleDay], "_data");
+          },
+        })
+        .then(() => {
+          firestore()
+            .collection('unavailable_times')
+            .doc(`${scheduleMouth}_2023`)
+            .get()
+            .then(({_data}) => {
+              // Verify if there aree data at the database with this props
+              if (!_data[scheduleDay]) {
+                _data = {
+                  [scheduleDay]: {
+                    [scheduleProfessional]: [`${shedulesUser.shedule}`],
+                  },
+                };
 
-                // Verify if there aree data at the database with this props
-                if (!_data[scheduleDay]) {
-                  _data = {
-                    [scheduleDay]: {
+                console.log(_data, '_data');
+              } else {
+                _data[scheduleDay][scheduleProfessional]
+                  ? _data[scheduleDay][scheduleProfessional].push(
+                      `${shedulesUser.shedule}`,
+                    )
+                  : (_data[scheduleDay] = {
+                      ..._data[scheduleDay],
                       [scheduleProfessional]: [`${shedulesUser.shedule}`],
-                    },
-                  };
+                    });
+              }
 
-                  console.log(_data, "_data");
-                } else {
-                  _data[scheduleDay][scheduleProfessional]
-                    ? _data[scheduleDay][scheduleProfessional].push(
-                        `${shedulesUser.shedule}`
-                      )
-                    : (_data[scheduleDay] = {
-                        ..._data[scheduleDay],
-                        [scheduleProfessional]: [`${shedulesUser.shedule}`],
-                      });
-                }
+              firestore()
+                .collection('unavailable_times')
+                .doc(`${scheduleMouth}_2023`)
+                .update(_data)
+                .then(() => {
+                  console.log('unavailable_times updated!!');
 
-                firestore()
-                  .collection("unavailable_times")
-                  .doc(`${scheduleMouth}_2023`)
-                  .update(_data)
-                  .then(() => {
-                    console.log("unavailable_times collection updated!!");
-
-
-                    firestore()
-                  .collection("schedules_by_user")
-                  .doc(userData.uid)
-                  .get()
-                  .then(({ _data }) => {
+                  firestore()
+                    .collection('schedules_by_user')
+                    .doc(userData.uid)
+                    .get()
+                    .then(({_data}) => {
                       console.log(_data);
 
-                      _data.schedules.push({ ...shedulesUser })
+                      _data.schedules.push({...shedulesUser});
 
                       firestore()
-                        .collection("schedules_by_user")
+                        .collection('schedules_by_user')
                         .doc(userData.uid)
                         .update(_data)
                         .then(() => {
-                          console.log("schedules_by_user UPDATED!!");
-                        })
-                  })
+                          console.log('schedules_by_user UPDATED!!');
+                        });
+                    });
 
-                    navigation.navigate("ConfirmSchedule");
-                  });
-              });
-          });
-      });
-  };
+                  clearSchedule(shedulesUser, setShedulesUser);
+
+                  navigation.navigate('FinalScreen');
+                });
+            });
+        });
+    });
+};

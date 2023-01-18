@@ -1,47 +1,44 @@
-import { Text, View, StyleSheet } from "react-native";
+import {Text, View, StyleSheet} from 'react-native';
 
-import { Title } from "../../../components/Title";
-import { Button } from "../../../components/Button";
+import {Title} from '../../../components/Title';
+import {Button} from '../../../components/Button';
 
-import { useContext, useState } from "react";
-import { ShedulesUserContext } from "../../../context/ShedulesUser";
+import {useContext, useState} from 'react';
+import {ShedulesUserContext} from '../../../context/ShedulesUser';
 
-import firestore from "@react-native-firebase/firestore";
+import firestore from '@react-native-firebase/firestore';
 
-import { globalStyles } from "../../globalStyles";
+import {globalStyles} from '../../globalStyles';
 
-import { getMonth } from "../../../functions/getMonth";
-import { getDay } from "../../../functions/getDay";
+import {getMonth} from '../../../functions/getMonth';
+import {getDay} from '../../../functions/getDay';
 
-import { addScheduleWhenDayAlredyUse } from "../../../functions/addScheduleWhenDayAlredyUse";
-import { addScheduleWhenDayNotUse } from "../../../functions/addScheduleWhenDayNotUse";
-import { addScheduleWhenMonthIsNotUse } from "../../../functions/addScheduleWhenMonthIsNotUse";
-import { UserContext } from "../../../context/UserContext";
+import {addScheduleWhenDayAlredyUse} from '../../../functions/addScheduleWhenDayAlredyUse';
+import {addScheduleWhenDayNotUse} from '../../../functions/addScheduleWhenDayNotUse';
+import {addScheduleWhenMonthIsNotUse} from '../../../functions/addScheduleWhenMonthIsNotUse';
+import {UserContext} from '../../../context/UserContext';
 
-export const ConfirmSchedule = ({ navigation }) => {
-  const { shedulesUser } = useContext(ShedulesUserContext);
+export const ConfirmSchedule = ({navigation}) => {
+  const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
 
-  const [isAllRight, setIsAllRight] = useState(false);
-
-  const { userData } = useContext(UserContext);
-
-  isAllRight
-    ? setTimeout(() => {
-        navigation.navigate("FinalScreen");
-      }, 100)
-    : null;
+  const {userData} = useContext(UserContext);
 
   const sheduleMouth = getMonth(shedulesUser);
   const sheduleDay = getDay(shedulesUser);
 
   const handleComfirm = async () => {
     firestore()
-      .collection("schedules_month")
+      .collection('schedules_month')
       .doc(`${sheduleMouth}_2023`)
       .get()
-      .then(({ _data }) => {
+      .then(({_data}) => {
         if (_data === undefined) {
-          addScheduleWhenMonthIsNotUse(userData, navigation, shedulesUser);
+          addScheduleWhenMonthIsNotUse(
+            userData,
+            navigation,
+            shedulesUser,
+            setShedulesUser,
+          );
           return;
         }
 
@@ -52,9 +49,15 @@ export const ConfirmSchedule = ({ navigation }) => {
               _data,
               navigation,
               userData,
-              shedulesUser
+              shedulesUser,
+              setShedulesUser,
             )
-          : addScheduleWhenDayNotUse(userData, navigation, shedulesUser);
+          : addScheduleWhenDayNotUse(
+              userData,
+              navigation,
+              shedulesUser,
+              setShedulesUser,
+            );
       });
   };
 
@@ -92,26 +95,26 @@ export const ConfirmSchedule = ({ navigation }) => {
 const style = StyleSheet.create({
   subTitle: {
     fontSize: 12,
-    color: "#FFFFFF60",
+    color: '#FFFFFF60',
   },
 
   contentData: {
-    width: "85%",
+    width: '85%',
     marginTop: 30,
   },
 
   data: {
-    borderColor: "#E95401",
+    borderColor: '#E95401',
     borderRadius: 20,
     borderWidth: 2,
     paddingVertical: 15,
-    alignItems: "center",
+    alignItems: 'center',
     marginVertical: 5,
   },
 
   textData: {
-    color: "#FFFFFF",
-    fontWeight: "700",
+    color: '#FFFFFF',
+    fontWeight: '700',
     fontSize: 16,
   },
 });
