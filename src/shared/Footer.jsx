@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View, Pressable } from "react-native"
-import { ScreenStackHeaderRightView } from "react-native-screens"
 
 export const Footer = () => {
     return(
@@ -20,9 +19,6 @@ const style = StyleSheet.create({
         width: "100%",
         alignItems: "center",
         backgroundColor: "#1E1E1E",
-        position: 'relative',
-        bottom: 0,
-        right: 0,
     },
 
     message: {
