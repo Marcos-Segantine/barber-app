@@ -46,7 +46,7 @@ export const Services = ({ navigation }) => {
                                 <Pressable style={serviceUserSelected === service ? style.serviceSelected : style.service} key={index} onPress={() => {
                                     setShedulesUser({ ...shedulesUser, service: `${service}` })
                                     setServiceUserSelected(service)
-                                    
+
                                 }}
                                 >
                                     <Text style={style.serviceText}>{service}</Text>
@@ -61,7 +61,7 @@ export const Services = ({ navigation }) => {
            
             </ScrollView>
 
-            <Button text="Comfirmar" action={handleComfirmButton} waitingData={shedulesUser ? !!shedulesUser.service : false} />
+            <Button text="Confirmar" action={handleComfirmButton} waitingData={shedulesUser ? !!shedulesUser.service : false} />
         </SafeAreaView>
     )
 }

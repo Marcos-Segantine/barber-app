@@ -30,14 +30,14 @@ export const Professionals = ({ navigation }) => {
                         setShedulesUser({...shedulesUser, professional: "Barbeiro 1"})
                         setProfessionalUserSelected("Barbeiro 1")    
                     }}>
-                        <Text style={style.professionalName}>BArbeiro 1</Text>
+                        <Text style={style.professionalName}>Barbeiro 1</Text>
                     </Pressable>
 
                     <Pressable style={professionalUserSelected === 'Barbeiro 2' ? style.professionalsSelected : style.professionals} onPress={() => {
                         setShedulesUser({...shedulesUser, professional: "Barbeiro 2"})
                         setProfessionalUserSelected("Barbeiro 2")
                     }}>
-                        <Text style={style.professionalName}>BArbeiro 2</Text>
+                        <Text style={style.professionalName}>Barbeiro 2</Text>
                     </Pressable>
 
                     <Pressable style={professionalUserSelected === 'Barbeiro 3' ? style.professionalsSelected : style.professionals} onPress={() => {

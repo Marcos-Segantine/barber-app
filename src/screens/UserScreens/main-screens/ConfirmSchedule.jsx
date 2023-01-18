@@ -243,7 +243,7 @@ export const ConfirmSchedule = ({ navigation }) => {
         const dayIsAlredyUse = _data[sheduleDay];
 
         dayIsAlredyUse
-          ? (console.log("DAY AND PROFESSIONAL ALREDY USIGN"),
+          ? (console.log("DAY AND PROFESSIONAL ALREADY USING"),
             addScheduleWhenDayAlredyUse(_data))
           : (console.log("DAY AND PROFESSIONAL NOT USE YET"),
             addScheduleWhenDayNotUse(_data));
@@ -274,7 +274,7 @@ export const ConfirmSchedule = ({ navigation }) => {
         </View>
       </View>
 
-      <Button text="Comfirmar" action={handleComfirm} />
+      <Button text="Confirmar" action={handleComfirm} />
     </View>
   );
 };
