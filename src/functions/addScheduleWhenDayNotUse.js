@@ -1,8 +1,4 @@
 import firestore from "@react-native-firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
-
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
 
 import { getDay } from "./getDay";
 import { getHour } from "./getHour";

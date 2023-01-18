@@ -31,8 +31,8 @@ export const ConfirmSchedule = ({ navigation }) => {
       }, 100)
     : null;
 
-  const sheduleMouth = getMonth()
-  const sheduleDay = getDay()
+  const sheduleMouth = getMonth(shedulesUser)
+  const sheduleDay = getDay(shedulesUser)
 
   const handleComfirm = async () => {
     firestore()
@@ -40,7 +40,9 @@ export const ConfirmSchedule = ({ navigation }) => {
       .doc(`${sheduleMouth}_2023`)
       .get()
       .then(({ _data }) => {
+        console.log(_data, "<<< _DATA");
         if (_data === undefined) {
+          
           addScheduleWhenMonthIsNotUse(userData, navigation, shedulesUser);
           return;
         }
