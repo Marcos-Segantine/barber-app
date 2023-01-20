@@ -17,8 +17,6 @@ import {useState} from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {globalStyles} from '../../globalStyles';
-
 export const Register = ({navigation}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
