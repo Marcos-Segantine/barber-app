@@ -32,6 +32,13 @@ export const Login = ({navigation}) => {
   const {setUserData} = useContext(UserContext);
 
   const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      setMessageError('Por favor preencha todos os campos'),
+        setModalVisible(true);
+
+      return;
+    }
+
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(async res => {
@@ -70,6 +77,11 @@ export const Login = ({navigation}) => {
       });
   };
 
+  const clearEmailAndPassword = () => {
+    setEmail('');
+    setPassword('');
+  };
+
   return (
     <>
       <Modal
@@ -78,7 +90,6 @@ export const Login = ({navigation}) => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>
         <View style={style.modalContainer}>
-
           <View>
             <Text style={style.messageError}>{messageError}.</Text>
             <Text style={style.secondMessageError}>Tente novamente.</Text>
@@ -86,7 +97,10 @@ export const Login = ({navigation}) => {
 
           <Pressable
             style={style.okButtonModal}
-            onPress={() => setModalVisible(false)}>
+            onPress={() => {
+              clearEmailAndPassword();
+              setModalVisible(false);
+            }}>
             <Text style={style.textOkButtonModal}>OK</Text>
           </Pressable>
         </View>
@@ -97,6 +111,7 @@ export const Login = ({navigation}) => {
 
         <View style={style.form}>
           <TextInput
+            value={email}
             onChangeText={text => setEmail(text)}
             style={style.input}
             placeholder="Email"
@@ -105,6 +120,7 @@ export const Login = ({navigation}) => {
           />
 
           <TextInput
+            value={password}
             onChangeText={text => setPassword(text)}
             style={style.input}
             placeholder="Digite sua senha"
@@ -155,7 +171,8 @@ const style = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '700',
     fontSize: 25,
-    marginTop: 10
+    marginTop: 10,
+    textAlign: 'center',
   },
 
   okButtonModal: {
