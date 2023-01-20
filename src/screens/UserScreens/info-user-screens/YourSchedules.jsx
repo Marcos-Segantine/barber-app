@@ -1,4 +1,4 @@
-import {Text, View, StyleSheet, Pressable} from 'react-native';
+import {Text, View, StyleSheet, Pressable, ScrollView} from 'react-native';
 
 import {Title} from '../../../components/Title';
 import {useContext, useEffect, useState} from 'react';
@@ -7,6 +7,8 @@ import {UserContext} from '../../../context/UserContext';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 
 import firestore from '@react-native-firebase/firestore';
+
+import {globalStyles} from '../../globalStyles';
 
 export const YourSchedules = () => {
   const [schedules, setShedules] = useState(null);
@@ -28,10 +30,11 @@ export const YourSchedules = () => {
   }, [isFocused]);
 
   return (
-    <View style={style.container}>
+    <View style={globalStyles.container}>
       <Title title={'Seus agendamentos'} />
-
-      <View style={style.content}>
+      <ScrollView
+        style={style.contentScrollView}
+        contentContainerStyle={{alignItems: 'center'}}>
         {schedules ? (
           schedules.map((item, index) => {
             return (
@@ -49,29 +52,22 @@ export const YourSchedules = () => {
         ) : (
           <Text style={style.text}>Sem Horarios marcados</Text>
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 };
 
 const style = StyleSheet.create({
-  container: {
-    backgroundColor: '#1E1E1E',
-    flex: 1,
-    alignItems: 'center',
-  },
-
-  content: {
+  contentScrollView: {
     width: '100%',
-    alignItems: 'center',
-    marginTop: 70,
+    marginTop: 50
   },
 
   schedulesDay: {
     borderWidth: 3,
     borderRadius: 20,
     borderColor: '#E95401',
-    width: '80%',
+    width: '70%',
     paddingVertical: 15,
     alignItems: 'center',
     marginTop: 20,
