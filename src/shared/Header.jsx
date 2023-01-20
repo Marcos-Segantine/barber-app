@@ -1,93 +1,100 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation, useNavigationState } from "@react-navigation/native";
-import { useContext, useEffect, useState } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation, useNavigationState} from '@react-navigation/native';
+import {useContext, useEffect, useState} from 'react';
+import {Text, View, StyleSheet, Pressable} from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 
-import Svg, { Path, Circle, Defs, Pattern, Image, Use } from "react-native-svg";
+import Svg, {Path, Circle, Defs, Pattern, Image, Use} from 'react-native-svg';
 
-import { UserContext } from '../context/UserContext'
+import {UserContext} from '../context/UserContext';
 
 export const Header = () => {
-  const [ showComeBackIcon, setShowComeBackIcon ] = useState(false);
-  const [ showUserIcon, setShowUserIcon ] = useState(false)
+  const [showComeBackIcon, setShowComeBackIcon] = useState(false);
+  const [showUserIcon, setShowUserIcon] = useState(false);
 
   const navigation = useNavigation();
 
-  const { userData } = useContext(UserContext)
+  const {userData} = useContext(UserContext);
 
   const stateNavigation = useNavigationState(
-    (stateNavigation) => stateNavigation
+    stateNavigation => stateNavigation,
   );
-  const indexNavigationScreen = stateNavigation?.index
-  const nameRouteNavigation = stateNavigation?.routes[indexNavigationScreen].name;
+  const indexNavigationScreen = stateNavigation?.index;
+  const nameRouteNavigation =
+    stateNavigation?.routes[indexNavigationScreen].name;
 
-    useEffect(() => {
-      const isUserLogIn = async() => {
-        const email = await AsyncStorage.getItem("@barber_app__email")
+  useEffect(() => {
+    const isUserLogIn = async () => {
+      const email = await AsyncStorage.getItem('@barber_app__email');
 
-        return email ? setShowUserIcon(true) : setShowUserIcon(false)
-      }
+      return email ? setShowUserIcon(true) : setShowUserIcon(false);
+    };
 
-      isUserLogIn()
-    
-      userData ? 
-      (
-        firestore()
-          .collection("users")
+    isUserLogIn();
+
+    userData
+      ? firestore()
+          .collection('users')
           .doc(userData.uid)
           .get()
-          .then(({ _data }) => {
-            isUserLogIn && _data ? setShowUserIcon(true) : setShowUserIcon(false)
+          .then(({_data}) => {
+            isUserLogIn && _data
+              ? setShowUserIcon(true)
+              : setShowUserIcon(false);
           })
-      ) :
-      (
-        setShowUserIcon(false)
-      )
-    }, [ stateNavigation ])
+      : setShowUserIcon(false);
+  }, [stateNavigation]);
 
   const handleComaBack = () => {
     switch (nameRouteNavigation) {
-        case "InitialScreen":
-            break;
-        case "Main":
-            navigation.navigate("InitialScreen")
-            setShowComeBackIcon(false)
-            break;
-        case "Login":
-            navigation.navigate("InitialScreen");
-            setShowComeBackIcon(false)
-            break;
-        case "Services":
-            navigation.navigate("InitialScreen");
-            setShowComeBackIcon(false)
-            break;
-        default:
-            navigation.goBack();
-            break;
+      case 'InitialScreen':
+        break;
+      case 'Main':
+        navigation.navigate('InitialScreen');
+        setShowComeBackIcon(false);
+        break;
+      case 'Login':
+        navigation.navigate('InitialScreen');
+        setShowComeBackIcon(false);
+        break;
+      case 'Services':
+        navigation.navigate('InitialScreen');
+        setShowComeBackIcon(false);
+        break;
+      default:
+        navigation.goBack();
+        break;
     }
   };
 
   const handleUserPerfil = () => {
-    navigation.navigate("Main");
+    navigation.navigate('Main');
   };
 
   useEffect(() => {
-    if(stateNavigation?.routes[stateNavigation.index].name === undefined) {
-      setShowComeBackIcon(false)
-      return
+    if (stateNavigation?.routes[stateNavigation.index].name === undefined) {
+      setShowComeBackIcon(false);
+      return;
     }
 
-    stateNavigation?.routes[stateNavigation.index].name === "InitialScreen" ?
-      setShowComeBackIcon(false) : setShowComeBackIcon(true)      
+    stateNavigation?.routes[stateNavigation.index].name === 'InitialScreen'
+      ? setShowComeBackIcon(false)
+      : setShowComeBackIcon(true);
 
-  }, [ stateNavigation ]);
+    stateNavigation?.routes[stateNavigation.index].name === 'FinalScreen'
+      ? setShowComeBackIcon(false)
+      : setShowComeBackIcon(true);
+  }, [stateNavigation]);
 
   return (
     <View style={style.container}>
       <View style={style.containerIcons}>
-      <Pressable style={showComeBackIcon ? style.comeBackIcon : style.comeBackIconHidden} onPress={handleComaBack}>
+        <Pressable
+          style={
+            showComeBackIcon ? style.comeBackIcon : style.comeBackIconHidden
+          }
+          onPress={handleComaBack}>
           <Svg width={50} height={40} viewBox="0 0 30 30" fill="none">
             <Path fill="url(#pattern0)" d="M0 0H30V30H0z" />
             <Defs>
@@ -95,8 +102,7 @@ export const Header = () => {
                 id="pattern0"
                 patternContentUnits="objectBoundingBox"
                 width={1}
-                height={1}
-              >
+                height={1}>
                 <Use xlinkHref="#image0_11_307" transform="scale(.00093)" />
               </Pattern>
               <Image
@@ -109,7 +115,9 @@ export const Header = () => {
           </Svg>
         </Pressable>
 
-        <Pressable style={showUserIcon ? style.userIcon : style.userIconHidden} onPress={handleUserPerfil}>
+        <Pressable
+          style={showUserIcon ? style.userIcon : style.userIconHidden}
+          onPress={handleUserPerfil}>
           <Svg width={40} height={40} viewBox="0 0 37 38" fill="none">
             <Path fill="url(#pattern0)" d="M0 0H37V38H0z" />
             <Defs>
@@ -117,8 +125,7 @@ export const Header = () => {
                 id="pattern0"
                 patternContentUnits="objectBoundingBox"
                 width={1}
-                height={1}
-              >
+                height={1}>
                 <Use
                   xlinkHref="#image0_10_96"
                   transform="matrix(.00095 0 0 .00093 -.014 0)"
@@ -138,11 +145,10 @@ export const Header = () => {
       <View style={style.containerLogo}>
         <Text
           style={{
-            color: "white",
-            fontWeight: "700",
+            color: 'white',
+            fontWeight: '700',
             fontSize: 30,
-          }}
-        >
+          }}>
           LOGO
         </Text>
       </View>
@@ -152,37 +158,37 @@ export const Header = () => {
 
 const style = StyleSheet.create({
   container: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: '#1E1E1E',
   },
 
   containerIcons: {
     minHeight: 50,
-},
+  },
 
   comeBackIcon: {
-    position: "absolute",
+    position: 'absolute',
     left: 20,
     top: 20,
   },
 
   comeBackIconHidden: {
-    display: 'none'
+    display: 'none',
   },
 
   userIcon: {
-    position: "absolute",
+    position: 'absolute',
     right: 20,
     top: 20,
   },
 
   userIconHidden: {
-    display: 'none'
+    display: 'none',
   },
 
   containerLogo: {
-    width: "100%",
+    width: '100%',
     minHeight: 130,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
