@@ -1,101 +1,156 @@
-import {  View, StyleSheet } from "react-native"
+import {View, StyleSheet} from 'react-native';
 
-import { useContext, useEffect, useState } from "react"
+import {useContext, useEffect, useState} from 'react';
 
-import { Calendar } from "react-native-calendars"
+import {Calendar, LocaleConfig} from 'react-native-calendars';
 
-import { Title } from "../../../components/Title"
-import { Button } from '../../../components/Button'
+import {Title} from '../../../components/Title';
+import {Button} from '../../../components/Button';
 
-import { ShedulesUserContext } from "../../../context/ShedulesUser"
+import {ShedulesUserContext} from '../../../context/ShedulesUser';
 
-import { globalStyles } from "../../globalStyles"
+import {globalStyles} from '../../globalStyles';
 
 import firestore from '@react-native-firebase/firestore';
 
-export const Calandar = ({ navigation }) => {
-    const currentDate = new Date()
+export const Calandar = ({navigation}) => {
+  LocaleConfig.locales['br'] = {
+    monthNames: [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
+    ],
+    monthNamesShort: [
+      'jan',
+      'fev',
+      'mar',
+      'abr',
+      'maio',
+      'jun',
+      'jul',
+      'ago',
+      'set',
+      'out',
+      'nov',
+      'dez',
+    ],
+    dayNames: [
+      'Domingo',
+      'Segunda-feira',
+      'Terça-feira',
+      'Quarta-feira',
+      'Quinta-feira',
+      'Sexta-feira',
+      'Sábado',
+    ],
+    dayNamesShort: ['Seg', 'Terç', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+  };
 
-    const [ deniedDays, setDeniedDays ] = useState()
-    const [ month, setMonth ] = useState(currentDate.getMonth() + 1)
-    const [ arrawLeftAvaible, setArrawLeftAvaible ] = useState(false)
+  LocaleConfig.defaultLocale = 'br';
 
-    // const currentMonth = currentDate.getMonth() + 1
+  const currentDate = new Date();
 
-    const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
+  const [deniedDays, setDeniedDays] = useState();
+  const [month, setMonth] = useState(currentDate.getMonth() + 1);
+  const [arrawLeftAvaible, setArrawLeftAvaible] = useState(false);
 
-    useEffect(() => {
-        firestore()
-            .collection("denied_days")
-            .get()
-            .then(async({ _docs }) => {
-                setDeniedDays(_docs[month - 1]._data)
-            })
-        }, [month])
+  // const currentMonth = currentDate.getMonth() + 1
 
-        const handleButton = () => {
-        shedulesUser.day ?
-            navigation.navigate("Schedules") :
-            console.log("NÃO SELECIONOU UM DIA");
+  const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
+
+  useEffect(() => {
+    firestore()
+      .collection('denied_days')
+      .get()
+      .then(async ({_docs}) => {
+        setDeniedDays(_docs[month - 1]._data);
+      });
+  }, [month]);
+
+  const handleButton = () => {
+    shedulesUser.day
+      ? navigation.navigate('Schedules')
+      : console.log('NÃO SELECIONOU UM DIA');
+  };
+
+  const handleLeftArrow = () => {
+    if (month === 1) {
+      setMonth(12);
+      return;
     }
 
-    const handleLeftArrow = () => {
-        if (month === 1) {
-            setMonth(12)
-            return
+    setMonth(month - 1);
+  };
+
+  const handleRightArrow = () => {
+    if (month === 12) {
+      setMonth(1);
+      return;
+    }
+
+    setMonth(month + 1);
+  };
+
+  return (
+    <View style={globalStyles.container}>
+      <Title title="Selecione um data" />
+
+      <Calendar
+        onPressArrowLeft={subtractMonth => {
+          handleLeftArrow();
+          subtractMonth();
+        }}
+        onPressArrowRight={addMonth => {
+          handleRightArrow();
+          addMonth();
+        }}
+        minDate={String(new Date())}
+        markedDates={{
+          ...deniedDays,
+          [shedulesUser.day]: {
+            selected: true,
+            marked: true,
+            selectedColor: 'white',
+          },
+        }}
+        // deniedDays
+        onDayPress={day =>
+          setShedulesUser({...shedulesUser, day: day.dateString})
         }
-        
-        setMonth(month - 1)
-    }
+        disableArrowLeft={arrawLeftAvaible}
+        style={{
+          width: 350,
+          marginTop: 40,
+          padding: 5,
+          borderRadius: 20,
+        }}
+        theme={{
+          calendarBackground: '#E95401',
+          dayTextColor: '#FFFFFF',
+          selectedDayTextColor: '#E95401',
+          selectedDayBackgroundColor: '#FFFFFF',
+          textDisabledColor: '#FFFFFF40',
+          textSectionTitleColor: '#FFFFFF',
+          arrowColor: '#FFFFFF',
+          monthTextColor: '#FFFFFF',
+          textDayHeaderFontWeight: '700',
+        }}
+      />
 
-    const handleRightArrow = () => {
-        if (month === 12) {
-            setMonth(1)
-            return
-        } 
-
-        setMonth(month + 1)
-    }
-
-    return(
-        <View style={globalStyles.container}>
-
-            <Title title="Selecione um data" />
-
-            <Calendar
-                  onPressArrowLeft={subtractMonth => {
-                    handleLeftArrow()
-                    subtractMonth()
-                  }}
-                  onPressArrowRight={addMonth => {
-                    handleRightArrow()  
-                    addMonth()
-                  }}
-                minDate={String(new Date())}
-                markedDates={{ ...deniedDays, [shedulesUser.day]: {selected: true, marked: true, selectedColor: 'white'} }}
-                // deniedDays
-                onDayPress={day => setShedulesUser({...shedulesUser, day: day.dateString})}
-                disableArrowLeft={arrawLeftAvaible}
-                style={{
-                    width: 350,
-                    marginTop: 40,
-                    padding: 5,
-                    borderRadius: 20,
-                }}
-                theme={{
-                    calendarBackground: "#E95401",
-                    dayTextColor: "#FFFFFF",
-                    selectedDayTextColor: "#E95401",
-                    selectedDayBackgroundColor: "#FFFFFF",
-                    textDisabledColor: '#FFFFFF40',
-                    textSectionTitleColor: "#FFFFFF",
-                    arrowColor: "#FFFFFF",
-                    monthTextColor: "#FFFFFF",
-                    textDayHeaderFontWeight: "700"
-                }}
-            />
-
-            <Button text="Comfirmar" action={handleButton} waitingData={!!shedulesUser.day} />
-        </View>
-    )
-}
+      <Button
+        text="Comfirmar"
+        action={handleButton}
+        waitingData={!!shedulesUser.day}
+      />
+    </View>
+  );
+};
