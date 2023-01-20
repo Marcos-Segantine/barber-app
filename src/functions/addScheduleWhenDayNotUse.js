@@ -52,7 +52,6 @@ export const addScheduleWhenDayNotUse = (
                   },
                 };
 
-                console.log(_data, '_data');
               } else {
                 _data[scheduleDay][scheduleProfessional]
                   ? _data[scheduleDay][scheduleProfessional].push(
