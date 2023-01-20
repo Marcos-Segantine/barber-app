@@ -1,6 +1,8 @@
 export const clearSchedule = (shedulesUser, setShedulesUser) => {
+    const propsToClear = ["day", "professional", "service", "shedule"]
     for (const data in shedulesUser) {
-        shedulesUser[data] = null
+        if(propsToClear.includes(data)) shedulesUser[data] = null
     }
+
     setShedulesUser(shedulesUser)
 }

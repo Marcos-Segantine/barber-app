@@ -72,10 +72,9 @@ export const addScheduleWhenDayAlredyUse = (
                     .update(_data)
                     .then(() => {
                       console.log('schedules_by_user UPDATED!!');
+                      clearSchedule(shedulesUser, setShedulesUser);
                     });
                 });
-
-              clearSchedule(shedulesUser, setShedulesUser);
 
               navigation.navigate('FinalScreen');
             });
