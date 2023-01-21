@@ -132,7 +132,7 @@ export const Login = ({navigation}) => {
               <Text style={style.linkHelp}>Cadastrar</Text>
             </Pressable>
 
-            <Pressable>
+            <Pressable onPress={() => navigation.navigate("ForgotPassword")}>
               <Text style={style.linkHelp}>Esqueci minha senha</Text>
             </Pressable>
           </View>
