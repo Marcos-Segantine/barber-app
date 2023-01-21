@@ -3,7 +3,7 @@ import {Text, View, StyleSheet} from 'react-native';
 import {Title} from '../../../components/Title';
 import {Button} from '../../../components/Button';
 
-import {useContext, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {ShedulesUserContext} from '../../../context/ShedulesUser';
 
 import firestore from '@react-native-firebase/firestore';
@@ -17,6 +17,7 @@ import {addScheduleWhenDayAlredyUse} from '../../../functions/addScheduleWhenDay
 import {addScheduleWhenDayNotUse} from '../../../functions/addScheduleWhenDayNotUse';
 import {addScheduleWhenMonthIsNotUse} from '../../../functions/addScheduleWhenMonthIsNotUse';
 import {UserContext} from '../../../context/UserContext';
+import { useIsFocused } from '@react-navigation/native';
 
 export const ConfirmSchedule = ({navigation}) => {
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
@@ -25,6 +26,13 @@ export const ConfirmSchedule = ({navigation}) => {
 
   const sheduleMouth = getMonth(shedulesUser);
   const sheduleDay = getDay(shedulesUser);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    shedulesUser.scheduleUid = `${userData.uid}-${shedulesUser.day}-${shedulesUser.professional}-${shedulesUser.shedule}-${shedulesUser.service}`;
+    console.log(shedulesUser.scheduleUid, 'shedulesUser.scheduleUid');
+  }, [ isFocused ]);
 
   const handleComfirm = async () => {
     firestore()

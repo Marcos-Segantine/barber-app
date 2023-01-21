@@ -20,6 +20,7 @@ export const YourSchedules = () => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
+    console.log(userData.uid);
     firestore()
       .collection('schedules_by_user')
       .doc(userData.uid)
