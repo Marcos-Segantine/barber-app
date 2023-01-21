@@ -16,6 +16,7 @@
     "@react-native-firebase/firestore": "^16.5.0",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
+    "firebase": "^9.16.0",
     "react": "18.2.0",
     "react-native": "0.71.0",
     "react-native-calendars": "^1.1293.0",

@@ -16,6 +16,7 @@ import {Services} from './main-screens/Services';
 import {Main} from './info-user-screens/Main';
 import {ScheduleDetail} from './info-user-screens/ScheduleDetail';
 import {ForgotPassword} from './main-screens/ForgotPassword';
+import { ChangePassword } from './info-user-screens/ChangePassword';
 
 const {Screen, Navigator} = createNativeStackNavigator();
 
@@ -50,9 +51,13 @@ export const UserScreens = () => {
       <Screen name="CancelScreen" component={CancelScreen} />
 
       <Screen name="YourInformation" component={YourInformation} />
+
       <Screen name="ScheduleDetail" component={ScheduleDetail} />
 
       <Screen name="ForgotPassword" component={ForgotPassword} />
+
+      <Screen name='ChangePassword' component={ChangePassword} />
+
     </Navigator>
   );
 };

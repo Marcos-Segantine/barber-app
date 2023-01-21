@@ -49,7 +49,7 @@ export const Main = () => {
           <Text style={style.text}>Suas informações</Text>
         </Pressable>
 
-        <Pressable style={style.link}>
+        <Pressable style={style.link} onPress={() => navigation.navigate("ChangePassword")}>
           <Text style={style.text}>Redefinir senha</Text>
         </Pressable>
 
