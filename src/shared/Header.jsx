@@ -9,9 +9,13 @@ import Svg, {Path, Circle, Defs, Pattern, Image, Use} from 'react-native-svg';
 
 import {UserContext} from '../context/UserContext';
 
+import {verifyScreenName} from '../functions/verifyScreenName';
+
 export const Header = () => {
   const [showComeBackIcon, setShowComeBackIcon] = useState(false);
   const [showUserIcon, setShowUserIcon] = useState(false);
+
+  const [isUserLogIn, setIsUserLogIn] = useState(false);
 
   const navigation = useNavigation();
 
@@ -25,26 +29,24 @@ export const Header = () => {
     stateNavigation?.routes[indexNavigationScreen].name;
 
   useEffect(() => {
-    const isUserLogIn = async () => {
+    setShowComeBackIcon(verifyScreenName(stateNavigation));
+  }, [stateNavigation]);
+
+  useEffect(() => {
+    (async () => {
       const email = await AsyncStorage.getItem('@barber_app__email');
 
-      return email ? setShowUserIcon(true) : setShowUserIcon(false);
-    };
-
-    isUserLogIn();
-
-    userData
-      ? firestore()
-          .collection('users')
-          .doc(userData.uid)
-          .get()
-          .then(({_data}) => {
-            isUserLogIn && _data
-              ? setShowUserIcon(true)
-              : setShowUserIcon(false);
-          })
-      : setShowUserIcon(false);
-  }, [stateNavigation]);
+      email
+        ? firestore()
+            .collection('users')
+            .doc(userData?.uid)
+            .get()
+            .then(({_data}) => {
+              !!_data ? setShowUserIcon(true) : setShowUserIcon(false);
+            })
+        : setShowUserIcon(false);
+    })();
+  }, [userData]);
 
   const handleComaBack = () => {
     switch (nameRouteNavigation) {
@@ -71,21 +73,6 @@ export const Header = () => {
   const handleUserPerfil = () => {
     navigation.navigate('Main');
   };
-
-  useEffect(() => {
-    if (stateNavigation?.routes[stateNavigation.index].name === undefined) {
-      setShowComeBackIcon(false);
-      return;
-    }
-
-    stateNavigation?.routes[stateNavigation.index].name === 'InitialScreen'
-      ? setShowComeBackIcon(false)
-      : setShowComeBackIcon(true);
-
-    stateNavigation?.routes[stateNavigation.index].name === 'FinalScreen'
-      ? setShowComeBackIcon(false)
-      : setShowComeBackIcon(true);
-  }, [stateNavigation]);
 
   return (
     <View style={style.container}>
