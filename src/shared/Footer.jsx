@@ -19,6 +19,7 @@ const style = StyleSheet.create({
         width: "100%",
         alignItems: "center",
         backgroundColor: "#1E1E1E",
+        paddingTop: 25,
     },
 
     message: {

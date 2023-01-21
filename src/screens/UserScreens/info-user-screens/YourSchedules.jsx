@@ -10,6 +10,8 @@ import firestore from '@react-native-firebase/firestore';
 
 import {globalStyles} from '../../globalStyles';
 
+import { LoadingScreen } from '../../../components/LoadingScreen';
+
 export const YourSchedules = () => {
   const [schedules, setShedules] = useState(null);
 
@@ -32,7 +34,7 @@ export const YourSchedules = () => {
 
   return (
     <View style={globalStyles.container}>
-      <Title title={'Seus agendamentos'} />
+      <Title title={schedules?.length === 0 ? 'Você não tem nenhum horario marcado' : 'Seus agendamentos'} />
       <ScrollView
         style={style.contentScrollView}
         contentContainerStyle={{alignItems: 'center'}}>
@@ -50,9 +52,9 @@ export const YourSchedules = () => {
               </Pressable>
             );
           })
-        ) : (
-          <Text style={style.text}>Sem Horarios marcados</Text>
-        )}
+        ) :  <LoadingScreen />
+        }
+
       </ScrollView>
     </View>
   );

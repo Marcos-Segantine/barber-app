@@ -9,9 +9,9 @@ import {Button} from '../../../components/Button';
 
 import {ShedulesUserContext} from '../../../context/ShedulesUser';
 
-import {globalStyles} from '../../globalStyles';
-
 import firestore from '@react-native-firebase/firestore';
+
+import {LoadingScreen} from '../../../components/LoadingScreen';
 
 export const Calandar = ({navigation}) => {
   LocaleConfig.locales['br'] = {
@@ -59,7 +59,7 @@ export const Calandar = ({navigation}) => {
 
   const currentDate = new Date();
 
-  const [deniedDays, setDeniedDays] = useState();
+  const [deniedDays, setDeniedDays] = useState(null);
   const [month, setMonth] = useState(currentDate.getMonth() + 1);
   const [arrawLeftAvaible, setArrawLeftAvaible] = useState(false);
 
@@ -101,51 +101,54 @@ export const Calandar = ({navigation}) => {
   };
 
   return (
-    <View style={globalStyles.container}>
+    <View style={style.container}>
       <Title title="Selecione um data" />
 
-      <Calendar
-        onPressArrowLeft={subtractMonth => {
-          handleLeftArrow();
-          subtractMonth();
-        }}
-        onPressArrowRight={addMonth => {
-          handleRightArrow();
-          addMonth();
-        }}
-        minDate={String(new Date())}
-        markedDates={{
-          ...deniedDays,
-          [shedulesUser.day]: {
-            selected: true,
-            marked: true,
-            selectedColor: 'white',
-          },
-        }}
-        // deniedDays
-        onDayPress={day =>
-          setShedulesUser({...shedulesUser, day: day.dateString})
-        }
-        disableArrowLeft={arrawLeftAvaible}
-        style={{
-          width: 350,
-          marginTop: 40,
-          padding: 5,
-          borderRadius: 20,
-        }}
-        theme={{
-          calendarBackground: '#E95401',
-          dayTextColor: '#FFFFFF',
-          selectedDayTextColor: '#E95401',
-          selectedDayBackgroundColor: '#FFFFFF',
-          textDisabledColor: '#FFFFFF40',
-          textSectionTitleColor: '#FFFFFF',
-          arrowColor: '#FFFFFF',
-          monthTextColor: '#FFFFFF',
-          textDayHeaderFontWeight: '700',
-        }}
-      />
-
+      {deniedDays ? (
+        <Calendar
+          onPressArrowLeft={subtractMonth => {
+            handleLeftArrow();
+            subtractMonth();
+          }}
+          onPressArrowRight={addMonth => {
+            handleRightArrow();
+            addMonth();
+          }}
+          minDate={String(new Date())}
+          markedDates={{
+            ...deniedDays,
+            [shedulesUser.day]: {
+              selected: true,
+              marked: true,
+              selectedColor: 'white',
+            },
+          }}
+          // deniedDays
+          onDayPress={day =>
+            setShedulesUser({...shedulesUser, day: day.dateString})
+          }
+          disableArrowLeft={arrawLeftAvaible}
+          style={{
+            width: 350,
+            marginTop: 40,
+            padding: 5,
+            borderRadius: 20,
+          }}
+          theme={{
+            calendarBackground: '#E95401',
+            dayTextColor: '#FFFFFF',
+            selectedDayTextColor: '#E95401',
+            selectedDayBackgroundColor: '#FFFFFF',
+            textDisabledColor: '#FFFFFF40',
+            textSectionTitleColor: '#FFFFFF',
+            arrowColor: '#FFFFFF',
+            monthTextColor: '#FFFFFF',
+            textDayHeaderFontWeight: '700',
+          }}
+        />
+      ) : (
+        <LoadingScreen />
+      )}
       <Button
         text="Comfirmar"
         action={handleButton}
@@ -154,3 +157,12 @@ export const Calandar = ({navigation}) => {
     </View>
   );
 };
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#1E1E1E',
+    justifyContent: 'space-between'
+  }
+})

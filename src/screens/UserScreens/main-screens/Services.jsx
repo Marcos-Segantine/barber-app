@@ -10,13 +10,14 @@ import { globalStyles } from "../../globalStyles"
 
 import firestore from '@react-native-firebase/firestore';
 
+import { LoadingScreen } from "../../../components/LoadingScreen"
+
 export const Services = ({ navigation }) => {
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
     const [ serviceUserSelected, setServiceUserSelected ] = useState()
     const [ services, setServices ] = useState(null)
 
     useEffect(() => {
-        console.log('SERVICES SCREEN LOADED');
         firestore()
             .collection("services")
             .doc("services")
@@ -36,7 +37,7 @@ export const Services = ({ navigation }) => {
         <SafeAreaView style={globalStyles.container}>
             <Title title="Selecione o serviço" />
 
-            <ScrollView style={style.services} contentContainerStyle={{alignItems: "center"}}>
+            <ScrollView style={style.services} contentContainerStyle={{alignItems: "center", justifyContent: "center"}}>
 
                 {
                     services ?
@@ -55,7 +56,7 @@ export const Services = ({ navigation }) => {
                         })
                     ) :
                     (
-                        null
+                        <LoadingScreen />
                     )
                 }
            
