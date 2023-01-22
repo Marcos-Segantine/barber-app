@@ -17,6 +17,8 @@ import {useState} from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {MessageError} from '../../../components/MessageError';
+
 export const Register = ({navigation}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -24,7 +26,22 @@ export const Register = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [comfirmPassword, setComfirmPassword] = useState('');
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [messageError, setMessageError] = useState('');
+
   const handleResgister = () => {
+    if (!email || !password || !comfirmPassword || !phone || !name) {
+      setModalVisible(true);
+      setMessageError('Por favor preencha todos os campos');
+
+      return;
+    } else if (password !== comfirmPassword) {
+      setModalVisible(true);
+      setMessageError('Senhas não são iguais');
+
+      return;
+    }
+
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(async res => {
@@ -45,11 +62,34 @@ export const Register = ({navigation}) => {
 
         navigation.navigate('Services');
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err.message);
+        setModalVisible(true);
+
+        switch (err.message) {
+          case '[auth/invalid-email] The email address is badly formatted.':
+            setMessageError('Email inválido');
+            break;
+
+          case "[auth/email-already-in-use] The email address is already in use by another account.":
+            setMessageError('Email já está em uso');
+          break;
+
+          default:
+            setMessageError('Ocorreu um erro');
+            break;
+        }
+      });
   };
 
   return (
     <ScrollView contentContainerStyle={style.container}>
+      <MessageError
+        modalVisible={modalVisible}
+        messageError={messageError}
+        setModalVisible={setModalVisible}
+        action={() => setModalVisible(false)}
+      />
       <Title title="Cadastre-se agora" />
 
       <View style={style.form}>
@@ -98,11 +138,11 @@ export const Register = ({navigation}) => {
 
 const style = StyleSheet.create({
   container: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: '#1E1E1E',
     alignItems: 'center',
     paddingBottom: 70,
   },
-  
+
   form: {
     width: '80%',
     marginTop: 15,

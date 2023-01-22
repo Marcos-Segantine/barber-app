@@ -10,10 +10,15 @@ import firebase from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
 import {UserContext} from '../../../context/UserContext';
 
+import {MessageError} from '../../../components/MessageError';
+
 export const ChangePassword = ({navigation}) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [comfirmNewPassword, setComfirmPassword] = useState('');
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [messageError, setMessageError] = useState('');
 
   const {userData, setUserData} = useContext(UserContext);
 
@@ -23,15 +28,23 @@ export const ChangePassword = ({navigation}) => {
       !newPassword.trim() ||
       !comfirmNewPassword.trim()
     ) {
-      console.log('CAMPOS VAZIOS');
+      setModalVisible(true);
+      setMessageError('Por favor preencha todos os campos');
 
       return;
     } else if (newPassword !== comfirmNewPassword) {
-      console.log('SENHAS NÃO SAO IGUAIS');
+      setModalVisible(true);
+      setMessageError('Os campos da nova senha não são iguais');
 
       return;
     } else if (userData.password !== oldPassword) {
-      console.log('SENHA INCORRETA');
+      setModalVisible(true);
+      setMessageError('Senha Incorreta');
+
+      return;
+    } else if (newPassword.length < 6) {
+      setModalVisible(true);
+      setMessageError('Nova senha muito pequena');
 
       return;
     }
@@ -48,7 +61,7 @@ export const ChangePassword = ({navigation}) => {
           .then(({_data}) => {
             _data.password = newPassword;
 
-            setUserData({...userData, password: newPassword})
+            setUserData({...userData, password: newPassword});
 
             firestore()
               .collection('users')
@@ -68,6 +81,12 @@ export const ChangePassword = ({navigation}) => {
 
   return (
     <View style={globalStyles.container}>
+      <MessageError
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        messageError={messageError}
+        action={() => setModalVisible(false)}
+      />
       <Title title={'Redefinir senha'} />
 
       <View style={style.content}>

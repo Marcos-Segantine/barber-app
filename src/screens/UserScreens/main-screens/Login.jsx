@@ -4,7 +4,6 @@ import {
   View,
   StyleSheet,
   TextInput,
-  Modal,
 } from 'react-native';
 
 import {useContext, useState} from 'react';
@@ -21,6 +20,8 @@ import {globalStyles} from '../../globalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {UserContext} from '../../../context/UserContext';
+
+import {MessageError} from '../../../components/MessageError';
 
 export const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -71,7 +72,7 @@ export const Login = ({navigation}) => {
             break;
 
           default:
-            setMessageError('Email eǒu senha inválidos');
+            setMessageError('Email e/ou senha inválidos');
             break;
         }
       });
@@ -80,31 +81,17 @@ export const Login = ({navigation}) => {
   const clearEmailAndPassword = () => {
     setEmail('');
     setPassword('');
+    setModalVisible(false);
   };
 
   return (
     <>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
-        <View style={style.modalContainer}>
-          <View>
-            <Text style={style.messageError}>{messageError}.</Text>
-            <Text style={style.secondMessageError}>Tente novamente.</Text>
-          </View>
-
-          <Pressable
-            style={style.okButtonModal}
-            onPress={() => {
-              clearEmailAndPassword();
-              setModalVisible(false);
-            }}>
-            <Text style={style.textOkButtonModal}>OK</Text>
-          </Pressable>
-        </View>
-      </Modal>
+      <MessageError
+        modalVisible={modalVisible}
+        messageError={messageError}
+        setModalVisible={setModalVisible}
+        action={clearEmailAndPassword}
+      />
 
       <View style={globalStyles.container}>
         <Title title="Entre agora" />
@@ -132,7 +119,7 @@ export const Login = ({navigation}) => {
               <Text style={style.linkHelp}>Cadastrar</Text>
             </Pressable>
 
-            <Pressable onPress={() => navigation.navigate("ForgotPassword")}>
+            <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
               <Text style={style.linkHelp}>Esqueci minha senha</Text>
             </Pressable>
           </View>
@@ -145,51 +132,6 @@ export const Login = ({navigation}) => {
 };
 
 const style = StyleSheet.create({
-  modalContainer: {
-    width: '80%',
-    backgroundColor: '#1E1E1E',
-    top: '35%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    borderRadius: 20,
-    borderColor: '#E95401',
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingVertical: 20,
-    minHeight: 300,
-  },
-
-  messageError: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: 25,
-    textAlign: 'center',
-  },
-
-  secondMessageError: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: 25,
-    marginTop: 10,
-    textAlign: 'center',
-  },
-
-  okButtonModal: {
-    backgroundColor: '#E95401',
-    width: '65%',
-    alignItems: 'center',
-    marginTop: 40,
-    borderRadius: 10,
-    paddingVertical: 10,
-  },
-
-  textOkButtonModal: {
-    fontWeight: '700',
-    color: '#FFFFFF',
-    fontSize: 20,
-  },
-
   form: {
     width: '80%',
     alignItems: 'center',
