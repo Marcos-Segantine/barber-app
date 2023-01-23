@@ -11,6 +11,8 @@ import {UserContext} from '../context/UserContext';
 
 import {verifyScreenName} from '../functions/verifyScreenName';
 
+import firebase from '@react-native-firebase/app';
+
 export const Header = () => {
   const [showComeBackIcon, setShowComeBackIcon] = useState(false);
   const [showUserIcon, setShowUserIcon] = useState(false);
@@ -42,7 +44,9 @@ export const Header = () => {
             .doc(userData?.uid)
             .get()
             .then(({_data}) => {
-              !!_data ? setShowUserIcon(true) : setShowUserIcon(false);
+              const user = firebase.auth().currentUser;
+
+              !!_data && user?.emailVerified ? setShowUserIcon(true) : setShowUserIcon(false);
             })
         : setShowUserIcon(false);
     })();

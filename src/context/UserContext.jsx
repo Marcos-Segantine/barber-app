@@ -21,7 +21,6 @@ export const UserProvider = ({ children }) => {
           .get()
           .then(({ _docs }) => {
             setUserData(_docs[0]?._data);
-            console.log(_docs, "CONTEXT");
           })
       : setUserData(null);
   }, [user]);

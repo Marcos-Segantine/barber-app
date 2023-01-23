@@ -18,7 +18,7 @@ export const InitialScreen = ({navigation}) => {
   const handleButton = () => {
     const user = firebase.auth().currentUser;
 
-    if (!user.emailVerified) {
+    if (!user?.emailVerified) {
       navigation.navigate('Login');
 
       return;
