@@ -1,10 +1,4 @@
-import {
-  Text,
-  Pressable,
-  View,
-  StyleSheet,
-  TextInput,
-} from 'react-native';
+import {Text, Pressable, View, StyleSheet, TextInput} from 'react-native';
 
 import {useContext, useState} from 'react';
 
@@ -23,9 +17,14 @@ import {UserContext} from '../../../context/UserContext';
 
 import {MessageError} from '../../../components/MessageError';
 
+import firebase from '@react-native-firebase/app';
+
 export const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const [isToClearEmailAndPassword, setIsToClearEmailAndPassword] =
+    useState(true);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [messageError, setMessageError] = useState('');
@@ -53,6 +52,17 @@ export const Login = ({navigation}) => {
           .then(res => {
             setUserData(res._docs[0]?._data);
           });
+
+        const user = firebase.auth().currentUser;
+
+        if (!user.emailVerified) {
+          setModalVisible(true);
+          setMessageError('Email não verificado');
+
+          setIsToClearEmailAndPassword(false);
+
+          return;
+        }
 
         navigation.navigate('Services');
       })
@@ -90,7 +100,11 @@ export const Login = ({navigation}) => {
         modalVisible={modalVisible}
         messageError={messageError}
         setModalVisible={setModalVisible}
-        action={clearEmailAndPassword}
+        action={
+          isToClearEmailAndPassword
+            ? clearEmailAndPassword
+            : () => setModalVisible(false)
+        }
       />
 
       <View style={globalStyles.container}>

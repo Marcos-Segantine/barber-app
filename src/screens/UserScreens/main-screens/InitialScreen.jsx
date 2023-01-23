@@ -1,20 +1,30 @@
-import { View, StyleSheet } from "react-native";
+import {View, StyleSheet} from 'react-native';
 
-import { useContext } from "react";
+import {useContext} from 'react';
 
-import { Button } from "../../../components/Button";
+import {Button} from '../../../components/Button';
 
-import { UserContext } from "../../../context/UserContext";
+import {UserContext} from '../../../context/UserContext';
 
-import InitialScreenSvg from "../../../assets/InitialScreenSvg";
+import InitialScreenSvg from '../../../assets/InitialScreenSvg';
 
-import { globalStyles } from "../../globalStyles";
+import {globalStyles} from '../../globalStyles';
 
-export const InitialScreen = ({ navigation }) => {
-  const { userData } = useContext(UserContext);
+import firebase from '@react-native-firebase/app';
+
+export const InitialScreen = ({navigation}) => {
+  const {userData} = useContext(UserContext);
 
   const handleButton = () => {
-    userData ? navigation.navigate("Services") : navigation.navigate("Login");
+    const user = firebase.auth().currentUser;
+
+    if (!user.emailVerified) {
+      navigation.navigate('Login');
+
+      return;
+    }
+
+    userData ? navigation.navigate('Services') : navigation.navigate('Login');
   };
 
   return (
@@ -30,6 +40,6 @@ export const InitialScreen = ({ navigation }) => {
 
 const style = StyleSheet.create({
   hero: {
-    alignItems: "center",
+    alignItems: 'center',
   },
 });

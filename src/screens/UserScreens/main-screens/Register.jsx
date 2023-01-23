@@ -5,6 +5,7 @@ import {
   TextInput,
   Pressable,
   ScrollView,
+  Modal,
 } from 'react-native';
 
 import {Title} from '../../../components/Title';
@@ -13,7 +14,7 @@ import {Button} from '../../../components/Button';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -28,6 +29,36 @@ export const Register = ({navigation}) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [messageError, setMessageError] = useState('');
+
+  const [modalMessageEmailVerification, setModalMessageEmailVerification] =
+    useState(false);
+
+  const [MessageErrorEmailVerified, setMessageErrorEmailVerified] =
+    useState(false);
+
+  const [canUserContinue, setCanUserContinue] = useState(false);
+
+  const handleContinue = () => {
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(async () => {
+        const user = auth().currentUser;
+
+        if (!user?.emailVerified) {
+          setCanUserContinue(false)
+          setModalMessageEmailVerification(true);
+          setMessageErrorEmailVerified(true)
+        }
+        else {
+          setCanUserContinue(true)
+          setMessageErrorEmailVerified(false)
+
+          console.log(user.emailVerified, 'user.emailVerified');
+          navigation.navigate('Services')
+        }
+
+      });
+  };
 
   const handleResgister = () => {
     if (!email || !password || !comfirmPassword || !phone || !name) {
@@ -60,7 +91,20 @@ export const Register = ({navigation}) => {
         await AsyncStorage.setItem('@barber_app__email', email);
         await AsyncStorage.setItem('@barber_app__password', password);
 
-        navigation.navigate('Services');
+        const user = auth().currentUser;
+
+        user
+          .sendEmailVerification()
+          .then(() => {
+            console.log('Email de verificação enviado!');
+            setModalMessageEmailVerification(true);
+          })
+          .catch(error => {
+            console.log(error);
+            setModalMessageEmailVerification(false);
+          });
+
+        canUserContinue ? navigation.navigate('Services') : null;
       })
       .catch(err => {
         console.log(err.message);
@@ -71,9 +115,9 @@ export const Register = ({navigation}) => {
             setMessageError('Email inválido');
             break;
 
-          case "[auth/email-already-in-use] The email address is already in use by another account.":
+          case '[auth/email-already-in-use] The email address is already in use by another account.':
             setMessageError('Email já está em uso');
-          break;
+            break;
 
           default:
             setMessageError('Ocorreu um erro');
@@ -84,6 +128,28 @@ export const Register = ({navigation}) => {
 
   return (
     <ScrollView contentContainerStyle={style.container}>
+      <Modal
+        animationType="slide"
+        visible={modalMessageEmailVerification}
+        transparent={true}>
+        <View style={style.modalVerifyEmail}>
+          <Text style={style.textModalVerifyEmail}>
+            Enviamos um email de verificação para:
+          </Text>
+          <Text style={style.textEmail}>{email}</Text>
+          <Text style={style.subText}>Sua conta foi criada com sucesso, agora é ó você ir na sua caixa de mensagens e verifica-la para poder usar o aplicativo.</Text>
+
+
+          <Button text={'Continuar'} action={handleContinue} />
+
+          {MessageErrorEmailVerified ? (
+            <Text style={style.messageErrorEmailVerified}>
+              Seu email não foi verificado!
+            </Text>
+          ) : null}
+        </View>
+      </Modal>
+
       <MessageError
         modalVisible={modalVisible}
         messageError={messageError}
@@ -171,4 +237,40 @@ const style = StyleSheet.create({
   linkHelp: {
     color: '#FFFFFF',
   },
+
+  modalVerifyEmail: {
+    backgroundColor: '#1E1E1E',
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+  },
+
+  textModalVerifyEmail: {
+    fontWeight: '700',
+    fontSize: 25,
+    textAlign: 'center',
+  },
+
+  textEmail: {
+    fontWeight: '900',
+    fontSize: 25,
+    textAlign: 'center',
+    color: '#FFFFFF',
+    marginVertical: 20,
+  },
+
+  messageErrorEmailVerified: {
+    color: 'red',
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: '500',
+    marginTop: 5,
+  },
+
+  subText: {
+    fontSize: 12,
+    width: "80%"
+  }
 });

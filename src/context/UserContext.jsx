@@ -19,8 +19,9 @@ export const UserProvider = ({ children }) => {
           .collection("users")
           .where("uid", "==", user)
           .get()
-          .then((res) => {
-            setUserData(res._docs[0]?._data);
+          .then(({ _docs }) => {
+            setUserData(_docs[0]?._data);
+            console.log(_docs, "CONTEXT");
           })
       : setUserData(null);
   }, [user]);
