@@ -5,7 +5,7 @@ import {Text, View, StyleSheet, Pressable} from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 
-import Svg, {Path, Circle, Defs, Pattern, Image, Use} from 'react-native-svg';
+import Svg, {Path, Defs, Pattern, Image, Use} from 'react-native-svg';
 
 import {UserContext} from '../context/UserContext';
 
@@ -46,7 +46,9 @@ export const Header = () => {
             .then(({_data}) => {
               const user = firebase.auth().currentUser;
 
-              !!_data && user?.emailVerified ? setShowUserIcon(true) : setShowUserIcon(false);
+              !!_data && user?.emailVerified
+                ? setShowUserIcon(true)
+                : setShowUserIcon(false);
             })
         : setShowUserIcon(false);
     })();

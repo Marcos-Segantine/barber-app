@@ -19,6 +19,8 @@ import {addScheduleWhenMonthIsNotUse} from '../../../functions/addScheduleWhenMo
 import {UserContext} from '../../../context/UserContext';
 import { useIsFocused } from '@react-navigation/native';
 
+import { dateFormated } from '../../../functions/dateFormated';
+
 export const ConfirmSchedule = ({navigation}) => {
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
 
@@ -26,6 +28,8 @@ export const ConfirmSchedule = ({navigation}) => {
 
   const sheduleMouth = getMonth(shedulesUser);
   const sheduleDay = getDay(shedulesUser);
+
+  const date = dateFormated(shedulesUser)
 
   const isFocused = useIsFocused();
 
@@ -77,7 +81,7 @@ export const ConfirmSchedule = ({navigation}) => {
 
       <View style={style.contentData}>
         <View style={style.data}>
-          <Text style={style.textData}>Dia: {shedulesUser.day}</Text>
+          <Text style={style.textData}>Dia: {date}</Text>
         </View>
 
         <View style={style.data}>

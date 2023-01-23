@@ -1,25 +1,25 @@
-import { createContext, useEffect, useState } from "react";
+import {createContext, useEffect, useState} from 'react';
 
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export const UserContext = createContext(null);
 
-export const UserProvider = ({ children }) => {
+export const UserProvider = ({children}) => {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
 
-  auth().onAuthStateChanged((res) => {
-    res ? setUser(res.uid) : console.log("USER LOG OUT");
+  auth().onAuthStateChanged(res => {
+    res ? setUser(res.uid) : console.log('USER LOG OUT');
   });
 
   useEffect(() => {
     user
       ? firestore()
-          .collection("users")
-          .where("uid", "==", user)
+          .collection('users')
+          .where('uid', '==', user)
           .get()
-          .then(({ _docs }) => {
+          .then(({_docs}) => {
             setUserData(_docs[0]?._data);
           })
       : setUserData(null);
@@ -27,15 +27,15 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     firestore()
-      .collection("users")
+      .collection('users')
       .doc(user)
-      .update({ ...userData })
+      .update({...userData})
       .then(() => {})
-      .catch((err) => {});
+      .catch(err => {});
   }, [userData]);
 
   return (
-    <UserContext.Provider value={{ userData, setUserData }}>
+    <UserContext.Provider value={{userData, setUserData}}>
       {children}
     </UserContext.Provider>
   );
