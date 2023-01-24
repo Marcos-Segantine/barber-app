@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 
 import {UserProvider} from './src/context/UserContext';
 import {ShedulesUserProvider} from './src/context/ShedulesUser';
+import {UserVerifiedProvider} from './src/context/UserVerified';
 
 import {UserScreens} from './src/screens/UserScreens/routes';
 
@@ -13,15 +14,19 @@ import {Footer} from './src/shared/Footer';
 const App = () => {
   return (
     <NavigationContainer>
-      <UserProvider>
-        <Header />
+      <UserVerifiedProvider>
+        
+        <UserProvider>
+          <Header />
 
-        <ShedulesUserProvider>
-          <UserScreens />
-        </ShedulesUserProvider>
+          <ShedulesUserProvider>
+            <UserScreens />
+          </ShedulesUserProvider>
 
-        <Footer />
-      </UserProvider>
+          <Footer />
+        </UserProvider>
+
+      </UserVerifiedProvider>
     </NavigationContainer>
   );
 };

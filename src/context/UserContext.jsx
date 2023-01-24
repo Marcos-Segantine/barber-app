@@ -31,7 +31,9 @@ export const UserProvider = ({children}) => {
       .doc(user)
       .update({...userData})
       .then(() => {})
-      .catch(err => {});
+      .catch(err => {
+        console.log(err, 'CONTEXT');
+      });
   }, [userData]);
 
   return (

@@ -11,17 +11,16 @@ import {UserContext} from '../context/UserContext';
 
 import {verifyScreenName} from '../functions/verifyScreenName';
 
-import firebase from '@react-native-firebase/app';
+import { UserVerified } from '../context/UserVerified';
 
 export const Header = () => {
   const [showComeBackIcon, setShowComeBackIcon] = useState(false);
   const [showUserIcon, setShowUserIcon] = useState(false);
 
-  const [isUserLogIn, setIsUserLogIn] = useState(false);
-
   const navigation = useNavigation();
 
   const {userData} = useContext(UserContext);
+  const {userVerified, setUserVerified} = useContext(UserVerified)
 
   const stateNavigation = useNavigationState(
     stateNavigation => stateNavigation,
@@ -44,9 +43,8 @@ export const Header = () => {
             .doc(userData?.uid)
             .get()
             .then(({_data}) => {
-              const user = firebase.auth().currentUser;
 
-              !!_data && user?.emailVerified
+              !!_data && userVerified
                 ? setShowUserIcon(true)
                 : setShowUserIcon(false);
             })
