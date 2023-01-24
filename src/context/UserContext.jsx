@@ -14,6 +14,7 @@ export const UserProvider = ({children}) => {
   });
 
   useEffect(() => {
+    console.log('EFFECT USER');
     user
       ? firestore()
           .collection('users')
@@ -21,20 +22,20 @@ export const UserProvider = ({children}) => {
           .get()
           .then(({_docs}) => {
             setUserData(_docs[0]?._data);
+            console.log('EFECCT USERDATA');
+            firestore()
+              .collection('users')
+              .doc(user)
+              .update({...userData})
+              .then(() => {
+                console.log('DATA UPDATED CONTEXT');
+              })
+              .catch(err => {
+                console.log(err, user, 'Context');
+              });
           })
       : setUserData(null);
   }, [user]);
-
-  useEffect(() => {
-    firestore()
-      .collection('users')
-      .doc(user)
-      .update({...userData})
-      .then(() => {})
-      .catch(err => {
-        console.log(err, 'CONTEXT');
-      });
-  }, [userData]);
 
   return (
     <UserContext.Provider value={{userData, setUserData}}>
