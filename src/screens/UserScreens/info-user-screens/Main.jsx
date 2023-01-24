@@ -49,11 +49,15 @@ export const Main = () => {
           <Text style={style.text}>Suas informações</Text>
         </Pressable>
 
-        <Pressable style={style.link} onPress={() => navigation.navigate("ChangePassword")}>
+        <Pressable
+          style={style.link}
+          onPress={() => navigation.navigate('ChangePassword')}>
           <Text style={style.text}>Redefinir senha</Text>
         </Pressable>
 
-        <Pressable style={style.link} onPress={() => navigation.navigate("FeedBack")}>
+        <Pressable
+          style={style.link}
+          onPress={() => navigation.navigate('FeedBack')}>
           <Text style={style.text}>Enviar um feedback</Text>
         </Pressable>
 

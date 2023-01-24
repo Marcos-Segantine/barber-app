@@ -10,6 +10,7 @@ export const UserProvider = ({children}) => {
   const [userData, setUserData] = useState(null);
 
   auth().onAuthStateChanged(res => {
+    console.log("USER AUTH STATE CHAGED", res?.uid);
     res ? setUser(res.uid) : console.log('USER LOG OUT');
   });
 
@@ -22,13 +23,11 @@ export const UserProvider = ({children}) => {
           .get()
           .then(({_docs}) => {
             setUserData(_docs[0]?._data);
-            console.log('EFECCT USERDATA');
             firestore()
               .collection('users')
               .doc(user)
               .update({...userData})
               .then(() => {
-                console.log('DATA UPDATED CONTEXT');
               })
               .catch(err => {
                 console.log(err, user, 'Context');

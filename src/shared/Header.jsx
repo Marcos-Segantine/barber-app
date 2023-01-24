@@ -11,7 +11,7 @@ import {UserContext} from '../context/UserContext';
 
 import {verifyScreenName} from '../functions/verifyScreenName';
 
-import { UserVerified } from '../context/UserVerified';
+import {UserVerified} from '../context/UserVerified';
 
 export const Header = () => {
   const [showComeBackIcon, setShowComeBackIcon] = useState(false);
@@ -20,7 +20,7 @@ export const Header = () => {
   const navigation = useNavigation();
 
   const {userData} = useContext(UserContext);
-  const {userVerified, setUserVerified} = useContext(UserVerified)
+  const {userVerified} = useContext(UserVerified);
 
   const stateNavigation = useNavigationState(
     stateNavigation => stateNavigation,
@@ -37,14 +37,16 @@ export const Header = () => {
     (async () => {
       const email = await AsyncStorage.getItem('@barber_app__email');
 
+      console.log("HEADER EFFECT", userData);
+
       email
         ? firestore()
             .collection('users')
             .doc(userData?.uid)
             .get()
             .then(({_data}) => {
-
-              !!_data && userVerified
+              console.log(!!_data && userVerified, '!!_data && userVerified');
+              true
                 ? setShowUserIcon(true)
                 : setShowUserIcon(false);
             })

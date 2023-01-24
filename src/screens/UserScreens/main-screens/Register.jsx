@@ -14,11 +14,15 @@ import {Button} from '../../../components/Button';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {MessageError} from '../../../components/MessageError';
+
+import {Path, Svg} from 'react-native-svg';
+
+import {createUserByGoogle} from '../../../functions/Register/createUserByGoogle';
 
 export const Register = ({navigation}) => {
   const [name, setName] = useState('');
@@ -45,18 +49,16 @@ export const Register = ({navigation}) => {
         const user = auth().currentUser;
 
         if (!user?.emailVerified) {
-          setCanUserContinue(false)
+          setCanUserContinue(false);
           setModalMessageEmailVerification(true);
-          setMessageErrorEmailVerified(true)
-        }
-        else {
-          setCanUserContinue(true)
-          setMessageErrorEmailVerified(false)
+          setMessageErrorEmailVerified(true);
+        } else {
+          setCanUserContinue(true);
+          setMessageErrorEmailVerified(false);
 
           console.log(user.emailVerified, 'user.emailVerified');
-          navigation.navigate('Services')
+          navigation.navigate('Services');
         }
-
       });
   };
 
@@ -137,8 +139,10 @@ export const Register = ({navigation}) => {
             Enviamos um email de verificação para:
           </Text>
           <Text style={style.textEmail}>{email}</Text>
-          <Text style={style.subText}>Sua conta foi criada com sucesso, agora é ó você ir na sua caixa de mensagens e verifica-la para poder usar o aplicativo.</Text>
-
+          <Text style={style.subText}>
+            Sua conta foi criada com sucesso, agora é ó você ir na sua caixa de
+            mensagens e verifica-la para poder usar o aplicativo.
+          </Text>
 
           <Button text={'Continuar'} action={handleContinue} />
 
@@ -196,6 +200,31 @@ export const Register = ({navigation}) => {
           <Text style={style.linkHelp}>Login</Text>
         </Pressable>
       </View>
+
+      <Pressable onPress={() => createUserByGoogle(navigation)}>
+        <Svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 48 48"
+          width="96px"
+          height="96px">
+          <Path
+            fill="#fbc02d"
+            d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"
+          />
+          <Path
+            fill="#e53935"
+            d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"
+          />
+          <Path
+            fill="#4caf50"
+            d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0124 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"
+          />
+          <Path
+            fill="#1565c0"
+            d="M43.611 20.083L43.595 20H24v8h11.303a12.04 12.04 0 01-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"
+          />
+        </Svg>
+      </Pressable>
 
       <Button text="Cadastrar" action={handleResgister} />
     </ScrollView>
@@ -271,6 +300,6 @@ const style = StyleSheet.create({
 
   subText: {
     fontSize: 12,
-    width: "80%"
-  }
+    width: '80%',
+  },
 });

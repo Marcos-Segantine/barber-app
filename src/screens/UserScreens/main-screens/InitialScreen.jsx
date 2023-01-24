@@ -10,19 +10,16 @@ import InitialScreenSvg from '../../../assets/InitialScreenSvg';
 
 import {globalStyles} from '../../globalStyles';
 
-import firebase from '@react-native-firebase/app';
+import {UserVerified} from '../../../context/UserVerified';
 
 export const InitialScreen = ({navigation}) => {
   const {userData} = useContext(UserContext);
 
-  const handleButton = () => {
-    const user = firebase.auth().currentUser;
+  const {userVerified} = useContext(UserVerified);
 
-    if (!user?.emailVerified) {
-      navigation.navigate('Login');
+  const handleButton = async () => {
 
-      return;
-    }
+    if (userData?.email && userVerified) navigation.navigate('Services');
 
     userData ? navigation.navigate('Services') : navigation.navigate('Login');
   };
