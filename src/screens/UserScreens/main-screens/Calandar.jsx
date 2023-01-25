@@ -14,7 +14,7 @@ import firestore from '@react-native-firebase/firestore';
 import {LoadingScreen} from '../../../components/LoadingScreen';
 
 export const Calandar = ({navigation}) => {
-  LocaleConfig.locales['br'] = {
+  LocaleConfig.locales['pt-br'] = {
     monthNames: [
       'Janeiro',
       'Fevereiro',
@@ -52,10 +52,10 @@ export const Calandar = ({navigation}) => {
       'Sexta-feira',
       'Sábado',
     ],
-    dayNamesShort: ['Seg', 'Terç', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+    dayNamesShort: ['Dom', 'Seg', 'Terç', 'Qua', 'Qui', 'Sex', 'Sáb'],
   };
 
-  LocaleConfig.defaultLocale = 'br';
+  LocaleConfig.defaultLocale = 'pt-br';
 
   const currentDate = new Date();
 
@@ -106,6 +106,7 @@ export const Calandar = ({navigation}) => {
 
       {deniedDays ? (
         <Calendar
+        context={{date: ''}}
           onPressArrowLeft={subtractMonth => {
             handleLeftArrow();
             subtractMonth();
