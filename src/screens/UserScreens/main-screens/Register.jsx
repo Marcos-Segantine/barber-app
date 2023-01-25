@@ -4,8 +4,8 @@ import {
   StyleSheet,
   TextInput,
   Pressable,
-  ScrollView,
   Modal,
+  ScrollView,
 } from 'react-native';
 
 import {Title} from '../../../components/Title';
@@ -21,8 +21,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MessageError} from '../../../components/MessageError';
 
 import {SignInWithGoogle} from '../../../components/SignInWithGoogle';
-import {SignInWithFacebook} from '../../../components/SignInWithFacebook';
-import {SignInWithMicrosoft} from '../../../components/SignInWithMicrosoft';
 
 export const Register = ({navigation}) => {
   const [name, setName] = useState('');
@@ -164,8 +162,6 @@ export const Register = ({navigation}) => {
       <Title title="Crie uma conta usando midias" />
 
       <SignInWithGoogle />
-      <SignInWithFacebook />
-      <SignInWithMicrosoft />
 
       <Title title="Ou preencha os campos abaixo" />
 
@@ -217,7 +213,6 @@ const style = StyleSheet.create({
   container: {
     backgroundColor: '#1E1E1E',
     alignItems: 'center',
-    paddingBottom: 70,
   },
 
   form: {

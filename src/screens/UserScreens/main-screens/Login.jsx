@@ -12,8 +12,6 @@ import {useContext, useState} from 'react';
 import {Title} from '../../../components/Title';
 import {Button} from '../../../components/Button';
 
-import {globalStyles} from '../../globalStyles';
-
 import {UserContext} from '../../../context/UserContext';
 
 import {MessageError} from '../../../components/MessageError';
@@ -21,8 +19,6 @@ import {MessageError} from '../../../components/MessageError';
 import {signInWithEmailAndPassword} from '../../../functions/Login/signInWithEmailAndPassword';
 
 import {SignInWithGoogle} from '../../../components/SignInWithGoogle';
-import {SignInWithFacebook} from '../../../components/SignInWithFacebook';
-import {SignInWithMicrosoft} from '../../../components/SignInWithMicrosoft';
 
 export const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -70,8 +66,6 @@ export const Login = ({navigation}) => {
         <Title title="Entre usando midias" />
 
         <SignInWithGoogle />
-        <SignInWithFacebook />
-        <SignInWithMicrosoft />
 
         <Title title="Ou entre com seu email e senha" />
 
@@ -113,7 +107,8 @@ export const Login = ({navigation}) => {
 const style = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#1E1E1E'
+    backgroundColor: '#1E1E1E',
+    flex: 1
   },  
 
   form: {
