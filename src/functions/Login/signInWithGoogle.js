@@ -27,46 +27,36 @@ export const signInWithGoogle = async (
     .then(async res => {
       console.log('Login by google');
 
-      if (await AsyncStorage.getItem('@barber_app__email')) {
-        firestore()
-          .collection('users')
-          .doc(res.user.uid)
-          .get()
-          .then(async ({_data}) => {
-            console.log(_data, '_data');
-            setUserData({..._data});
-            
-          })
-          .catch(error => {
-            console.log(
-              error,
-              'ERROR OCURRED WHEN TRY TO LOGIN USER WITH GOOGLE ACCOUNT!!',
-            );
-          });
-      } else {
-        firestore()
-          .collection('users')
-          .doc(res.user.uid)
-          .set({
+      firestore()
+        .collection('users')
+        .doc(res.user.uid)
+        .set({
+          name: res.user.displayName,
+          email: res.user.email,
+          password: null,
+          phone: res.user.phoneNumber,
+          uid: res.user.uid,
+        })
+        .then(async () => {
+          console.log('users colection updated!');
+          setUserData({
             name: res.user.displayName,
             email: res.user.email,
             password: null,
             phone: res.user.phoneNumber,
             uid: res.user.uid,
-          })
-          .then(async () => {
-            console.log('users colection updated!');
+          });
 
-            await AsyncStorage.setItem('@barber_app__email', res.user?.email);
-            console.log(await AsyncStorage.getItem('@barber_app__email'));
+          await AsyncStorage.setItem('@barber_app__email', res.user?.email);
 
-            firestore()
-              .collection('schedules_by_user')
-              .doc(res.user.uid)
-              .set({
-                schedules: [],
-              })
-              .then(() => {
+          firestore()
+            .collection('schedules_by_user')
+            .doc(res.user.uid)
+            .set({
+              schedules: [],
+            })
+            .then(() => {
+              if (res.additionalUserInfo.isNewUser) {
                 firebase
                   .auth()
                   .sendPasswordResetEmail(res.user.email)
@@ -79,10 +69,10 @@ export const signInWithGoogle = async (
                     console.log(err);
                     console.log('ERROR RO SEND A EMAIL TO CHANGE PASSWORD');
                   });
-                setUserVerified(true);
-                navigation.navigate('Services');
-              });
-          });
-      }
+              }
+              setUserVerified(true);
+              navigation.navigate('Services');
+            });
+        });
     });
 };

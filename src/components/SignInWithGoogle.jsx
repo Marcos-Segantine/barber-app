@@ -2,7 +2,7 @@ import {useNavigation, useNavigationState} from '@react-navigation/native';
 import {useContext} from 'react';
 
 import {Path, Svg} from 'react-native-svg';
-import {Pressable} from 'react-native';
+import {Pressable, StyleSheet} from 'react-native';
 
 import {UserContext} from '../context/UserContext';
 import {UserVerified} from '../context/UserVerified';
@@ -31,13 +31,16 @@ export const SignInWithGoogle = () => {
   };
 
   return (
-    <Pressable onPress={handleCLick}>
+    <Pressable style={style.button} onPress={handleCLick}>
       <Svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 48 48"
-        width="96px"
-        height="96px">
-        <Path d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z" />
+        width="80px"
+        height="80px">
+        <Path
+          fill="#fbc02d"
+          d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"
+        />
         <Path
           fill="#e53935"
           d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"
@@ -54,3 +57,14 @@ export const SignInWithGoogle = () => {
     </Pressable>
   );
 };
+
+const style = StyleSheet.create({
+  button: {
+    backgroundColor: '#FFFFFF',
+    width: '85%',
+    paddingVertical: 5,
+    alignItems: 'center',
+    borderRadius: 15,
+    marginTop: 15
+  },
+});

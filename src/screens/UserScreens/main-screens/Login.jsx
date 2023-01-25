@@ -1,4 +1,11 @@
-import {Text, Pressable, View, StyleSheet, TextInput} from 'react-native';
+import {
+  Text,
+  Pressable,
+  View,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+} from 'react-native';
 
 import {useContext, useState} from 'react';
 
@@ -14,9 +21,8 @@ import {MessageError} from '../../../components/MessageError';
 import {signInWithEmailAndPassword} from '../../../functions/Login/signInWithEmailAndPassword';
 
 import {SignInWithGoogle} from '../../../components/SignInWithGoogle';
-
-import {Path, Svg} from 'react-native-svg';
-import {UserVerified} from '../../../context/UserVerified';
+import {SignInWithFacebook} from '../../../components/SignInWithFacebook';
+import {SignInWithMicrosoft} from '../../../components/SignInWithMicrosoft';
 
 export const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -41,8 +47,6 @@ export const Login = ({navigation}) => {
     );
   };
 
-  const {setUserVerified} = useContext(UserVerified);
-
   const clearEmailAndPassword = () => {
     setEmail('');
     setPassword('');
@@ -62,8 +66,14 @@ export const Login = ({navigation}) => {
         }
       />
 
-      <View style={globalStyles.container}>
-        <Title title="Entre agora" />
+      <ScrollView contentContainerStyle={style.container}>
+        <Title title="Entre usando midias" />
+
+        <SignInWithGoogle />
+        <SignInWithFacebook />
+        <SignInWithMicrosoft />
+
+        <Title title="Ou entre com seu email e senha" />
 
         <View style={style.form}>
           <TextInput
@@ -93,20 +103,23 @@ export const Login = ({navigation}) => {
             </Pressable>
           </View>
 
-          <SignInWithGoogle />
-
           <Button text="Entrar" action={handleLoginByEmailAndPassword} />
         </View>
-      </View>
+      </ScrollView>
     </>
   );
 };
 
 const style = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    backgroundColor: '#1E1E1E'
+  },  
+
   form: {
     width: '80%',
     alignItems: 'center',
-    marginTop: '15%',
+    marginTop: '5%',
   },
 
   input: {

@@ -20,11 +20,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {MessageError} from '../../../components/MessageError';
 
-import {Path, Svg} from 'react-native-svg';
-
-import {createUserByGoogle} from '../../../functions/Register/createUserByGoogle';
-
-import { SignInWithGoogle } from '../../../components/SignInWithGoogle';
+import {SignInWithGoogle} from '../../../components/SignInWithGoogle';
+import {SignInWithFacebook} from '../../../components/SignInWithFacebook';
+import {SignInWithMicrosoft} from '../../../components/SignInWithMicrosoft';
 
 export const Register = ({navigation}) => {
   const [name, setName] = useState('');
@@ -162,7 +160,14 @@ export const Register = ({navigation}) => {
         setModalVisible={setModalVisible}
         action={() => setModalVisible(false)}
       />
-      <Title title="Cadastre-se agora" />
+
+      <Title title="Crie uma conta usando midias" />
+
+      <SignInWithGoogle />
+      <SignInWithFacebook />
+      <SignInWithMicrosoft />
+
+      <Title title="Ou preencha os campos abaixo" />
 
       <View style={style.form}>
         <TextInput
@@ -202,8 +207,6 @@ export const Register = ({navigation}) => {
           <Text style={style.linkHelp}>Login</Text>
         </Pressable>
       </View>
-
-      <SignInWithGoogle />
 
       <Button text="Cadastrar" action={handleResgister} />
     </ScrollView>
