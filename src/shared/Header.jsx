@@ -35,18 +35,14 @@ export const Header = () => {
 
   useEffect(() => {
     (async () => {
-      const email = await AsyncStorage.getItem('@barber_app__email');
 
-      console.log("HEADER EFFECT", userData);
-
-      email
+      userData
         ? firestore()
             .collection('users')
             .doc(userData?.uid)
             .get()
             .then(({_data}) => {
-              console.log(!!_data && userVerified, '!!_data && userVerified');
-              true
+              !!_data && userVerified
                 ? setShowUserIcon(true)
                 : setShowUserIcon(false);
             })

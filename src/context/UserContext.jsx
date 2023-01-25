@@ -10,12 +10,10 @@ export const UserProvider = ({children}) => {
   const [userData, setUserData] = useState(null);
 
   auth().onAuthStateChanged(res => {
-    console.log("USER AUTH STATE CHAGED", res?.uid);
     res ? setUser(res.uid) : console.log('USER LOG OUT');
   });
 
   useEffect(() => {
-    console.log('EFFECT USER');
     user
       ? firestore()
           .collection('users')
