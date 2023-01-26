@@ -35,8 +35,6 @@ export const Header = () => {
 
   useEffect(() => {
     (async () => {
-      console.log('EFFECT HEADER', userData);
-
       userData
         ? firestore()
             .collection('users')

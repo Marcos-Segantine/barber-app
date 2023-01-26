@@ -7,14 +7,21 @@ import firestore from '@react-native-firebase/firestore';
 import {useContext} from 'react';
 import {UserContext} from '../../../context/UserContext';
 
+import { verifySchedules } from '../../../functions/verifySchedules';
+
+import { getMonth } from '../../../functions/getMonth';
+import { getDay } from '../../../functions/getDay';
+
 export const ScheduleDetail = ({route, navigation}) => {
   const {item} = route.params;
 
-  const {userData, setUserData} = useContext(UserContext);
+  const {userData} = useContext(UserContext);
+
+  console.log("");
 
   const dateFormated = item.day.split('-').reverse().join('/');
-  const sheduleMouth = item.day?.split('').slice(5, 7).join('');
-  const scheduleDay = item.day.split('').slice(8).join('');
+  const sheduleMouth = getMonth(item)
+  const scheduleDay = getDay(item)
   const professional = item.professional;
 
   const cancelScheduleButton = () => {
@@ -24,9 +31,7 @@ export const ScheduleDetail = ({route, navigation}) => {
       .get()
       .then(({_data}) => {
         const newSchedules__Temp = _data.schedules.filter(itemFilter => {
-          return (
-            itemFilter.scheduleUid !== item.scheduleUid
-          );
+          return itemFilter.scheduleUid !== item.scheduleUid;
         });
 
         _data.schedules = newSchedules__Temp;
@@ -68,6 +73,8 @@ export const ScheduleDetail = ({route, navigation}) => {
           .doc(`${sheduleMouth}_2023`)
           .update({..._data})
           .then(() => {
+            verifySchedules(item)
+
             navigation.navigate('InitialScreen');
           });
       });

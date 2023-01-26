@@ -35,7 +35,6 @@ export const ConfirmSchedule = ({navigation}) => {
 
   useEffect(() => {
     shedulesUser.scheduleUid = `${userData.uid}-${shedulesUser.day}-${shedulesUser.professional}-${shedulesUser.shedule}-${shedulesUser.service}`;
-    console.log(shedulesUser.scheduleUid, 'shedulesUser.scheduleUid');
   }, [ isFocused ]);
 
   const handleComfirm = async () => {

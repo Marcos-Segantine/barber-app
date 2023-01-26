@@ -1,6 +1,6 @@
 import {View, StyleSheet} from 'react-native';
 
-import {useContext} from 'react';
+import {useContext, useEffect} from 'react';
 
 import {Button} from '../../../components/Button';
 
@@ -11,18 +11,28 @@ import InitialScreenSvg from '../../../assets/InitialScreenSvg';
 import {globalStyles} from '../../globalStyles';
 
 import {UserVerified} from '../../../context/UserVerified';
+import {useIsFocused} from '@react-navigation/native';
+
+import {clearSchedule} from '../../../functions/clearSchedule';
+import {ShedulesUserContext} from '../../../context/ShedulesUser';
 
 export const InitialScreen = ({navigation}) => {
   const {userData} = useContext(UserContext);
 
   const {userVerified} = useContext(UserVerified);
+  const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
+
+  const isFocused = useIsFocused();
 
   const handleButton = async () => {
-
     if (userData?.email && userVerified) navigation.navigate('Services');
 
     userData ? navigation.navigate('Services') : navigation.navigate('Login');
   };
+
+  useEffect(() => {
+    clearSchedule(shedulesUser, setShedulesUser);
+  }, [isFocused]);
 
   return (
     <View style={globalStyles.container}>

@@ -13,7 +13,7 @@ export const addScheduleWhenMonthIsNotUse = (
   shedulesUser,
   setShedulesUser,
 ) => {
-  console.log('addScheduleWhenMonthIsNotUse CALLED THIS ONE');
+  console.log('addScheduleWhenMonthIsNotUse CALLED');
 
   const sheduleMouth = getMonth(shedulesUser);
   const scheduleHour = getHour(shedulesUser);

@@ -22,7 +22,6 @@ export const YourSchedules = () => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log(userData.uid);
     firestore()
       .collection('schedules_by_user')
       .doc(userData.uid)
@@ -40,6 +39,7 @@ export const YourSchedules = () => {
         contentContainerStyle={{alignItems: 'center'}}>
         {schedules ? (
           schedules.map((item, index) => {
+            console.log(item, "ITEM");
             return (
               <Pressable
                 style={style.schedulesDay}

@@ -5,21 +5,20 @@ import {getHour} from './getHour';
 import {getMonth} from './getMonth';
 import {getProfessional} from './getProfessional';
 
-import {clearSchedule} from './clearSchedule';
+import { verifySchedules } from './verifySchedules';
 
 export const addScheduleWhenDayAlredyUse = (
   _data,
   navigation,
   userData,
   shedulesUser,
-  setShedulesUser,
 ) => {
-  console.log('addScheduleWhenDayAlredyUse CALLED THIS ONE');
-
   const scheduleMouth = getMonth(shedulesUser);
   const scheduleDay = getDay(shedulesUser);
   const scheduleHour = getHour(shedulesUser);
   const scheduleProfessional = getProfessional(shedulesUser);
+
+  console.log("addScheduleWhenDayAlredyUse CALLED");
 
   _data[scheduleDay][scheduleProfessional]
     ? (_data[scheduleDay][scheduleProfessional] = {
@@ -57,8 +56,7 @@ export const addScheduleWhenDayAlredyUse = (
             .doc(`${scheduleMouth}_2023`)
             .update(_data)
             .then(() => {
-              console.log('unavailable_times UPDATED!!');
-
+              verifySchedules(shedulesUser)
               firestore()
                 .collection('schedules_by_user')
                 .doc(userData.uid)
@@ -70,12 +68,8 @@ export const addScheduleWhenDayAlredyUse = (
                     .collection('schedules_by_user')
                     .doc(userData.uid)
                     .update(_data)
-                    .then(() => {
-                      console.log('schedules_by_user UPDATED!!');
-                      clearSchedule(shedulesUser, setShedulesUser);
-                    });
+                    .then(() => {});
                 });
-
               navigation.navigate('FinalScreen');
             });
         });

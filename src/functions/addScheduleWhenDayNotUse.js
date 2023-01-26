@@ -5,15 +5,14 @@ import {getHour} from './getHour';
 import {getMonth} from './getMonth';
 import {getProfessional} from './getProfessional';
 
-import {clearSchedule} from './clearSchedule';
+import {verifySchedules} from './verifySchedules';
 
 export const addScheduleWhenDayNotUse = (
   userData,
   navigation,
   shedulesUser,
-  setShedulesUser,
 ) => {
-  console.log('addScheduleWhenDayNotUse CALLED THIS ONE');
+  console.log('addScheduleWhenDayNotUse CALLED');
 
   const scheduleMouth = getMonth(shedulesUser);
   const scheduleDay = getDay(shedulesUser);
@@ -51,7 +50,6 @@ export const addScheduleWhenDayNotUse = (
                     [scheduleProfessional]: [`${shedulesUser.shedule}`],
                   },
                 };
-
               } else {
                 _data[scheduleDay][scheduleProfessional]
                   ? _data[scheduleDay][scheduleProfessional].push(
@@ -70,6 +68,8 @@ export const addScheduleWhenDayNotUse = (
                 .then(() => {
                   console.log('unavailable_times updated!!');
 
+                  verifySchedules(shedulesUser);
+
                   firestore()
                     .collection('schedules_by_user')
                     .doc(userData.uid)
@@ -85,7 +85,6 @@ export const addScheduleWhenDayNotUse = (
                         .update(_data)
                         .then(() => {
                           console.log('schedules_by_user UPDATED!!');
-                          clearSchedule(shedulesUser, setShedulesUser);
                         });
                     });
 
