@@ -1,18 +1,16 @@
 import firestore from '@react-native-firebase/firestore';
 
-import {getYear} from './getYear';
-import {getMonth} from './getMonth';
-import {getDay} from './getDay';
-import {getProfessional} from './getProfessional';
+import {getYear} from '../getYear';
+import {getMonth} from '../getMonth';
+import {getDay} from '../getDay';
+import {getProfessional} from '../getProfessional';
 
 export const verifySchedules = shedulesUser => {
-  // const year = getYear(shedulesUser);
+  const year = getYear(shedulesUser);
   const month = getMonth(shedulesUser);
   const day = getDay(shedulesUser);
 
   const professional = getProfessional(shedulesUser);
-
-  console.log(month, "<<<<<<<<<<< month");
 
   firestore()
     .collection('working_hours')
@@ -25,14 +23,10 @@ export const verifySchedules = shedulesUser => {
 
       firestore()
         .collection('unavailable_times')
-        .doc(`${month}_2023`)
+        .doc(`${month}_${year}`)
         .get()
         .then(({_data}) => {
           const unavailableTimes = _data;
-          console.log(unavailableTimes, workingHour);
-          console.log(unavailableTimes[day][professional].length ===
-            workingHour.length - 1, unavailableTimes[day][professional].length,
-            workingHour.length - 1, 'unavailableTimes[day][professional].length === workingHour.length - 1');
 
           if (
             !!unavailableTimes[day][professional] &&
@@ -40,12 +34,12 @@ export const verifySchedules = shedulesUser => {
           ) {
             firestore()
               .collection('denied_days')
-              .doc(`${month}_2023`)
+              .doc(`${month}_${year}`)
               .get()
               .then(({_data}) => {
                 firestore()
                   .collection('denied_days')
-                  .doc(`${month}_2023`)
+                  .doc(`${month}_${year}`)
                   .update({
                     ..._data,
                     [`2023-${month}-${day}`]: {
@@ -58,27 +52,21 @@ export const verifySchedules = shedulesUser => {
             unavailableTimes[day][professional].length ===
             workingHour.length - 1
           ) {
-            console.log('ELSE IF DENIED DAYS');
             firestore()
               .collection('denied_days')
-              .doc(`${month}_2023`)
+              .doc(`${month}_${year}`)
               .get()
               .then(({_data}) => {
                 const deniedDays = _data;
-                console.log(deniedDays, ' <<<<<<<<<<<<< deniedDays, BEFORE');
-                
+
                 delete deniedDays[shedulesUser.day].disableTouchEvent;
                 delete deniedDays[shedulesUser.day].disabled;
 
-                console.log(deniedDays, ' <<<<<<<<<<<<< deniedDays');
-
                 firestore()
                   .collection('denied_days')
-                  .doc(`${month}_2023`)
+                  .doc(`${month}_${year}`)
                   .update(deniedDays)
-                  .then(() => {
-                    console.log('denied_days updated!');
-                  });
+                  .then(() => {});
               });
           }
         });

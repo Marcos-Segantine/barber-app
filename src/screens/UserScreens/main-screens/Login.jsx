@@ -24,24 +24,10 @@ export const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [isToClearEmailAndPassword, setIsToClearEmailAndPassword] =
-    useState(true);
-
   const [modalVisible, setModalVisible] = useState(false);
   const [messageError, setMessageError] = useState('');
 
   const {setUserData} = useContext(UserContext);
-
-  const handleLoginByEmailAndPassword = async () => {
-    signInWithEmailAndPassword(
-      navigation,
-      email,
-      password,
-      setUserData,
-      setModalVisible,
-      setMessageError,
-    );
-  };
 
   const clearEmailAndPassword = () => {
     setEmail('');
@@ -55,11 +41,7 @@ export const Login = ({navigation}) => {
         modalVisible={modalVisible}
         messageError={messageError}
         setModalVisible={setModalVisible}
-        action={
-          isToClearEmailAndPassword
-            ? clearEmailAndPassword
-            : () => setModalVisible(false)
-        }
+        action={clearEmailAndPassword}
       />
 
       <ScrollView contentContainerStyle={style.container}>
@@ -97,7 +79,19 @@ export const Login = ({navigation}) => {
             </Pressable>
           </View>
 
-          <Button text="Entrar" action={handleLoginByEmailAndPassword} />
+          <Button
+            text="Entrar"
+            action={() =>
+              signInWithEmailAndPassword(
+                navigation,
+                email,
+                password,
+                setUserData,
+                setModalVisible,
+                setMessageError,
+              )
+            }
+          />
         </View>
       </ScrollView>
     </>
@@ -108,8 +102,8 @@ const style = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#1E1E1E',
-    flex: 1
-  },  
+    flex: 1,
+  },
 
   form: {
     width: '80%',

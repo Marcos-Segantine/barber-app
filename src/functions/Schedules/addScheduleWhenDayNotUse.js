@@ -1,9 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
 
-import {getDay} from './getDay';
-import {getHour} from './getHour';
-import {getMonth} from './getMonth';
-import {getProfessional} from './getProfessional';
+import {getDay} from '../getDay';
+import {getHour} from '../getHour';
+import {getMonth} from '../getMonth';
+import {getProfessional} from '../getProfessional';
 
 import {verifySchedules} from './verifySchedules';
 

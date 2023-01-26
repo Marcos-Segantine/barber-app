@@ -3,7 +3,7 @@ import {Text, View, StyleSheet} from 'react-native';
 import {Title} from '../../../components/Title';
 import {Button} from '../../../components/Button';
 
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect} from 'react';
 import {ShedulesUserContext} from '../../../context/ShedulesUser';
 
 import firestore from '@react-native-firebase/firestore';
@@ -13,13 +13,14 @@ import {globalStyles} from '../../globalStyles';
 import {getMonth} from '../../../functions/getMonth';
 import {getDay} from '../../../functions/getDay';
 
-import {addScheduleWhenDayAlredyUse} from '../../../functions/addScheduleWhenDayAlredyUse';
-import {addScheduleWhenDayNotUse} from '../../../functions/addScheduleWhenDayNotUse';
-import {addScheduleWhenMonthIsNotUse} from '../../../functions/addScheduleWhenMonthIsNotUse';
-import {UserContext} from '../../../context/UserContext';
-import { useIsFocused } from '@react-navigation/native';
+import {addScheduleWhenDayAlredyUse} from '../../../functions/Schedules/addScheduleWhenDayAlredyUse';
+import {addScheduleWhenDayNotUse} from '../../../functions/Schedules/addScheduleWhenDayNotUse';
+import {addScheduleWhenMonthIsNotUse} from '../../../functions/Schedules/addScheduleWhenMonthIsNotUse';
 
-import { dateFormated } from '../../../functions/dateFormated';
+import {UserContext} from '../../../context/UserContext';
+import {useIsFocused} from '@react-navigation/native';
+
+import {dateFormated} from '../../../functions/dateFormated';
 
 export const ConfirmSchedule = ({navigation}) => {
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
@@ -29,13 +30,13 @@ export const ConfirmSchedule = ({navigation}) => {
   const sheduleMouth = getMonth(shedulesUser);
   const sheduleDay = getDay(shedulesUser);
 
-  const date = dateFormated(shedulesUser)
+  const date = dateFormated(shedulesUser);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
     shedulesUser.scheduleUid = `${userData.uid}-${shedulesUser.day}-${shedulesUser.professional}-${shedulesUser.shedule}-${shedulesUser.service}`;
-  }, [ isFocused ]);
+  }, [isFocused]);
 
   const handleComfirm = async () => {
     firestore()

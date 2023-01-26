@@ -39,7 +39,6 @@ export const YourSchedules = () => {
         contentContainerStyle={{alignItems: 'center'}}>
         {schedules ? (
           schedules.map((item, index) => {
-            console.log(item, "ITEM");
             return (
               <Pressable
                 style={style.schedulesDay}

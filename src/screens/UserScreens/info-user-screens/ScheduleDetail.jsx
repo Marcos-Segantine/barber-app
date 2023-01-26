@@ -3,86 +3,23 @@ import {Text, StyleSheet, View} from 'react-native';
 import {Title} from '../../../components/Title';
 import {Button} from '../../../components/Button';
 
-import firestore from '@react-native-firebase/firestore';
 import {useContext} from 'react';
 import {UserContext} from '../../../context/UserContext';
 
-import { verifySchedules } from '../../../functions/verifySchedules';
+import {cancelScheduleButton} from '../../../functions/Schedules/cancelScheduleButton';
 
-import { getMonth } from '../../../functions/getMonth';
-import { getDay } from '../../../functions/getDay';
+import { dateFormated } from '../../../functions/dateFormated';
 
 export const ScheduleDetail = ({route, navigation}) => {
   const {item} = route.params;
 
   const {userData} = useContext(UserContext);
 
-  console.log("");
-
-  const dateFormated = item.day.split('-').reverse().join('/');
-  const sheduleMouth = getMonth(item)
-  const scheduleDay = getDay(item)
-  const professional = item.professional;
-
-  const cancelScheduleButton = () => {
-    firestore()
-      .collection('schedules_by_user')
-      .doc(userData.uid)
-      .get()
-      .then(({_data}) => {
-        const newSchedules__Temp = _data.schedules.filter(itemFilter => {
-          return itemFilter.scheduleUid !== item.scheduleUid;
-        });
-
-        _data.schedules = newSchedules__Temp;
-
-        console.log(_data.schedules);
-
-        firestore()
-          .collection('schedules_by_user')
-          .doc(userData.uid)
-          .update({..._data});
-      });
-
-    firestore()
-      .collection('schedules_month')
-      .doc(`${sheduleMouth}_2023`)
-      .get()
-      .then(({_data}) => {
-        delete _data[scheduleDay][professional][item.shedule];
-
-        firestore()
-          .collection('schedules_month')
-          .doc(`${sheduleMouth}_2023`)
-          .update({..._data});
-      });
-
-    firestore()
-      .collection('unavailable_times')
-      .doc(`${sheduleMouth}_2023`)
-      .get()
-      .then(({_data}) => {
-        const newData = _data[scheduleDay][professional].filter(schedule => {
-          return schedule !== item.shedule;
-        });
-
-        _data[scheduleDay][professional] = newData;
-
-        firestore()
-          .collection('unavailable_times')
-          .doc(`${sheduleMouth}_2023`)
-          .update({..._data})
-          .then(() => {
-            verifySchedules(item)
-
-            navigation.navigate('InitialScreen');
-          });
-      });
-  };
+  const date = dateFormated(item)
 
   return (
     <View style={style.container}>
-      <Title title={dateFormated} />
+      <Title title={date} />
 
       <View style={style.content}>
         <Text style={style.info}>Horario: {item.shedule}</Text>
@@ -90,7 +27,10 @@ export const ScheduleDetail = ({route, navigation}) => {
         <Text style={style.info}>Barbeiro: {item.professional}</Text>
       </View>
 
-      <Button text="Cancelar Horario" action={cancelScheduleButton} />
+      <Button
+        text="Cancelar Horario"
+        action={() => cancelScheduleButton(userData, item, navigation)}
+      />
     </View>
   );
 };

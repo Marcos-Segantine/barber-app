@@ -13,7 +13,7 @@ import {globalStyles} from '../../globalStyles';
 import {UserVerified} from '../../../context/UserVerified';
 import {useIsFocused} from '@react-navigation/native';
 
-import {clearSchedule} from '../../../functions/clearSchedule';
+import {clearSchedule} from '../../../functions/Schedules/clearSchedule';
 import {ShedulesUserContext} from '../../../context/ShedulesUser';
 
 export const InitialScreen = ({navigation}) => {
