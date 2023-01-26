@@ -18,7 +18,7 @@ import {MessageError} from '../../../components/MessageError';
 
 import {signInWithEmailAndPassword} from '../../../functions/Login/signInWithEmailAndPassword';
 
-import {SignInWithGoogle} from '../../../components/SignInWithGoogle';
+import {SignInWithGoogle} from '../../../components/Modals/SignInWithGoogle';
 
 export const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -45,11 +45,11 @@ export const Login = ({navigation}) => {
       />
 
       <ScrollView contentContainerStyle={style.container}>
-        <Title title="Entre usando midias" />
+        <Title title="Entre usando sua conta do Google" />
 
         <SignInWithGoogle />
 
-        <Title title="Ou entre com seu email e senha" />
+        <Title title="Ou com seu email e senha" />
 
         <View style={style.form}>
           <TextInput
@@ -102,7 +102,7 @@ const style = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#1E1E1E',
-    flex: 1,
+    paddingBottom: 20
   },
 
   form: {

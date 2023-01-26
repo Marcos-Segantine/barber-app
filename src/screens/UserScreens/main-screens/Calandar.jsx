@@ -11,7 +11,7 @@ import {ShedulesUserContext} from '../../../context/ShedulesUser';
 
 import firestore from '@react-native-firebase/firestore';
 
-import {LoadingScreen} from '../../../components/LoadingScreen';
+import {LoadingAnimation} from '../../../components/LoadingAnimation';
 
 export const Calandar = ({navigation}) => {
   LocaleConfig.locales['pt-br'] = {
@@ -106,7 +106,7 @@ export const Calandar = ({navigation}) => {
 
       {deniedDays ? (
         <Calendar
-        context={{date: ''}}
+          context={{date: ''}}
           onPressArrowLeft={subtractMonth => {
             handleLeftArrow();
             subtractMonth();
@@ -148,7 +148,7 @@ export const Calandar = ({navigation}) => {
           }}
         />
       ) : (
-        <LoadingScreen />
+        <LoadingAnimation />
       )}
       <Button
         text="Comfirmar"
@@ -164,6 +164,6 @@ const style = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#1E1E1E',
-    justifyContent: 'space-between'
-  }
-})
+    justifyContent: 'space-between',
+  },
+});

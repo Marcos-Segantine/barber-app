@@ -10,7 +10,7 @@ import firestore from '@react-native-firebase/firestore';
 
 import {globalStyles} from '../../globalStyles';
 
-import { LoadingScreen } from '../../../components/LoadingScreen';
+import { LoadingScreen } from '../../../components/LoadingAnimation';
 
 export const YourSchedules = () => {
   const [schedules, setShedules] = useState(null);

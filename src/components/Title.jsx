@@ -10,5 +10,7 @@ const style = StyleSheet.create({
     fontWeight: '900',
     color: '#FFFFFF',
     paddingHorizontal: 10,
+    width: '100%',
+    textAlign: 'center',
   },
 });

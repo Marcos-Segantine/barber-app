@@ -10,7 +10,7 @@ import { globalStyles } from "../../globalStyles"
 
 import firestore from '@react-native-firebase/firestore';
 
-import { LoadingScreen } from "../../../components/LoadingScreen"
+import { LoadingAnimation } from "../../../components/LoadingAnimation"
 
 export const Services = ({ navigation }) => {
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)
@@ -56,7 +56,7 @@ export const Services = ({ navigation }) => {
                         })
                     ) :
                     (
-                        <LoadingScreen />
+                        <LoadingAnimation />
                     )
                 }
            

@@ -4,11 +4,11 @@ import {useContext} from 'react';
 import {Path, Svg} from 'react-native-svg';
 import {Pressable, StyleSheet} from 'react-native';
 
-import {UserContext} from '../context/UserContext';
-import {UserVerified} from '../context/UserVerified';
+import {UserContext} from '../../context/UserContext';
+import {UserVerified} from '../../context/UserVerified';
 
-import {signInWithGoogle} from '../functions/Login/signInWithGoogle';
-import {createUserByGoogle} from '../functions/Register/createUserByGoogle';
+import {signInWithGoogle} from '../../functions/Login/signInWithGoogle';
+import {createUserByGoogle} from '../../functions/Register/createUserByGoogle';
 
 export const SignInWithGoogle = () => {
   setUserVerified;
@@ -65,6 +65,6 @@ const style = StyleSheet.create({
     paddingVertical: 5,
     alignItems: 'center',
     borderRadius: 15,
-    marginTop: 15
+    marginVertical: 35
   },
 });
