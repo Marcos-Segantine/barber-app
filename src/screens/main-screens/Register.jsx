@@ -75,11 +75,7 @@ export const Register = ({navigation}) => {
         action={() => setModalVisible(false)}
       />
 
-      <Title title="Crie uma conta usando midias" />
-
-      <SignInWithGoogle />
-
-      <Title title="Ou preencha os campos abaixo" />
+      <Title title="Preencha os campos abaixo" />
 
       <View style={style.form}>
         <TextInput
@@ -105,12 +101,14 @@ export const Register = ({navigation}) => {
           placeholder="Crie uma senha"
           placeholderTextColor={'#FFFFFF80'}
           style={style.input}
+          secureTextEntry={true}
         />
         <TextInput
           onChangeText={text => setComfirmPassword(text)}
           placeholder="Crie uma senha"
           placeholderTextColor={'#FFFFFF80'}
           style={style.input}
+          secureTextEntry={true}
         />
       </View>
 
@@ -137,6 +135,10 @@ export const Register = ({navigation}) => {
           )
         }
       />
+
+      <Text style={style.text}>Ou crie sua conta usando o Google</Text>
+
+      <SignInWithGoogle />
     </ScrollView>
   );
 };
@@ -145,6 +147,7 @@ const style = StyleSheet.create({
   container: {
     backgroundColor: '#1E1E1E',
     alignItems: 'center',
+    paddingHorizontal: 10,
   },
 
   form: {
@@ -174,5 +177,12 @@ const style = StyleSheet.create({
 
   linkHelp: {
     color: '#FFFFFF',
+  },
+
+  text: {
+    color: '#FFFFFF',
+    marginTop: 40,
+    fontWeight: '700',
+    fontSize: 15,
   },
 });

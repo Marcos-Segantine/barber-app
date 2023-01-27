@@ -25,7 +25,7 @@ const {Screen, Navigator} = createNativeStackNavigator();
 export const UserScreens = () => {
   return (
     <Navigator
-      initialRouteName="InitialScreen"
+      initialRouteName="Login"
       screenOptions={{headerShown: false}}>
       <Screen name="InitialScreen" component={InitialScreen} />
 

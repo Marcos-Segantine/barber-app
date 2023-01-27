@@ -45,11 +45,7 @@ export const Login = ({navigation}) => {
       />
 
       <ScrollView contentContainerStyle={style.container}>
-        <Title title="Entre usando sua conta do Google" />
-
-        <SignInWithGoogle />
-
-        <Title title="Ou com seu email e senha" />
+        <Title title="Preencha os campos" />
 
         <View style={style.form}>
           <TextInput
@@ -69,6 +65,7 @@ export const Login = ({navigation}) => {
             placeholderTextColor={'#FFFFFF80'}
             secureTextEntry={true}
           />
+
           <View style={style.linksHelpUser}>
             <Pressable onPress={() => navigation.navigate('Register')}>
               <Text style={style.linkHelp}>Cadastrar</Text>
@@ -93,6 +90,10 @@ export const Login = ({navigation}) => {
             }
           />
         </View>
+
+        <Text style={style.text}>Ou entre usando sua conta do Google</Text>
+
+        <SignInWithGoogle />
       </ScrollView>
     </>
   );
@@ -102,7 +103,9 @@ const style = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#1E1E1E',
-    paddingBottom: 20
+    justifyContent: 'center',
+    paddingBottom: 20,
+    flex: 1,
   },
 
   form: {
@@ -133,5 +136,12 @@ const style = StyleSheet.create({
 
   linkHelp: {
     color: '#FFFFFF',
+  },
+
+  text: {
+    color: '#FFFFFF',
+    marginTop: 40,
+    fontWeight: '700',
+    fontSize: 15,
   },
 });
