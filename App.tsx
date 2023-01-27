@@ -6,7 +6,7 @@ import {UserProvider} from './src/context/UserContext';
 import {ShedulesUserProvider} from './src/context/ShedulesUser';
 import {UserVerifiedProvider} from './src/context/UserVerified';
 
-import {UserScreens} from './src/screens/UserScreens/routes';
+import {UserScreens} from './src/screens/routes';
 
 import {Header} from './src/shared/Header';
 import {Footer} from './src/shared/Footer';

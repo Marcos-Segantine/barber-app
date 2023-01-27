@@ -1,14 +1,14 @@
 import {Text, StyleSheet, View} from 'react-native';
 
-import {Title} from '../../../components/Title';
-import {Button} from '../../../components/Button';
+import {Title} from '../../components/Title';
+import {Button} from '../../components/Button';
 
 import {useContext} from 'react';
-import {UserContext} from '../../../context/UserContext';
+import {UserContext} from '../../context/UserContext';
 
-import {cancelScheduleButton} from '../../../functions/Schedules/cancelScheduleButton';
+import {cancelScheduleButton} from '../../functions/Schedules/cancelScheduleButton';
 
-import { dateFormated } from '../../../functions/dateFormated';
+import { dateFormated } from '../../functions/dateFormated';
 
 export const ScheduleDetail = ({route, navigation}) => {
   const {item} = route.params;

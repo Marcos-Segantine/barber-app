@@ -1,26 +1,26 @@
 import {Text, View, StyleSheet} from 'react-native';
 
-import {Title} from '../../../components/Title';
-import {Button} from '../../../components/Button';
+import {Title} from '../../components/Title';
+import {Button} from '../../components/Button';
 
 import {useContext, useEffect} from 'react';
-import {ShedulesUserContext} from '../../../context/ShedulesUser';
+import {ShedulesUserContext} from '../../context/ShedulesUser';
 
 import firestore from '@react-native-firebase/firestore';
 
-import {globalStyles} from '../../globalStyles';
+import {globalStyles} from '../globalStyles';
 
-import {getMonth} from '../../../functions/getMonth';
-import {getDay} from '../../../functions/getDay';
+import {getMonth} from '../../functions/getMonth';
+import {getDay} from '../../functions/getDay';
 
-import {addScheduleWhenDayAlredyUse} from '../../../functions/Schedules/addScheduleWhenDayAlredyUse';
-import {addScheduleWhenDayNotUse} from '../../../functions/Schedules/addScheduleWhenDayNotUse';
-import {addScheduleWhenMonthIsNotUse} from '../../../functions/Schedules/addScheduleWhenMonthIsNotUse';
+import {addScheduleWhenDayAlredyUse} from '../../functions/Schedules/addScheduleWhenDayAlredyUse';
+import {addScheduleWhenDayNotUse} from '../../functions/Schedules/addScheduleWhenDayNotUse';
+import {addScheduleWhenMonthIsNotUse} from '../../functions/Schedules/addScheduleWhenMonthIsNotUse';
 
-import {UserContext} from '../../../context/UserContext';
+import {UserContext} from '../../context/UserContext';
 import {useIsFocused} from '@react-navigation/native';
 
-import {dateFormated} from '../../../functions/dateFormated';
+import {dateFormated} from '../../functions/dateFormated';
 
 export const ConfirmSchedule = ({navigation}) => {
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);

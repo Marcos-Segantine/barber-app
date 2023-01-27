@@ -1,3 +1,3 @@
 export const dateFormated = shedulesUser => {
-  return shedulesUser.day.split('-').reverse().join('/');
+  return shedulesUser.day.split('-').reverse().join('/ ');
 };

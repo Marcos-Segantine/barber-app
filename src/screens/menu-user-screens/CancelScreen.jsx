@@ -1,25 +1,30 @@
-import { Text, View, StyleSheet, Pressable } from "react-native"
+import { Text, View, StyleSheet, Pressable } from "react-native";
 
-import ComfirmationSvg from '../../../assets/ComfirmationSvg'
+import { Title } from "../../components/Title";
 
-export const FinalScreen = ({ navigation }) => {
+import { CancelSvg } from "../../assets/CancelSvg";
 
+export const CancelScreen = () => {
     return(
         <View style={style.container}>
-            <ComfirmationSvg />
+
+            <Title title={"Horario Cancelado!"} />
+
+            <CancelSvg />
 
             <Pressable style={style.goBackButton} onPress={() => navigation.navigate("InitialScreen")}>
                 <Text style={style.textGoBack}>Voltar ao inicio</Text>
             </Pressable>
+
         </View>
     )
 }
 
 const style = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: "#1E1E1E",
-        alignItems: "center"
+        flex: 1,
+        alignItems: 'center',
     },
 
     goBackButton: {

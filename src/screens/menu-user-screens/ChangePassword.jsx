@@ -1,16 +1,16 @@
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 
-import {globalStyles} from '../../globalStyles';
+import {globalStyles} from '../globalStyles';
 
-import {Title} from '../../../components/Title';
-import {Button} from '../../../components/Button';
+import {Title} from '../../components/Title';
+import {Button} from '../../components/Button';
 import {useContext, useState} from 'react';
 
 import firebase from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
-import {UserContext} from '../../../context/UserContext';
+import {UserContext} from '../../context/UserContext';
 
-import {MessageError} from '../../../components/MessageError';
+import {MessageError} from '../../components/MessageError';
 
 export const ChangePassword = ({navigation}) => {
   const [oldPassword, setOldPassword] = useState('');

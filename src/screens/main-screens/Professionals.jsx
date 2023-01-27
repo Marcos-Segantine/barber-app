@@ -2,12 +2,12 @@ import { View, StyleSheet, Pressable, Text } from "react-native"
 
 import { useContext, useState } from "react"
 
-import { ShedulesUserContext } from "../../../context/ShedulesUser"
+import { ShedulesUserContext } from "../../context/ShedulesUser"
 
-import { Title } from "../../../components/Title"
-import { Button } from "../../../components/Button"
+import { Title } from "../../components/Title"
+import { Button } from "../../components/Button"
 
-import { globalStyles } from "../../globalStyles"
+import { globalStyles } from "../globalStyles"
 
 export const Professionals = ({ navigation }) => {
     const [ professionalUserSelected, setProfessionalUserSelected ] = useState()

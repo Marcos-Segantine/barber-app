@@ -1,16 +1,16 @@
 import { Text, Pressable, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 
-import { Title } from "../../../components/Title"
-import { Button } from "../../../components/Button"
+import { Title } from "../../components/Title"
+import { Button } from "../../components/Button"
 import { useContext, useEffect, useState } from "react"
 
-import { ShedulesUserContext } from "../../../context/ShedulesUser"
+import { ShedulesUserContext } from "../../context/ShedulesUser"
 
-import { globalStyles } from "../../globalStyles"
+import { globalStyles } from "../globalStyles"
 
 import firestore from '@react-native-firebase/firestore';
 
-import { LoadingAnimation } from "../../../components/LoadingAnimation"
+import { LoadingAnimation } from "../../components/LoadingAnimation"
 
 export const Services = ({ navigation }) => {
     const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext)

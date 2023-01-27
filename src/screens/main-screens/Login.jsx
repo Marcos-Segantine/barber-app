@@ -9,16 +9,16 @@ import {
 
 import {useContext, useState} from 'react';
 
-import {Title} from '../../../components/Title';
-import {Button} from '../../../components/Button';
+import {Title} from '../../components/Title';
+import {Button} from '../../components/Button';
 
-import {UserContext} from '../../../context/UserContext';
+import {UserContext} from '../../context/UserContext';
 
-import {MessageError} from '../../../components/MessageError';
+import {MessageError} from '../../components/MessageError';
 
-import {signInWithEmailAndPassword} from '../../../functions/Login/signInWithEmailAndPassword';
+import {signInWithEmailAndPassword} from '../../functions/Login/signInWithEmailAndPassword';
 
-import {SignInWithGoogle} from '../../../components/Modals/SignInWithGoogle';
+import {SignInWithGoogle} from '../../components/Modals/SignInWithGoogle';
 
 export const Login = ({navigation}) => {
   const [email, setEmail] = useState('');

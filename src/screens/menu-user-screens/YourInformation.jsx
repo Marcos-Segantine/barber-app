@@ -1,10 +1,10 @@
 import { Text, View, Pressable, StyleSheet } from "react-native";
 
-import { Title } from "../../../components/Title";
-import { Button } from "../../../components/Button";
+import { Title } from "../../components/Title";
+import { Button } from "../../components/Button";
 
 import { useContext } from "react";
-import { UserContext } from "../../../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 
 export const YourInformation = () => {
     const { userData } = useContext(UserContext)

@@ -7,20 +7,20 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {Title} from '../../../components/Title';
-import {Button} from '../../../components/Button';
+import {Title} from '../../components/Title';
+import {Button} from '../../components/Button';
 
 import auth from '@react-native-firebase/auth';
 
 import {useState} from 'react';
 
-import {MessageError} from '../../../components/MessageError';
+import {MessageError} from '../../components/MessageError';
 
-import {createUserWithEmailAndPassword} from '../../../functions/Register/createUserWithEmailAndPassword';
+import {createUserWithEmailAndPassword} from '../../functions/Register/createUserWithEmailAndPassword';
 
-import {SignInWithGoogle} from '../../../components/Modals/SignInWithGoogle';
+import {SignInWithGoogle} from '../../components/Modals/SignInWithGoogle';
 
-import {EmailVerificationModal} from '../../../components/Modals/EmailVerificationModal';
+import {EmailVerificationModal} from '../../components/Modals/EmailVerificationModal';
 
 export const Register = ({navigation}) => {
   const [name, setName] = useState('');

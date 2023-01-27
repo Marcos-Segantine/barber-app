@@ -1,16 +1,18 @@
 import {Text, View, StyleSheet, Pressable, ScrollView} from 'react-native';
 
-import {Title} from '../../../components/Title';
+import {Title} from '../../components/Title';
 import {useContext, useEffect, useState} from 'react';
 
-import {UserContext} from '../../../context/UserContext';
+import {UserContext} from '../../context/UserContext';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 
 import firestore from '@react-native-firebase/firestore';
 
-import {globalStyles} from '../../globalStyles';
+import {globalStyles} from '../globalStyles';
 
-import { LoadingScreen } from '../../../components/LoadingAnimation';
+import { LoadingScreen } from '../../components/LoadingAnimation';
+
+import { dateFormated } from '../../functions/dateFormated';
 
 export const YourSchedules = () => {
   const [schedules, setShedules] = useState(null);
@@ -38,14 +40,14 @@ export const YourSchedules = () => {
         style={style.contentScrollView}
         contentContainerStyle={{alignItems: 'center'}}>
         {schedules ? (
-          schedules.map((item, index) => {
+          schedules?.map((item, index) => {
             return (
               <Pressable
                 style={style.schedulesDay}
                 key={index}
                 onPress={() => navigation.navigate('ScheduleDetail', {item})}>
                 <Text style={style.text}>
-                  Dia: {item?.day?.split('-').reverse().join('/ ')}
+                  Dia: {dateFormated(item)}
                 </Text>
                 <Text style={style.text}>Horario: {item.shedule}</Text>
               </Pressable>

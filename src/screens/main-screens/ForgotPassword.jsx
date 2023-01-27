@@ -7,14 +7,14 @@ import {
   Modal,
 } from 'react-native';
 
-import {Title} from '../../../components/Title';
-import {Button} from '../../../components/Button';
+import {Title} from '../../components/Title';
+import {Button} from '../../components/Button';
 
 import {useState} from 'react';
 
 import auth from '@react-native-firebase/auth';
 
-import {globalStyles} from '../../globalStyles';
+import {globalStyles} from '../globalStyles';
 
 export const ForgotPassword = ({navigation}) => {
   const [email, setEmail] = useState('');

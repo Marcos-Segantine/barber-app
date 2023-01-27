@@ -2,19 +2,19 @@ import {View, StyleSheet} from 'react-native';
 
 import {useContext, useEffect} from 'react';
 
-import {Button} from '../../../components/Button';
+import {Button} from '../../components/Button';
 
-import {UserContext} from '../../../context/UserContext';
+import {UserContext} from '../../context/UserContext';
 
-import InitialScreenSvg from '../../../assets/InitialScreenSvg';
+import InitialScreenSvg from '../../assets/InitialScreenSvg';
 
-import {globalStyles} from '../../globalStyles';
+import {globalStyles} from '../globalStyles';
 
-import {UserVerified} from '../../../context/UserVerified';
+import {UserVerified} from '../../context/UserVerified';
 import {useIsFocused} from '@react-navigation/native';
 
-import {clearSchedule} from '../../../functions/Schedules/clearSchedule';
-import {ShedulesUserContext} from '../../../context/ShedulesUser';
+import {clearSchedule} from '../../functions/Schedules/clearSchedule';
+import {ShedulesUserContext} from '../../context/ShedulesUser';
 
 export const InitialScreen = ({navigation}) => {
   const {userData} = useContext(UserContext);

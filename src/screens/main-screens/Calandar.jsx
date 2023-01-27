@@ -4,14 +4,14 @@ import {useContext, useEffect, useState} from 'react';
 
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 
-import {Title} from '../../../components/Title';
-import {Button} from '../../../components/Button';
+import {Title} from '../../components/Title';
+import {Button} from '../../components/Button';
 
-import {ShedulesUserContext} from '../../../context/ShedulesUser';
+import {ShedulesUserContext} from '../../context/ShedulesUser';
 
 import firestore from '@react-native-firebase/firestore';
 
-import {LoadingAnimation} from '../../../components/LoadingAnimation';
+import {LoadingAnimation} from '../../components/LoadingAnimation';
 
 export const Calandar = ({navigation}) => {
   LocaleConfig.locales['pt-br'] = {

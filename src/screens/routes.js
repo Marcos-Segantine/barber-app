@@ -1,23 +1,24 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import {Calandar} from './main-screens/Calandar';
 import {ConfirmSchedule} from './main-screens/ConfirmSchedule';
 import {FinalScreen} from './main-screens/FinalScreen';
-
 import {InitialScreen} from './main-screens/InitialScreen';
 import {Login} from './main-screens/Login';
-import {CancelScreen} from './info-user-screens/CancelScreen';
-import {InfoSchedule} from './info-user-screens/InfoSchedule';
-import {YourInformation} from './info-user-screens/YourInformation';
-import {YourSchedules} from './info-user-screens/YourSchedules';
 import {Professionals} from './main-screens/Professionals';
 import {Register} from './main-screens/Register';
 import {Schedules} from './main-screens/Schedules';
 import {Services} from './main-screens/Services';
-import {Main} from './info-user-screens/Main';
-import {ScheduleDetail} from './info-user-screens/ScheduleDetail';
 import {ForgotPassword} from './main-screens/ForgotPassword';
-import {ChangePassword} from './info-user-screens/ChangePassword';
-import {FeedBack} from './info-user-screens/FeedBack';
+
+import {Main} from './menu-user-screens/Main';
+import {ChangePassword} from './menu-user-screens/ChangePassword';
+import {CancelScreen} from './menu-user-screens/CancelScreen';
+import {InfoSchedule} from './menu-user-screens/InfoSchedule';
+import {YourInformation} from './menu-user-screens/YourInformation';
+import {YourSchedules} from './menu-user-screens/YourSchedules';
+import {ScheduleDetail} from './menu-user-screens/ScheduleDetail';
+import {FeedBack} from './menu-user-screens/FeedBack';
 
 const {Screen, Navigator} = createNativeStackNavigator();
 

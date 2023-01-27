@@ -2,13 +2,13 @@ import {View, StyleSheet, Pressable, Text} from 'react-native';
 
 import {useContext} from 'react';
 
-import {Title} from '../../../components/Title';
+import {Title} from '../../components/Title';
 
 import auth from '@react-native-firebase/auth';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {UserContext} from '../../../context/UserContext';
+import {UserContext} from '../../context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
 export const Main = () => {
