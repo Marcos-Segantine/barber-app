@@ -2,6 +2,8 @@ import {Text, View, StyleSheet, Pressable} from 'react-native';
 
 import {Title} from '../../components/Title';
 import {Button} from '../../components/Button';
+import {LoadingAnimation} from '../../components/LoadingAnimation';
+
 import {useContext, useEffect, useState} from 'react';
 import {ShedulesUserContext} from '../../context/ShedulesUser';
 
@@ -9,7 +11,10 @@ import {globalStyles} from '../globalStyles';
 
 import firestore from '@react-native-firebase/firestore';
 
-import {LoadingAnimation} from '../../components/LoadingAnimation';
+import { getYear } from '../../functions/getYear';
+import { getMonth } from '../../functions/getMonth';
+import { getDay } from '../../functions/getDay';
+import { getProfessional } from '../../functions/getProfessional';
 
 export const Schedules = ({navigation}) => {
   const [avaibleTimesState, setAvaibleTimesState] = useState();
@@ -17,21 +22,31 @@ export const Schedules = ({navigation}) => {
 
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
 
-  const sheduleMouth = shedulesUser.day?.split('').slice(5, 7).join('');
-  const sheduleDay = shedulesUser.day?.split('').slice(8).join('');
-  const sheduleProfessional = shedulesUser.professional;
+  const ScheduleYear = getYear(shedulesUser)
+  const sheduleMouth = getMonth(shedulesUser)
+  const sheduleDay = getDay(shedulesUser)
+  const sheduleProfessional = getProfessional(shedulesUser)
 
   useEffect(() => {
     firestore()
       .collection('working_hours')
       .get()
       .then(({_docs}) => {
-        const currentDay = _docs[0]._data.times;
+        const date = new Date(shedulesUser.day);
+        const dayOfSchedule = date.getDay() + 1;
+
+        let day;
+
+        if (dayOfSchedule > 0 && dayOfSchedule <= 5) day = 0;
+        else if (dayOfSchedule === 6) day = 1;
+        else day = 2;
+
+        const currentDay = _docs[day]._data.times;
         const workingTimes = currentDay;
 
         firestore()
           .collection('unavailable_times')
-          .doc(`${sheduleMouth}_2023`)
+          .doc(`${sheduleMouth}_${ScheduleYear}`)
           .get()
           .then(({_data}) => {
             // If month does't exists
@@ -105,7 +120,7 @@ const style = StyleSheet.create({
     flexWrap: 'wrap',
     marginTop: 50,
     justifyContent: 'center',
-    flex: .8
+    flex: 0.8,
   },
 
   schedule: {

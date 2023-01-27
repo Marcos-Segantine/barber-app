@@ -16,10 +16,16 @@ export const verifySchedules = shedulesUser => {
     .collection('working_hours')
     .get()
     .then(({_docs}) => {
-      console.log(
-        'FIX THIS LATER, THE SYSTEM MUST TO KNOW WHEN THE SCHEDULE IS FROM MONDAY TO FRIDAY OR ENDWEEK!!',
-      );
-      const workingHour = _docs[0]._data.times;
+      const date = new Date(shedulesUser.day);
+      const dayOfSchedule = date.getDay() + 1;
+
+      let day;
+
+      if (dayOfSchedule > 0 && dayOfSchedule <= 5) day = 0;
+      else if (dayOfSchedule === 6) day = 1;
+      else day = 2;
+
+      const workingHour = _docs[day]._data.times;
 
       firestore()
         .collection('unavailable_times')

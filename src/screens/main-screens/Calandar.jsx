@@ -63,8 +63,6 @@ export const Calandar = ({navigation}) => {
   const [month, setMonth] = useState(currentDate.getMonth() + 1);
   const [arrawLeftAvaible, setArrawLeftAvaible] = useState(false);
 
-  // const currentMonth = currentDate.getMonth() + 1
-
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
 
   useEffect(() => {
