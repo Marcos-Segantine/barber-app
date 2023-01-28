@@ -69,8 +69,12 @@ export const Calandar = ({navigation}) => {
     firestore()
       .collection('denied_days')
       .get()
-      .then(async ({_docs}) => {
-        setDeniedDays(_docs[month - 1]._data);
+      .then(async (res) => {
+        if(!(!!res._docs[month - 1])) {
+          setDeniedDays({})
+          return
+        }
+        setDeniedDays(res._docs[month - 1]._data);
       });
   }, [month]);
 
