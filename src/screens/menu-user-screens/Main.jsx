@@ -1,17 +1,22 @@
-import {View, StyleSheet, Pressable, Text} from 'react-native';
+import {View, StyleSheet, Pressable, Text, Modal} from 'react-native';
 
-import {useContext} from 'react';
+import {useContext, useState} from 'react';
 
 import {Title} from '../../components/Title';
 
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {UserContext} from '../../context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
+import {ChangePassword} from '../../components/Modals/ChangePassword';
+
 export const Main = () => {
+  const [modalChangePassword, setmodalChangePassword] = useState(false);
+
   const {userData, setUserData} = useContext(UserContext);
 
   const navigation = useNavigation();
@@ -30,42 +35,58 @@ export const Main = () => {
     }
   };
 
+  const handleChangePassword = () => {
+    firestore()
+      .collection('users')
+      .doc(userData.uid)
+      .get()
+      .then(({_data}) => {
+        if (_data.password === null || !_data.password) {
+          setmodalChangePassword(true);
+        } else navigation.navigate('ChangePassword');
+      });
+  };
+
   return (
-    <View style={style.container}>
-      <Title title={`Olá ${userData?.name}`} />
+    <>
+      <ChangePassword
+        modalChangePassword={modalChangePassword}
+        setmodalChangePassword={setmodalChangePassword}
+      />
+      <View style={style.container}>
+        <Title title={`Olá ${userData?.name}`} />
 
-      <View style={style.contentLinks}>
-        <Pressable style={style.link}>
-          <Text
-            style={style.text}
-            onPress={() => navigation.navigate('YourSchedules')}>
-            Seus agendamentos
-          </Text>
-        </Pressable>
+        <View style={style.contentLinks}>
+          <Pressable style={style.link}>
+            <Text
+              style={style.text}
+              onPress={() => navigation.navigate('YourSchedules')}>
+              Seus agendamentos
+            </Text>
+          </Pressable>
 
-        <Pressable
-          style={style.link}
-          onPress={() => navigation.navigate('YourInformation')}>
-          <Text style={style.text}>Suas informações</Text>
-        </Pressable>
+          <Pressable
+            style={style.link}
+            onPress={() => navigation.navigate('YourInformation')}>
+            <Text style={style.text}>Suas informações</Text>
+          </Pressable>
 
-        <Pressable
-          style={style.link}
-          onPress={() => navigation.navigate('ChangePassword')}>
-          <Text style={style.text}>Redefinir senha</Text>
-        </Pressable>
+          <Pressable style={style.link} onPress={handleChangePassword}>
+            <Text style={style.text}>Redefinir senha</Text>
+          </Pressable>
 
-        <Pressable
-          style={style.link}
-          onPress={() => navigation.navigate('FeedBack')}>
-          <Text style={style.text}>Enviar um feedback</Text>
-        </Pressable>
+          <Pressable
+            style={style.link}
+            onPress={() => navigation.navigate('FeedBack')}>
+            <Text style={style.text}>Enviar um feedback</Text>
+          </Pressable>
 
-        <Pressable style={style.link} onPress={handleLogOut}>
-          <Text style={style.text}>Sair</Text>
-        </Pressable>
+          <Pressable style={style.link} onPress={handleLogOut}>
+            <Text style={style.text}>Sair</Text>
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 

@@ -91,7 +91,7 @@ export const Login = ({navigation}) => {
           />
         </View>
 
-        <Text style={style.text}>Ou entre usando sua conta do Google</Text>
+        <Text style={style.text}>Entrar usando o Google</Text>
 
         <SignInWithGoogle />
       </ScrollView>

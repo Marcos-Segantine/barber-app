@@ -136,7 +136,7 @@ export const Register = ({navigation}) => {
         }
       />
 
-      <Text style={style.text}>Ou crie sua conta usando o Google</Text>
+      <Text style={style.text}>Registrar usando sua conta do Google</Text>
 
       <SignInWithGoogle />
     </ScrollView>
