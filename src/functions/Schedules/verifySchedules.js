@@ -19,13 +19,13 @@ export const verifySchedules = shedulesUser => {
       const date = new Date(shedulesUser.day);
       const dayOfSchedule = date.getDay() + 1;
 
-      let day;
+      let weekDay;
 
-      if (dayOfSchedule > 0 && dayOfSchedule <= 5) day = 0;
-      else if (dayOfSchedule === 6) day = 1;
-      else day = 2;
+      if (dayOfSchedule > 0 && dayOfSchedule <= 5) weekDay = 0;
+      else if (dayOfSchedule === 6) weekDay = 1;
+      else weekDay = 2;
 
-      const workingHour = _docs[day]._data.times;
+      const workingHour = _docs[weekDay]._data.times;
 
       firestore()
         .collection('unavailable_times')
@@ -46,7 +46,7 @@ export const verifySchedules = shedulesUser => {
                 firestore()
                   .collection('denied_days')
                   .doc(`${month}_${year}`)
-                  .update({
+                  .set({
                     ..._data,
                     [`2023-${month}-${day}`]: {
                       disableTouchEvent: true,
