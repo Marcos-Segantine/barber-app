@@ -10,7 +10,7 @@ import firestore from '@react-native-firebase/firestore';
 
 import {globalStyles} from '../globalStyles';
 
-import { LoadingScreen } from '../../components/LoadingAnimation';
+import { LoadingAnimation } from '../../components/LoadingAnimation';
 
 import { dateFormated } from '../../functions/dateFormated';
 
@@ -53,7 +53,7 @@ export const YourSchedules = () => {
               </Pressable>
             );
           })
-        ) :  <LoadingScreen />
+        ) :  <LoadingAnimation />
         }
 
       </ScrollView>

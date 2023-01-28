@@ -6,7 +6,7 @@ import firebase from '@react-native-firebase/app';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const createUserByGoogle = async navigation => {
+export const createUserByGoogle = async (navigation, setModalVisible, setUserData) => {
   GoogleSignin.configure({
     webClientId:
       '10724457964-o7b9idafundq6uhu1ls8upa5c53013gs.apps.googleusercontent.com',
@@ -27,8 +27,8 @@ export const createUserByGoogle = async navigation => {
         .collection('users')
         .doc(res.user.uid)
         .set({
-          name: res.user.displayName,
           email: res.user.email,
+          name: res.user.displayName,
           password: null,
           phone: res.user.phoneNumber,
           uid: res.user.uid,
@@ -36,7 +36,14 @@ export const createUserByGoogle = async navigation => {
         .then(async () => {
           console.log('users colection updated!');
 
-          console.log(res.user?.email, 'ASYNC STRAGE');
+          setUserData({
+            email: res.user.email,
+            name: res.user.displayName,
+            password: null,
+            phone: res.user.phoneNumber,
+            uid: res.user.uid,
+          });
+
           await AsyncStorage.setItem('@barber_app__email', res.user?.email);
 
           firestore()
@@ -46,19 +53,22 @@ export const createUserByGoogle = async navigation => {
               schedules: [],
             })
             .then(() => {
-              firebase
-                .auth()
-                .sendPasswordResetEmail(res.user.email)
-                .then(() => {
-                  console.log(
-                    'EMIAL TO REDEFINITION OF PASSWORD SEND SUCESSFULLY',
-                  );
-                })
-                .catch(err => {
-                  console.log(err);
-                  console.log('ERROR RO SEND A EMAIL TO CHANGE PASSWORD');
-                });
-              navigation.navigate('Services');
+              if (res.additionalUserInfo.isNewUser) {
+                firebase
+                  .auth()
+                  .sendPasswordResetEmail(res.user.email)
+                  .then(async () => {
+                    console.log(
+                      'EMIAL TO REDEFINITION OF PASSWORD SEND SUCESSFULLY',
+                    );
+                    setModalVisible(true);
+                    setUserVerified(true);
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    console.log('ERROR RO SEND A EMAIL TO CHANGE PASSWORD');
+                  });
+              } else navigation.navigate('Services');
             });
         });
     })

@@ -10,6 +10,7 @@ export const signInWithGoogle = async (
   navigation,
   setUserVerified,
   setUserData,
+  setModalVisible,
 ) => {
   GoogleSignin.configure({
     webClientId:
@@ -64,14 +65,14 @@ export const signInWithGoogle = async (
                     console.log(
                       'EMIAL TO REDEFINITION OF PASSWORD SEND SUCESSFULLY',
                     );
+                    setModalVisible(true);
+                    setUserVerified(true);
                   })
                   .catch(err => {
                     console.log(err);
                     console.log('ERROR RO SEND A EMAIL TO CHANGE PASSWORD');
                   });
-              }
-              setUserVerified(true);
-              navigation.navigate('Services');
+              } else navigation.navigate('Services');
             });
         });
     });

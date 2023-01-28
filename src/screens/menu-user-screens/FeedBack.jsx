@@ -17,6 +17,8 @@ export const FeedBack = () => {
   const {userData} = useContext(UserContext);
 
   const handleFeedback = () => {
+    setFeedback('');
+
     firestore()
       .collection('feedbacks')
       .doc(userData.uid)
