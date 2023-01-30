@@ -4,7 +4,7 @@ import {useContext, useState} from 'react';
 
 import {Title} from '../../components/Title';
 
-import auth from '@react-native-firebase/auth';
+import auth, {firebase} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,6 +43,11 @@ export const Main = () => {
       .then(({_data}) => {
         if (_data.password === null || !_data.password) {
           setmodalChangePassword(true);
+
+          firebase
+            .auth()
+            .sendPasswordResetEmail(_data.email)
+            .then('Email Send!!');
         } else navigation.navigate('ChangePassword');
       });
   };
