@@ -7,22 +7,22 @@ export const MessageError = ({
   action,
 }) => {
   return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
-        <View style={style.modalContainer}>
-          <View>
-            <Text style={style.messageError}>{messageError}.</Text>
-            <Text style={style.secondMessageError}>Tente novamente.</Text>
-          </View>
-
-          <Pressable style={style.okButtonModal} onPress={action}>
-            <Text style={style.textOkButtonModal}>OK</Text>
-          </Pressable>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(false)}>
+      <View style={style.modalContainer}>
+        <View>
+          <Text style={style.messageError}>{messageError}.</Text>
+          <Text style={style.secondMessageError}>Tente novamente.</Text>
         </View>
-      </Modal>
+
+        <Pressable style={style.okButtonModal} onPress={action}>
+          <Text style={style.textOkButtonModal}>OK</Text>
+        </Pressable>
+      </View>
+    </Modal>
   );
 };
 

@@ -6,7 +6,7 @@ import { Button } from "../../components/Button";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 
-export const YourInformation = () => {
+export const YourInformation = ({navigation}) => {
     const { userData } = useContext(UserContext)
 
     return(
@@ -31,7 +31,7 @@ export const YourInformation = () => {
                 </Pressable>
             </View>        
 
-            <Button text={"Alterar informações"} />    
+            <Button text={"Alterar informações"} action={_ => navigation.navigate('ChangeInformation')} />    
         </View>
     )
 }

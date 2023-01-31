@@ -19,13 +19,14 @@ import {YourInformation} from './menu-user-screens/YourInformation';
 import {YourSchedules} from './menu-user-screens/YourSchedules';
 import {ScheduleDetail} from './menu-user-screens/ScheduleDetail';
 import {FeedBack} from './menu-user-screens/FeedBack';
+import {ChangeInformation} from './menu-user-screens/ChangeInformation';
 
 const {Screen, Navigator} = createNativeStackNavigator();
 
 export const UserScreens = () => {
   return (
     <Navigator
-      initialRouteName="InitialScreen"
+      // initialRouteName="ChangeInformation"
       screenOptions={{headerShown: false}}>
       <Screen name="InitialScreen" component={InitialScreen} />
 
@@ -62,6 +63,8 @@ export const UserScreens = () => {
       <Screen name="ChangePassword" component={ChangePassword} />
 
       <Screen name="FeedBack" component={FeedBack} />
+
+      <Screen name="ChangeInformation" component={ChangeInformation} />
     </Navigator>
   );
 };
