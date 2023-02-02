@@ -1,5 +1,5 @@
 import {View, StyleSheet, TextInput} from 'react-native';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 
 import {globalStyles} from '../globalStyles';
 
@@ -7,10 +7,14 @@ import {Title} from '../../components/Title';
 import {Button} from '../../components/Button';
 
 import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app';
 
-import {ChangeInformations} from '../../components/Modals/ChangeInformations';
+import {changeName} from '../../functions/User/changeName';
 
-import {changeEmail} from '../../functions/User/changeEmail';
+import {ChangePhone} from '../../components/Modals/ChangePhone';
+import {ChangeEmail} from '../../components/Modals/ChangeEmail';
+import {ChangeName} from '../../components/Modals/ChangeName';
+import {UserContext} from '../../context/UserContext';
 
 export const ChangeInformation = () => {
   const [name, setName] = useState('');
@@ -20,37 +24,63 @@ export const ChangeInformation = () => {
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState('');
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [phoneChange, setPhoneChange] = useState(false);
+  const [emailChange, setEmailChange] = useState(false);
+  const [nameChange, setNameChange] = useState(false);
+
+  const {userData, setUserData} = useContext(UserContext);
 
   const verifyPhoneNumber = async phoneNumber => {
     const confirmation = await auth().verifyPhoneNumber(phoneNumber);
     setConfirm(confirmation);
   };
 
-  const hadleNewInfomation = async () => {
+  const hadleNewInfomation = () => {
+    if (name.trim()) {
+      changeName(name, userData, setUserData);
+      setNameChange(true);
+    }
+
     if (email.trim()) {
-      changeEmail(email);
-      setModalVisible(true);
+      firebase
+        .auth()
+        .currentUser.updateEmail(email)
+        .then(function () {
+          console.log('EMAIL UPDATED');
+          setEmailChange(true);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     if (phone.trim()) {
-      verifyPhoneNumber('+' + phone);
-      setModalVisible(true);
+      verifyPhoneNumber('+' + phone).then(() => {
+        setPhoneChange(true);
+      });
     }
   };
 
   return (
     <View style={globalStyles.container}>
-      <ChangeInformations
-        modalVisible={modalVisible}
+      <ChangeName visible={nameChange} setNameChange={setNameChange} />
+
+      <ChangePhone
+        visible={phoneChange}
         confirm={confirm}
-        code={code}
         setCode={setCode}
-        email={email}
-        setEmail={setEmail}
+        code={code}
         phone={phone}
+        setPhoneChange={setPhoneChange}
       />
-      <Title title={'Mudar informações'} />
+
+      <ChangeEmail
+        visible={emailChange}
+        email={email}
+        setEmailChange={setEmailChange}
+      />
+
+      <Title title="Mudar informações" />
       <TextInput
         value={name}
         style={style.input}
@@ -62,6 +92,7 @@ export const ChangeInformation = () => {
         style={style.input}
         placeholder="Email"
         onChangeText={text => setEmail(text)}
+        keyboardType="email-address"
       />
       <TextInput
         value={phone}

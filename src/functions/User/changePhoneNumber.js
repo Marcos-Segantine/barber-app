@@ -7,22 +7,33 @@ export const changePhoneNumber = async (
   setError,
   setMessageError,
   phone,
+  userData,
+  setUserData,
+  setPhoneChange,
 ) => {
   try {
     const credential = auth.PhoneAuthProvider.credential(
       confirm.verificationId,
       code,
     );
-    let userData = await auth().currentUser.linkWithCredential(credential);
+    let user = await auth().currentUser.linkWithCredential(credential);
     firestore()
       .collection('users')
-      .doc(userData.user.uid)
+      .doc(user.user.uid)
       .get()
       .then(({_data}) => {
         firestore()
           .collection('users')
-          .doc(userData.user.uid)
-          .update({..._data, phone: phone});
+          .doc(user.user.uid)
+          .update({..._data, phone: phone})
+          .then(() => {
+            setUserData({
+              ...userData,
+              phone: phone,
+            });
+
+            setPhoneChange(false);
+          });
       });
   } catch (error) {
     if (error.code == 'auth/invalid-verification-code') {
