@@ -1,4 +1,4 @@
-import {View, StyleSheet, TextInput} from 'react-native';
+import {View, StyleSheet, TextInput, Text} from 'react-native';
 import {useContext, useState} from 'react';
 
 import {globalStyles} from '../globalStyles';
@@ -9,12 +9,12 @@ import {Button} from '../../components/Button';
 import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app';
 
-import {changeName} from '../../functions/User/changeName';
+import {ChangeInformations} from '../../components/Modals/ChangeInformations';
 
-import {ChangePhone} from '../../components/Modals/ChangePhone';
-import {ChangeEmail} from '../../components/Modals/ChangeEmail';
-import {ChangeName} from '../../components/Modals/ChangeName';
 import {UserContext} from '../../context/UserContext';
+
+import {changeEmail} from '../../functions/User/changeEmail';
+import {changeName} from '../../functions/User/changeName';
 
 export const ChangeInformation = () => {
   const [name, setName] = useState('');
@@ -22,11 +22,13 @@ export const ChangeInformation = () => {
   const [phone, setPhone] = useState('');
 
   const [confirm, setConfirm] = useState(null);
-  const [code, setCode] = useState('');
 
   const [phoneChange, setPhoneChange] = useState(false);
   const [emailChange, setEmailChange] = useState(false);
   const [nameChange, setNameChange] = useState(false);
+
+  const [error, seterror] = useState(false);
+  const [messageError, setMessageError] = useState('');
 
   const {userData, setUserData} = useContext(UserContext);
 
@@ -35,7 +37,36 @@ export const ChangeInformation = () => {
     setConfirm(confirmation);
   };
 
-  const hadleNewInfomation = () => {
+  const hadleNewInfomation = async () => {
+    const user = firebase.auth().currentUser;
+
+    if (phone.trim()) {
+      await verifyPhoneNumber('+' + phone);
+      setPhoneChange(true);
+
+      if (name.trim()) {
+        setNameChange(true);
+        changeName(name, userData, setUserData);
+      }
+
+      if (email.trim()) {
+        user
+          .updateEmail(email)
+          .then(function () {
+            user.sendEmailVerification().then(() => {
+              console.log("EMAIL VERIFICAION SEND");
+            })
+            setEmailChange(true);
+            changeEmail(email);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
+      return;
+    }
+
     if (name.trim()) {
       changeName(name, userData, setUserData);
       setNameChange(true);
@@ -46,37 +77,27 @@ export const ChangeInformation = () => {
         .auth()
         .currentUser.updateEmail(email)
         .then(function () {
-          console.log('EMAIL UPDATED');
           setEmailChange(true);
+          user.sendEmailVerification().then(() => {
+            console.log("EMAIL VERIFICAION SEND");
+          })
+          changeEmail(email);
         })
         .catch(function (error) {
           console.log(error);
         });
     }
-
-    if (phone.trim()) {
-      verifyPhoneNumber('+' + phone).then(() => {
-        setPhoneChange(true);
-      });
-    }
   };
 
   return (
     <View style={globalStyles.container}>
-      <ChangeName visible={nameChange} setNameChange={setNameChange} />
-
-      <ChangePhone
-        visible={phoneChange}
+      <ChangeInformations
         confirm={confirm}
-        setCode={setCode}
-        code={code}
-        phone={phone}
+        phone={phoneChange}
+        name={nameChange}
+        email={emailChange}
         setPhoneChange={setPhoneChange}
-      />
-
-      <ChangeEmail
-        visible={emailChange}
-        email={email}
+        setNameChange={setNameChange}
         setEmailChange={setEmailChange}
       />
 
@@ -101,6 +122,7 @@ export const ChangeInformation = () => {
         onChangeText={text => setPhone(text)}
         keyboardType="phone-pad"
       />
+      {error ? <Text style={style.errorMessage}>{messageError}.</Text> : null}
       <Button text="Salvar" action={hadleNewInfomation} />
     </View>
   );
@@ -116,5 +138,9 @@ const style = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: 'center',
     marginTop: 15,
+  },
+
+  errorMessage: {
+    color: 'red',
   },
 });

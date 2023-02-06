@@ -9,7 +9,6 @@ export const changePhoneNumber = async (
   phone,
   userData,
   setUserData,
-  setPhoneChange,
 ) => {
   try {
     const credential = auth.PhoneAuthProvider.credential(
@@ -32,7 +31,6 @@ export const changePhoneNumber = async (
               phone: phone,
             });
 
-            setPhoneChange(false);
           });
       });
   } catch (error) {
