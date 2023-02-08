@@ -13,9 +13,26 @@ import {verifyScreenName} from '../functions/verifyScreenName';
 
 import {UserVerified} from '../context/UserVerified';
 
+import NetInfo from '@react-native-community/netinfo';
+
+import {BadInternet} from '../components/Modals/BadInternet';
+
 export const Header = () => {
   const [showComeBackIcon, setShowComeBackIcon] = useState(false);
   const [showUserIcon, setShowUserIcon] = useState(false);
+
+  const [isConnected, setIsConnected] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  console.log(isConnected, ' isConnected');
 
   const navigation = useNavigation();
 
@@ -77,6 +94,9 @@ export const Header = () => {
 
   return (
     <View style={style.container}>
+      <BadInternet 
+        visible={!isConnected}
+      />
       <View style={style.containerIcons}>
         <Pressable
           style={
