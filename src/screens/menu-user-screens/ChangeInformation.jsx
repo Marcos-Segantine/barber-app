@@ -6,19 +6,13 @@ import {globalStyles} from '../globalStyles';
 import {Title} from '../../components/Title';
 import {Button} from '../../components/Button';
 
-import auth from '@react-native-firebase/auth';
-import firebase from '@react-native-firebase/app';
-
 import {ChangeInformations} from '../../components/Modals/ChangeInformations';
 
 import {UserContext} from '../../context/UserContext';
 
-import {changeEmail} from '../../functions/User/changeEmail';
-import {changeName} from '../../functions/User/changeName';
-
-import {findErrorChangeInformations} from '../../functions/User/findErrorChangeInformations';
-
 import {LoadingAnimation} from '../../components/LoadingAnimation';
+
+import {hadleNewInfomation} from '../../functions/User/hadleNewInfomation';
 
 export const ChangeInformation = () => {
   const [name, setName] = useState('');
@@ -41,84 +35,12 @@ export const ChangeInformation = () => {
 
   const hadlePhoneChange = text => {
     setPhoneNotFormated(text);
-    console.log('PHONE NOT FORMATED >>> ', phoneNotFormated);
     let cleaned = text.replace(/\D/g, '');
     let match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
     if (match) {
       setPhone('(' + match[1] + ') ' + match[2] + '-' + match[3]);
     } else {
       setPhone(text);
-    }
-  };
-
-  const verifyPhoneNumber = async phoneNumber => {
-    const confirmation = await auth().verifyPhoneNumber(phoneNumber);
-    setConfirm(confirmation);
-  };
-
-  const hadleNewInfomation = async () => {
-    const theresError = findErrorChangeInformations(
-      phone,
-      phoneNotFormated,
-      name,
-      email,
-      setError,
-      setMessageError,
-    );
-    if (!theresError) return;
-
-    const user = firebase.auth().currentUser;
-
-    if (phone.trim()) {
-      setIsToShowLoading(true);
-
-      await verifyPhoneNumber('+55' + phone);
-      setPhoneChange(true);
-
-      setIsToShowLoading(false);
-
-      if (name.trim()) {
-        setNameChange(true);
-        changeName(name, userData, setUserData);
-      }
-
-      if (email.trim()) {
-        user
-          .updateEmail(email)
-          .then(function () {
-            user.sendEmailVerification().then(() => {
-              console.log('EMAIL VERIFICAION SEND');
-            });
-            setEmailChange(true);
-            changeEmail(email);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
-
-      return;
-    }
-
-    if (name.trim()) {
-      changeName(name, userData, setUserData);
-      setNameChange(true);
-    }
-
-    if (email.trim()) {
-      firebase
-        .auth()
-        .currentUser.updateEmail(email)
-        .then(function () {
-          setEmailChange(true);
-          user.sendEmailVerification().then(() => {
-            console.log('EMAIL VERIFICAION SEND');
-          });
-          changeEmail(email);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
     }
   };
 
@@ -162,7 +84,35 @@ export const ChangeInformation = () => {
           {error ? (
             <Text style={style.errorMessage}>{messageError}.</Text>
           ) : null}
-          <Button text="Salvar" action={hadleNewInfomation} />
+          <Button
+            text="Salvar"
+            action={() =>
+              hadleNewInfomation(
+                phone,
+                phoneNotFormated,
+                name,
+                email,
+
+                setPhone,
+                setName,
+                setEmail,
+
+                setPhoneChange,
+                setNameChange,
+                setEmailChange,
+
+                setError,
+                setMessageError,
+
+                setIsToShowLoading,
+
+                userData,
+                setUserData,
+
+                setConfirm,
+              )
+            }
+          />
         </View>
       )}
     </View>

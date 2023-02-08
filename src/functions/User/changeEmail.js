@@ -4,6 +4,10 @@ import firebase from '@react-native-firebase/app';
 export const changeEmail = email => {
   const user = firebase.auth().currentUser;
 
+  user.updateEmail(email).then(() => {
+    user.sendEmailVerification();
+  });
+
   firestore()
     .collection('users')
     .doc(user.uid)
