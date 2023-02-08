@@ -18,7 +18,7 @@ export const ChangeInformations = ({
   setEmailChange,
 }) => {
   const [error, setError] = useState(false);
-  const [messageError, setMessageError] = useState('');
+  const [messageError, setMessageError] = useState({});
 
   const [code, setCode] = useState('');
 
@@ -26,29 +26,29 @@ export const ChangeInformations = ({
 
   return (
     <>
-      <Modal visible={name} transparent={true} animationType="fade">
+      <Modal visible={name} transparent={true} animationType="slide">
         <View style={style.container}>
           <Title title={'Seu nome foi atualizado com sucesso'} />
 
-          <Button text={'Comfirmar'} action={() => setNameChange(false)} />
+          <Button text={'Confirmar'} action={() => setNameChange(false)} />
         </View>
       </Modal>
 
       <Modal
         visible={email && name === false}
         transparent={true}
-        animationType="fade">
+        animationType="slide">
         <View style={style.container}>
           <Title title={'Email de verificação enviado com sucesso'} />
 
-          <Button text={'Comfirmar'} action={() => setEmailChange(false)} />
+          <Button text={'Confirmar'} action={() => setEmailChange(false)} />
         </View>
       </Modal>
 
       <Modal
         visible={phone && email === false && name === false}
         transparent={true}
-        animationType="fade">
+        animationType="slide">
         <View style={style.container}>
           <Title title={'Email de verificação enviado com sucesso'} />
 
@@ -57,11 +57,14 @@ export const ChangeInformations = ({
             onChangeText={text => setCode(text)}
             style={style.input}
           />
+          {messageError.type === 'phone' ? (
+            <Text style={style.messageError}>{messageError.message}</Text>
+          ) : null}
 
           <Button
-            text={'Comfirmar'}
-            action={() => {
-              changePhoneNumber(
+            text={'Confirmar'}
+            action={async () => {
+              await changePhoneNumber(
                 confirm,
                 code,
                 setError,
@@ -70,7 +73,7 @@ export const ChangeInformations = ({
                 userData,
                 setUserData,
               );
-              setPhoneChange(false);
+              error ? null : setPhoneChange(false);
             }}
           />
         </View>
@@ -101,5 +104,13 @@ const style = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: 'center',
     marginTop: 15,
+  },
+
+  messageError: {
+    color: 'red',
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: '500',
+    marginTop: 5,
   },
 });

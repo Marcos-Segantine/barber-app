@@ -16,10 +16,15 @@ import {UserContext} from '../../context/UserContext';
 import {changeEmail} from '../../functions/User/changeEmail';
 import {changeName} from '../../functions/User/changeName';
 
+import {findErrorChangeInformations} from '../../functions/User/findErrorChangeInformations';
+
+import {LoadingAnimation} from '../../components/LoadingAnimation';
+
 export const ChangeInformation = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [phoneNotFormated, setPhoneNotFormated] = useState('');
 
   const [confirm, setConfirm] = useState(null);
 
@@ -27,10 +32,24 @@ export const ChangeInformation = () => {
   const [emailChange, setEmailChange] = useState(false);
   const [nameChange, setNameChange] = useState(false);
 
-  const [error, seterror] = useState(false);
+  const [error, setError] = useState(false);
   const [messageError, setMessageError] = useState('');
 
+  const [isToShowLoading, setIsToShowLoading] = useState(false);
+
   const {userData, setUserData} = useContext(UserContext);
+
+  const hadlePhoneChange = text => {
+    setPhoneNotFormated(text);
+    console.log('PHONE NOT FORMATED >>> ', phoneNotFormated);
+    let cleaned = text.replace(/\D/g, '');
+    let match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
+    if (match) {
+      setPhone('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+    } else {
+      setPhone(text);
+    }
+  };
 
   const verifyPhoneNumber = async phoneNumber => {
     const confirmation = await auth().verifyPhoneNumber(phoneNumber);
@@ -38,11 +57,25 @@ export const ChangeInformation = () => {
   };
 
   const hadleNewInfomation = async () => {
+    const theresError = findErrorChangeInformations(
+      phone,
+      phoneNotFormated,
+      name,
+      email,
+      setError,
+      setMessageError,
+    );
+    if (!theresError) return;
+
     const user = firebase.auth().currentUser;
 
     if (phone.trim()) {
-      await verifyPhoneNumber('+' + phone);
+      setIsToShowLoading(true);
+
+      await verifyPhoneNumber('+55' + phone);
       setPhoneChange(true);
+
+      setIsToShowLoading(false);
 
       if (name.trim()) {
         setNameChange(true);
@@ -54,8 +87,8 @@ export const ChangeInformation = () => {
           .updateEmail(email)
           .then(function () {
             user.sendEmailVerification().then(() => {
-              console.log("EMAIL VERIFICAION SEND");
-            })
+              console.log('EMAIL VERIFICAION SEND');
+            });
             setEmailChange(true);
             changeEmail(email);
           })
@@ -79,8 +112,8 @@ export const ChangeInformation = () => {
         .then(function () {
           setEmailChange(true);
           user.sendEmailVerification().then(() => {
-            console.log("EMAIL VERIFICAION SEND");
-          })
+            console.log('EMAIL VERIFICAION SEND');
+          });
           changeEmail(email);
         })
         .catch(function (error) {
@@ -101,29 +134,37 @@ export const ChangeInformation = () => {
         setEmailChange={setEmailChange}
       />
 
-      <Title title="Mudar informações" />
-      <TextInput
-        value={name}
-        style={style.input}
-        placeholder="Nome"
-        onChangeText={text => setName(text)}
-      />
-      <TextInput
-        value={email}
-        style={style.input}
-        placeholder="Email"
-        onChangeText={text => setEmail(text)}
-        keyboardType="email-address"
-      />
-      <TextInput
-        value={phone}
-        style={style.input}
-        placeholder="Telefone"
-        onChangeText={text => setPhone(text)}
-        keyboardType="phone-pad"
-      />
-      {error ? <Text style={style.errorMessage}>{messageError}.</Text> : null}
-      <Button text="Salvar" action={hadleNewInfomation} />
+      {isToShowLoading ? (
+        <LoadingAnimation isToShow={isToShowLoading} />
+      ) : (
+        <View style={{width: '100%', alignItems: 'center'}}>
+          <Title title="Mudar informações" />
+          <TextInput
+            value={name}
+            style={style.input}
+            placeholder="Nome"
+            onChangeText={text => setName(text)}
+          />
+          <TextInput
+            value={email}
+            style={style.input}
+            placeholder="Email"
+            onChangeText={text => setEmail(text)}
+            keyboardType="email-address"
+          />
+          <TextInput
+            style={style.input}
+            value={phone}
+            placeholder="Número"
+            onChangeText={hadlePhoneChange}
+            keyboardType="numeric"
+          />
+          {error ? (
+            <Text style={style.errorMessage}>{messageError}.</Text>
+          ) : null}
+          <Button text="Salvar" action={hadleNewInfomation} />
+        </View>
+      )}
     </View>
   );
 };

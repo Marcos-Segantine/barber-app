@@ -10,6 +10,16 @@ export const changePhoneNumber = async (
   userData,
   setUserData,
 ) => {
+  console.log("CODe", code);
+  if(!code) {
+    setError(true)
+    setMessageError({
+      type: 'phone',
+      message: "Insira o código"
+    })
+    
+    return
+  }
   try {
     const credential = auth.PhoneAuthProvider.credential(
       confirm.verificationId,
@@ -30,27 +40,35 @@ export const changePhoneNumber = async (
               ...userData,
               phone: phone,
             });
-
+            setError(false)
           });
       });
   } catch (error) {
     if (error.code == 'auth/invalid-verification-code') {
       console.log(error);
       setError(true);
-      setMessageError('Código invalido');
+      setMessageError({
+        type: 'phone',
+        message: 'Código invalido'
+      });
     } else if (
       error.message ===
       '[auth/unknown] User has already been linked to the given provider.'
     ) {
       console.log(error);
       setError(true);
-      setMessageError(
-        'Verificamos que este número de telefone já está em uso.',
+      setMessageError({
+        type: 'phone',
+        message: 'Verificamos que este número de telefone já está em uso.',
+      }
       );
     } else {
       console.log(error);
       setError(true);
-      setMessageError('Ocorreu um erro, por favor tente mais tarde.');
+      setMessageError({
+        type: 'phone',
+        message: 'Ocorreu um erro, por favor tente mais tarde.'
+      });
     }
   }
 };
