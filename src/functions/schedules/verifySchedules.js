@@ -1,54 +1,56 @@
 import firestore from '@react-native-firebase/firestore';
-import {getYear, getMonth, getDay, getProfessional} from '../helpers/dateHelper';
+import {
+  getYear,
+  getMonth,
+  getDay,
+  getProfessional,
+} from '../helpers/dateHelper';
 
-export const verifySchedules = async shedulesUser => {
-  const year = getYear(shedulesUser);
-  const month = getMonth(shedulesUser);
-  const day = getDay(shedulesUser);
-  const professional = getProfessional(shedulesUser);
-  const date = new Date(shedulesUser.day);
+const DAYS_OF_WEEK = ['weekday', 'saturday', 'sunday'];
+
+export const verifySchedules = async schedulesUser => {
+  const year = getYear(schedulesUser);
+  const month = getMonth(schedulesUser);
+  const day = getDay(schedulesUser);
+  const professional = getProfessional(schedulesUser);
+  const date = new Date(schedulesUser.day);
   const dayOfSchedule = date.getDay() + 1;
-  const weekDay =
-    dayOfSchedule > 0 && dayOfSchedule <= 5 ? 0 : dayOfSchedule === 6 ? 1 : 2;
+  const weekDay = DAYS_OF_WEEK[dayOfSchedule > 5 ? dayOfSchedule - 5 : 0];
 
-  const workingHourDoc = await firestore().collection('working_hours').get();
-  const workingHour = workingHourDoc._docs[weekDay]._data.times;
+  const workingHourDoc = await firestore()
+    .collection('working_hours')
+    .doc(weekDay)
+    .get();
+  const workingHour = workingHourDoc.data().times;
 
   const unavailableTimesDoc = await firestore()
     .collection('unavailable_times')
     .doc(`${month}_${year}`)
     .get();
-  const unavailableTimes = unavailableTimesDoc._data;
+  const unavailableTimes = unavailableTimesDoc.data();
+
+  const deniedDaysDoc = await firestore()
+    .collection('denied_days')
+    .doc(`${month}_${year}`)
+    .get();
+  const deniedDays = deniedDaysDoc.data();
 
   if (unavailableTimes[day][professional].length === workingHour.length) {
-    const deniedDaysDoc = await firestore()
-      .collection('denied_days')
-      .doc(`${month}_${year}`)
-      .get();
-    const deniedDays = deniedDaysDoc._data;
+    deniedDays[`2023-${month}-${day}`] = {
+      disableTouchEvent: true,
+      disabled: true,
+    };
 
     await firestore()
       .collection('denied_days')
       .doc(`${month}_${year}`)
-      .set({
-        ...deniedDays,
-        [`2023-${month}-${day}`]: {
-          disableTouchEvent: true,
-          disabled: true,
-        },
-      });
+      .update(deniedDays);
   } else if (
     unavailableTimes[day][professional].length ===
     workingHour.length - 1
   ) {
-    const deniedDaysDoc = await firestore()
-      .collection('denied_days')
-      .doc(`${month}_${year}`)
-      .get();
-    const deniedDays = deniedDaysDoc._data;
-
-    delete deniedDays[shedulesUser.day].disableTouchEvent;
-    delete deniedDays[shedulesUser.day].disabled;
+    delete deniedDays[schedulesUser.day].disableTouchEvent;
+    delete deniedDays[schedulesUser.day].disabled;
 
     await firestore()
       .collection('denied_days')

@@ -2,10 +2,8 @@
   This function delete a schedule
 */
 
-import {getMonth} from '../getMonth';
-import {getDay} from '../getDay';
-import {getProfessional} from '../getProfessional';
 import {verifySchedules} from './verifySchedules';
+import {getDay, getMonth, getProfessional} from '../helpers/dateHelper';
 import firestore from '@react-native-firebase/firestore';
 
 export const cancelScheduleButton = async (userData, item, navigation) => {

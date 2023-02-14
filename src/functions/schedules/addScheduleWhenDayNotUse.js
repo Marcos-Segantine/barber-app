@@ -1,8 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
-import {getDay} from '../getDay';
-import {getHour} from '../getHour';
-import {getMonth} from '../getMonth';
-import {getProfessional} from '../getProfessional';
+import {
+  getMonth,
+  getDay,
+  getProfessional,
+  getHour,
+} from '../helpers/dateHelper';
 import {verifySchedules} from './verifySchedules';
 
 export const addScheduleWhenDayNotUse = async (
