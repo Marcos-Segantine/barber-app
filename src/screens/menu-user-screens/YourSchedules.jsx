@@ -10,9 +10,9 @@ import firestore from '@react-native-firebase/firestore';
 
 import {globalStyles} from '../globalStyles';
 
-import { LoadingAnimation } from '../../components/LoadingAnimation';
+import {LoadingAnimation} from '../../components/LoadingAnimation';
 
-import { dateFormated } from '../../functions/dateFormated';
+import {dateFormated} from '../../functions/helpers/dateHelper';
 
 export const YourSchedules = () => {
   const [schedules, setShedules] = useState(null);
@@ -35,7 +35,13 @@ export const YourSchedules = () => {
 
   return (
     <View style={globalStyles.container}>
-      <Title title={schedules?.length === 0 ? 'Você não tem nenhum horario marcado' : 'Seus agendamentos'} />
+      <Title
+        title={
+          schedules?.length === 0
+            ? 'Você não tem nenhum horario marcado'
+            : 'Seus agendamentos'
+        }
+      />
       <ScrollView
         style={style.contentScrollView}
         contentContainerStyle={{alignItems: 'center'}}>
@@ -46,16 +52,14 @@ export const YourSchedules = () => {
                 style={style.schedulesDay}
                 key={index}
                 onPress={() => navigation.navigate('ScheduleDetail', {item})}>
-                <Text style={style.text}>
-                  Dia: {dateFormated(item)}
-                </Text>
+                <Text style={style.text}>Dia: {dateFormated(item)}</Text>
                 <Text style={style.text}>Horario: {item.shedule}</Text>
               </Pressable>
             );
           })
-        ) :  <LoadingAnimation />
-        }
-
+        ) : (
+          <LoadingAnimation />
+        )}
       </ScrollView>
     </View>
   );
@@ -64,7 +68,7 @@ export const YourSchedules = () => {
 const style = StyleSheet.create({
   contentScrollView: {
     width: '100%',
-    marginTop: 50
+    marginTop: 50,
   },
 
   schedulesDay: {

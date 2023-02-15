@@ -38,32 +38,27 @@ export const Register = ({navigation}) => {
   const [MessageErrorEmailVerified, setMessageErrorEmailVerified] =
     useState(false);
 
-  const [canUserContinue, setCanUserContinue] = useState(false);
+  const checkEmailVerified = async() => {
+    try {
+      const {user} = await auth().signInWithEmailAndPassword(email, password);
 
-  const handleContinue = () => {
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(async () => {
-        const user = auth().currentUser;
-
-        if (!user?.emailVerified) {
-          setCanUserContinue(false);
-          setModalMessageEmailVerification(true);
-          setMessageErrorEmailVerified(true);
-        } else {
-          setCanUserContinue(true);
-          setMessageErrorEmailVerified(false);
-
-          navigation.navigate('Services');
-        }
-      });
+      if (user.emailVerified) {
+        setMessageErrorEmailVerified(false);
+        navigation.navigate('Services');
+      } else {
+        setModalMessageEmailVerification(true);
+        setMessageErrorEmailVerified("Seu email não foi verificado!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={style.container}>
       <EmailVerificationModal
         email={email}
-        handleContinue={handleContinue}
+        checkEmailVerified={checkEmailVerified}
         MessageErrorEmailVerified={MessageErrorEmailVerified}
         modalMessageEmailVerification={modalMessageEmailVerification}
       />
@@ -105,7 +100,7 @@ export const Register = ({navigation}) => {
         />
         <TextInput
           onChangeText={text => setComfirmPassword(text)}
-          placeholder="Crie uma senha"
+          placeholder="Confirme sua senha"
           placeholderTextColor={'#FFFFFF80'}
           style={style.input}
           secureTextEntry={true}
@@ -127,7 +122,6 @@ export const Register = ({navigation}) => {
             comfirmPassword,
             phone,
             name,
-            canUserContinue,
             setMessageError,
             setModalVisible,
             setModalMessageEmailVerification,

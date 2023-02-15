@@ -11,109 +11,111 @@ import {globalStyles} from '../globalStyles';
 
 import firestore from '@react-native-firebase/firestore';
 
-import { getYear } from '../../functions/getYear';
-import { getMonth } from '../../functions/getMonth';
-import { getDay } from '../../functions/getDay';
-import { getProfessional } from '../../functions/getProfessional';
+import {
+  getProfessional,
+  getDay,
+  getMonth,
+  getYear,
+} from '../../functions/helpers/dateHelper';
 
 export const Schedules = ({navigation}) => {
-  const [avaibleTimesState, setAvaibleTimesState] = useState();
-  const [timeUserSelected, steTimeUserSelected] = useState();
-
+  const [availableTimes, setAvailableTimes] = useState([]);
+  const [selectedTime, setSelectedTime] = useState('');
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
 
-  const ScheduleYear = getYear(shedulesUser)
-  const sheduleMouth = getMonth(shedulesUser)
-  const sheduleDay = getDay(shedulesUser)
-  const sheduleProfessional = getProfessional(shedulesUser)
+  const year = getYear(shedulesUser);
+  const month = getMonth(shedulesUser);
+  const day = getDay(shedulesUser);
+  const professional = getProfessional(shedulesUser);
 
   useEffect(() => {
-    firestore()
-      .collection('working_hours')
-      .get()
-      .then(({_docs}) => {
-        const date = new Date(shedulesUser.day);
-        const dayOfSchedule = date.getDay() + 1;
+    const getAvailableTimes = async () => {
+      try {
+        const workingHoursSnapshot = await firestore()
+          .collection('working_hours')
+          .get();
+        const workingHours = workingHoursSnapshot.docs.map(
+          doc => doc.data().times,
+        );
 
-        let day;
-
-        if (dayOfSchedule > 0 && dayOfSchedule <= 5) day = 0;
-        else if (dayOfSchedule === 6) day = 1;
-        else day = 2;
-
-        const currentDay = _docs[day]._data.times;
-        const workingTimes = currentDay;
-
-        firestore()
+        const unavailableTimesSnapshot = await firestore()
           .collection('unavailable_times')
-          .doc(`${sheduleMouth}_${ScheduleYear}`)
-          .get()
-          .then(({_data}) => {
-            // If month does't exists
-            if (_data === undefined) {
-              setAvaibleTimesState(workingTimes);
-              return;
-            }
+          .doc(`${month}_${year}`)
+          .get();
 
-            const thereAreProfessionalRegisterInDay = _data[sheduleDay]
-              ? _data[sheduleDay][sheduleProfessional]
-              : null;
+        const unavailableTimes = unavailableTimesSnapshot.data() || {};
 
-            let avaibleTimesState__Temp;
-            thereAreProfessionalRegisterInDay
-              ? ((avaibleTimesState__Temp = workingTimes.filter(time => {
-                  return !_data[sheduleDay][sheduleProfessional].includes(time);
-                })),
-                setAvaibleTimesState(avaibleTimesState__Temp))
-              : setAvaibleTimesState(workingTimes);
-          });
-      });
+        const dayOfWeek = new Date(shedulesUser.day).getDay() + 1;
+
+        let availableTimes = [];
+
+        if (dayOfWeek > 0 && dayOfWeek <= 5) {
+          availableTimes = workingHours[0];
+        } else if (dayOfWeek === 6) {
+          availableTimes = workingHours[1];
+        } else {
+          availableTimes = workingHours[2];
+        }
+
+        const unavailableTimesForDayAndProfessional =
+          unavailableTimes[day]?.[professional] || [];
+
+        availableTimes = availableTimes.filter(
+          time => !unavailableTimesForDayAndProfessional.includes(time),
+        );
+
+        setAvailableTimes(availableTimes);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getAvailableTimes();
   }, []);
 
-  const handleButton = () => {
-    shedulesUser.shedule
-      ? navigation.navigate('ConfirmSchedule')
-      : console.log('TIME NOT SELECTED');
+  const handleSelectTime = time => {
+    setShedulesUser({...shedulesUser, shedule: time});
+    setSelectedTime(time);
+  };
+
+  const handleConfirmSchedule = () => {
+    if (shedulesUser.shedule) {
+      navigation.navigate('ConfirmSchedule');
+    } else {
+      console.log('TIME NOT SELECTED');
+    }
   };
 
   return (
     <View style={globalStyles.container}>
       <Title title="Selecione um horário" />
-
-      <View style={style.schedules}>
-        {avaibleTimesState ? (
-          avaibleTimesState.map((time, index) => {
-            return (
-              <Pressable
-                key={index}
-                style={
-                  timeUserSelected === time
-                    ? style.scheduleSeleted
-                    : style.schedule
-                }
-                onPress={() => {
-                  setShedulesUser({...shedulesUser, shedule: `${time}`});
-                  steTimeUserSelected(time);
-                }}>
-                <Text style={style.textSchedule}>{time}</Text>
-              </Pressable>
-            );
-          })
+      <View style={styles.schedules}>
+        {availableTimes.length ? (
+          availableTimes.map((time, index) => (
+            <Pressable
+              key={index}
+              style={[
+                styles.schedule,
+                selectedTime === time && styles.scheduleSeleted,
+              ]}
+              onPress={() => handleSelectTime(time)}>
+              <Text style={styles.textSchedule}>{time}</Text>
+            </Pressable>
+          ))
         ) : (
           <LoadingAnimation />
         )}
       </View>
-
       <Button
-        text="Comfirmar"
-        action={handleButton}
-        waitingData={shedulesUser.shedule ? !!shedulesUser.shedule : false}
+        text="Confirmar"
+        action={handleConfirmSchedule}
+        waitingData={!!shedulesUser.shedule}
       />
     </View>
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   schedules: {
     width: '90%',
     flexDirection: 'row',

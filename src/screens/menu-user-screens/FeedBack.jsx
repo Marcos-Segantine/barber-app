@@ -16,37 +16,30 @@ export const FeedBack = () => {
 
   const {userData} = useContext(UserContext);
 
-  const handleFeedback = () => {
-    setFeedback('');
+  const handleFeedback = async () => {
+    try {
+      if (!feedback.trim()) {
+        setModalVisible(true);
+        setMessageError('Por favor, preencha o campo de feedback.');
+        return;
+      }
 
-    firestore()
-      .collection('feedbacks')
-      .doc(userData.uid)
-      .get()
-      .then(({_data}) => {
-        console.log(_data);
+      const feedbackRef = firestore().collection('feedbacks').doc(userData.uid);
+      const feedbackDoc = await feedbackRef.get();
+      const feedbackData = feedbackDoc.exists
+        ? feedbackDoc.data()
+        : {feedbacks: []};
+      const updatedFeedbacks = [...feedbackData.feedbacks, feedback];
 
-        let _data__Temp = _data;
+      await feedbackRef.set({feedbacks: updatedFeedbacks});
 
-        !!_data
-          ? (_data__Temp.feedbacks.push(feedback),
-            firestore()
-              .collection('feedbacks')
-              .doc(userData.uid)
-              .update({..._data__Temp})
-              .then(() => {
-                console.log('feedback from user', userData.uid, 'updated');
-              }))
-          : firestore()
-              .collection('feedbacks')
-              .doc(`${userData.uid}`)
-              .set({
-                feedbacks: [feedback],
-              })
-              .then(() => {
-                console.log('feedback from user', userData.uid, 'updated');
-              });
-      });
+      setModalVisible(true);
+      setMessageError('Obrigado por compartilhar o seu feedback!');
+
+      setFeedback('');
+    } catch (error) {
+      console.log('Erro ao enviar feedback: ', error);
+    }
   };
 
   return (

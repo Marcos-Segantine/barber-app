@@ -1,86 +1,74 @@
-import {View, Text, StyleSheet, TextInput} from 'react-native';
-
+import React, {useState, useContext} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import {globalStyles} from '../globalStyles';
-
 import {Title} from '../../components/Title';
 import {Button} from '../../components/Button';
-import {useContext, useState} from 'react';
-
-import firebase from '@react-native-firebase/app';
-import firestore from '@react-native-firebase/firestore';
 import {UserContext} from '../../context/UserContext';
-
 import {MessageError} from '../../components/MessageError';
+import {firebase, firestore} from '@react-native-firebase/auth';
 
 export const ChangePassword = ({navigation}) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [comfirmNewPassword, setComfirmPassword] = useState('');
-
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [messageError, setMessageError] = useState('');
-
   const {userData, setUserData} = useContext(UserContext);
 
-  const handleNewPassword = () => {
+  const handleNewPassword = async () => {
     if (
       !oldPassword.trim() ||
       !newPassword.trim() ||
-      !comfirmNewPassword.trim()
+      !confirmNewPassword.trim()
     ) {
       setModalVisible(true);
       setMessageError('Por favor preencha todos os campos');
-
-      return;
-    } else if (newPassword !== comfirmNewPassword) {
-      setModalVisible(true);
-      setMessageError('Os campos da nova senha não são iguais');
-
-      return;
-    } else if (userData.password !== oldPassword) {
-      setModalVisible(true);
-      setMessageError('Senha Incorreta');
-
-      return;
-    } else if (newPassword.length < 6) {
-      setModalVisible(true);
-      setMessageError('Nova senha muito pequena');
-
       return;
     }
 
-    const user = firebase.auth().currentUser;
+    if (newPassword !== confirmNewPassword) {
+      setModalVisible(true);
+      setMessageError('Os campos da nova senha não são iguais');
+      return;
+    }
 
-    user
-      .updatePassword(newPassword)
-      .then(() => {
-        firestore()
-          .collection('users')
-          .doc(user.uid)
-          .get()
-          .then(({_data}) => {
-            _data.password = newPassword;
+    if (userData.password !== oldPassword) {
+      setModalVisible(true);
+      setMessageError('Senha Incorreta');
+      return;
+    }
 
-            setUserData({...userData, password: newPassword});
+    if (newPassword.length < 6) {
+      setModalVisible(true);
+      setMessageError('Nova senha muito pequena');
+      return;
+    }
 
-            firestore()
-              .collection('users')
-              .doc(user.uid)
-              .update({..._data})
-              .then(() => {
-                console.log('User password updated');
-
-                navigation.navigate('Main');
-              });
-          });
-      })
-      .catch(error => {
-        console.log('Erro ao atualizar a senha: ', error);
-      });
+    try {
+      const user = firebase.auth().currentUser;
+      await user.updatePassword(newPassword);
+      await firestore()
+        .collection('users')
+        .doc(user.uid)
+        .update({password: newPassword});
+      setUserData({...userData, password: newPassword});
+      navigation.navigate('Main');
+    } catch (error) {
+      console.log('Erro ao atualizar a senha: ', error);
+    }
   };
 
   return (
-    <View style={globalStyles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={globalStyles.container}>
       <MessageError
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -90,38 +78,40 @@ export const ChangePassword = ({navigation}) => {
       <Title title={'Redefinir senha'} />
 
       <View style={style.content}>
-        <View style={{width: '80%'}}>
-          <Text style={style.textOrietation}>Digite sua senha atual.</Text>
+        <View style={style.inputContainer}>
+          <Text style={style.textOrientation}>Digite sua senha atual.</Text>
           <TextInput
             placeholder="Senha atual"
             value={oldPassword}
             onChangeText={setOldPassword}
             style={style.input}
+            secureTextEntry
           />
         </View>
 
-        <View style={{width: '80%'}}>
-          <Text style={style.textOrietation}>Informe sua nova senha.</Text>
+        <View style={style.inputContainer}>
+          <Text style={style.textOrientation}>Informe sua nova senha.</Text>
           <TextInput
             placeholder="Senha nova"
             value={newPassword}
             onChangeText={setNewPassword}
             style={style.input}
+            secureTextEntry
           />
           <TextInput
             placeholder="Confirme sua nova senha"
-            value={comfirmNewPassword}
-            onChangeText={setComfirmPassword}
+            value={confirmNewPassword}
+            onChangeText={setConfirmNewPassword}
             style={style.input}
+            secureTextEntry
           />
         </View>
       </View>
 
-      <Button text="Comfirmar" action={handleNewPassword} waitingData={true} />
-    </View>
+      <Button text="Comfirmar" action={handleNewPassword} waitingData />
+    </KeyboardAvoidingView>
   );
 };
-
 const style = StyleSheet.create({
   content: {
     marginTop: 25,

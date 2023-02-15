@@ -1,6 +1,6 @@
 import {View, StyleSheet} from 'react-native';
 
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useMemo, useState} from 'react';
 
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 
@@ -13,70 +13,63 @@ import firestore from '@react-native-firebase/firestore';
 
 import {LoadingAnimation} from '../../components/LoadingAnimation';
 
-export const Calandar = ({navigation}) => {
-  LocaleConfig.locales['pt-br'] = {
-    monthNames: [
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro',
-    ],
-    monthNamesShort: [
-      'jan',
-      'fev',
-      'mar',
-      'abr',
-      'maio',
-      'jun',
-      'jul',
-      'ago',
-      'set',
-      'out',
-      'nov',
-      'dez',
-    ],
-    dayNames: [
-      'Domingo',
-      'Segunda-feira',
-      'Terça-feira',
-      'Quarta-feira',
-      'Quinta-feira',
-      'Sexta-feira',
-      'Sábado',
-    ],
-    dayNamesShort: ['Dom', 'Seg', 'Terç', 'Qua', 'Qui', 'Sex', 'Sáb'],
-  };
+LocaleConfig.locales['pt-br'] = {
+  monthNames: [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ],
+  monthNamesShort: [
+    'jan',
+    'fev',
+    'mar',
+    'abr',
+    'maio',
+    'jun',
+    'jul',
+    'ago',
+    'set',
+    'out',
+    'nov',
+    'dez',
+  ],
+  dayNames: [
+    'Domingo',
+    'Segunda-feira',
+    'Terça-feira',
+    'Quarta-feira',
+    'Quinta-feira',
+    'Sexta-feira',
+    'Sábado',
+  ],
+  dayNamesShort: ['Dom', 'Seg', 'Terç', 'Qua', 'Qui', 'Sex', 'Sáb'],
+};
 
+export const Calandar = ({navigation}) => {
   LocaleConfig.defaultLocale = 'pt-br';
 
-  const currentDate = new Date();
-
-  const [deniedDays, setDeniedDays] = useState(null);
-  const [month, setMonth] = useState(currentDate.getMonth() + 1);
-  const [arrawLeftAvaible, setArrawLeftAvaible] = useState(false);
-
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
+  const [deniedDays, setDeniedDays] = useState(null);
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [arrawLeftAvaible, setArrawLeftAvaible] = useState(false);
 
   useEffect(() => {
     firestore()
       .collection('denied_days')
       .get()
-      .then(async (res) => {
-        if(!(!!res._docs[month - 1])) {
-          setDeniedDays({})
-          return
-        }
-        setDeniedDays(res._docs[month - 1]._data);
+      .then(async res => {
+        setDeniedDays(res._docs[month - 1] ? res._docs[month - 1]._data : {});
       });
-  }, [month]);
+  }, []);
 
   const handleButton = () => {
     shedulesUser.day
@@ -84,23 +77,8 @@ export const Calandar = ({navigation}) => {
       : console.log('NÃO SELECIONOU UM DIA');
   };
 
-  const handleLeftArrow = () => {
-    if (month === 1) {
-      setMonth(12);
-      return;
-    }
-
-    setMonth(month - 1);
-  };
-
-  const handleRightArrow = () => {
-    if (month === 12) {
-      setMonth(1);
-      return;
-    }
-
-    setMonth(month + 1);
-  };
+  const handleLeftArrow = () => setMonth(month === 1 ? 12 : month - 1);
+  const handleRightArrow = () => setMonth(month === 12 ? 1 : month + 1);
 
   return (
     <View style={style.container}>

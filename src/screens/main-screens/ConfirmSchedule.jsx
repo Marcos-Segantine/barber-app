@@ -10,25 +10,20 @@ import firestore from '@react-native-firebase/firestore';
 
 import {globalStyles} from '../globalStyles';
 
-import {getMonth} from '../../functions/getMonth';
-import {getDay} from '../../functions/getDay';
+import { dateFormated,getDay, getMonth } from '../../functions/helpers/dateHelper';
 
-import {addScheduleWhenDayAlredyUse} from '../../functions/Schedules/addScheduleWhenDayAlredyUse';
-import {addScheduleWhenDayNotUse} from '../../functions/Schedules/addScheduleWhenDayNotUse';
-import {addScheduleWhenMonthIsNotUse} from '../../functions/Schedules/addScheduleWhenMonthIsNotUse';
+import {addScheduleWhenDayAlredyUse} from '../../functions/schedules/addScheduleWhenDayAlredyUse';
+import {addScheduleWhenDayNotUse} from '../../functions/schedules/addScheduleWhenDayNotUse';
+import {addScheduleWhenMonthIsNotUse} from '../../functions/schedules/addScheduleWhenMonthIsNotUse';
 
 import {UserContext} from '../../context/UserContext';
 import {useIsFocused} from '@react-navigation/native';
 
-import {dateFormated} from '../../functions/dateFormated';
 
 export const ConfirmSchedule = ({navigation}) => {
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
 
   const {userData} = useContext(UserContext);
-
-  const sheduleMouth = getMonth(shedulesUser);
-  const sheduleDay = getDay(shedulesUser);
 
   const date = dateFormated(shedulesUser);
 
@@ -39,6 +34,9 @@ export const ConfirmSchedule = ({navigation}) => {
   }, [isFocused]);
 
   const handleComfirm = async () => {
+    const sheduleMouth = getMonth(shedulesUser);
+    const sheduleDay = getDay(shedulesUser);
+
     firestore()
       .collection('schedules_month')
       .doc(`${sheduleMouth}_2023`)
@@ -57,13 +55,7 @@ export const ConfirmSchedule = ({navigation}) => {
         const dayIsAlredyUse = _data[sheduleDay];
 
         dayIsAlredyUse
-          ? addScheduleWhenDayAlredyUse(
-              _data,
-              navigation,
-              userData,
-              shedulesUser,
-              setShedulesUser,
-            )
+          ? addScheduleWhenDayAlredyUse(navigation, userData, shedulesUser)
           : addScheduleWhenDayNotUse(
               userData,
               navigation,

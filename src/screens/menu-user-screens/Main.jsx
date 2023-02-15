@@ -1,4 +1,4 @@
-import {View, StyleSheet, Pressable, Text, Modal} from 'react-native';
+import {View, StyleSheet, Pressable, Text} from 'react-native';
 
 import {useContext, useState} from 'react';
 
@@ -20,36 +20,37 @@ export const Main = () => {
   const {userData, setUserData} = useContext(UserContext);
 
   const navigation = useNavigation();
-
   const handleLogOut = async () => {
-    if (userData) {
+    try {
       const keys = ['@barber_app__email', '@barber_app__password'];
       await AsyncStorage.multiRemove(keys);
 
-      auth()
-        .signOut()
-        .then(() => {
-          setUserData(null);
-          navigation.navigate('InitialScreen');
-        });
+      await auth().signOut();
+      setUserData(null);
+      navigation.navigate('InitialScreen');
+    } catch (error) {
+      console.error('Error logging out:', error);
     }
   };
-
-  const handleChangePassword = () => {
-    firestore()
+  const handleChangePassword = async () => {
+    const userDoc = await firestore()
       .collection('users')
       .doc(userData.uid)
-      .get()
-      .then(({_data}) => {
-        if (_data.password === null || !_data.password) {
-          setmodalChangePassword(true);
+      .get();
+    const user = userDoc.data();
 
-          firebase
-            .auth()
-            .sendPasswordResetEmail(_data.email)
-            .then('Email Send!!');
-        } else navigation.navigate('ChangePassword');
-      });
+    if (user.password === null || !user.password) {
+      setmodalChangePassword(true);
+
+      try {
+        await firebase.auth().sendPasswordResetEmail(user.email);
+        console.log('Email sent!');
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      navigation.navigate('ChangePassword');
+    }
   };
 
   return (

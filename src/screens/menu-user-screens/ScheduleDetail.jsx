@@ -6,9 +6,9 @@ import {Button} from '../../components/Button';
 import {useContext} from 'react';
 import {UserContext} from '../../context/UserContext';
 
-import {cancelScheduleButton} from '../../functions/Schedules/cancelScheduleButton';
+import {cancelScheduleButton} from '../../functions/schedules/cancelScheduleButton';
 
-import { dateFormated } from '../../functions/dateFormated';
+import { dateFormated } from '../../functions/helpers/dateHelper';
 
 export const ScheduleDetail = ({route, navigation}) => {
   const {item} = route.params;
