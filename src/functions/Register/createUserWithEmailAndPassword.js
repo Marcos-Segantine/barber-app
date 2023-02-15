@@ -1,81 +1,70 @@
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const createUserWithEmailAndPassword = (
+export const createUserWithEmailAndPassword = async (
   email,
   password,
   comfirmPassword,
   phone,
   name,
-  canUserContinue,
   setMessageError,
   setModalVisible,
   setModalMessageEmailVerification,
-  navigation
 ) => {
-  if (!email || !password || !comfirmPassword || !phone || !name) {
+  const isFieldsValid =
+    email &&
+    password &&
+    comfirmPassword &&
+    phone &&
+    name &&
+    password === comfirmPassword;
+
+  if (!isFieldsValid) {
     setModalVisible(true);
     setMessageError('Por favor preencha todos os campos');
 
     return;
-  } else if (password !== comfirmPassword) {
-    setModalVisible(true);
-    setMessageError('Senhas não são iguais');
-
-    return;
   }
 
-  auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then(async res => {
-      firestore().collection('users').doc(res.user.uid).set({
-        name: name,
-        email: email,
-        password: password,
-        phone: phone,
-        uid: res.user.uid,
-      });
+  try {
+    const res = await auth().createUserWithEmailAndPassword(email, password);
+    const uid = res.user.uid;
+    const userDoc = firestore().collection('users').doc(uid);
+    const scheduleDoc = firestore().collection('schedules_by_user').doc(uid);
 
-      firestore().collection('schedules_by_user').doc(res.user.uid).set({
-        schedules: [],
-      });
+    const batch = firestore().batch();
 
-      await AsyncStorage.setItem('@barber_app__email', email);
-      await AsyncStorage.setItem('@barber_app__password', password);
-
-      const user = auth().currentUser;
-
-      user
-        .sendEmailVerification()
-        .then(() => {
-          console.log('Email de verificação enviado!');
-          setModalMessageEmailVerification(true);
-        })
-        .catch(error => {
-          console.log(error);
-          setModalMessageEmailVerification(false);
-        });
-
-      canUserContinue ? navigation.navigate('Services') : null;
-    })
-    .catch(err => {
-      console.log(err.message);
-      setModalVisible(true);
-
-      switch (err.message) {
-        case '[auth/invalid-email] The email address is badly formatted.':
-          setMessageError('Email inválido');
-          break;
-
-        case '[auth/email-already-in-use] The email address is already in use by another account.':
-          setMessageError('Email já está em uso');
-          break;
-
-        default:
-          setMessageError('Ocorreu um erro');
-          break;
-      }
+    batch.set(userDoc, {
+      name: name,
+      email: email,
+      password: password,
+      phone: phone,
+      uid: uid,
     });
+    batch.set(scheduleDoc, {
+      schedules: [],
+    });
+    await batch.commit();
+
+    await AsyncStorage.setItem('@barber_app__email', email);
+    await AsyncStorage.setItem('@barber_app__password', password);
+
+    await res.user.sendEmailVerification();
+    setModalMessageEmailVerification(true);
+
+  } catch (error) {
+    setModalVisible(true);
+    switch (error.code) {
+      case 'auth/invalid-email':
+        setMessageError('Email inválido');
+        break;
+      case 'auth/email-already-in-use':
+        setMessageError('Email já está em uso');
+        break;
+      default:
+        setMessageError('Ocorreu um erro');
+        break;
+    }
+  }
 };
