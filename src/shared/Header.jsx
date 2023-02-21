@@ -9,7 +9,7 @@ import Svg, {Path, Defs, Pattern, Image, Use} from 'react-native-svg';
 
 import {UserContext} from '../context/UserContext';
 
-import {verifyScreenName} from '../functions/verifyScreenName';
+import {verifyScreenName} from '../functions/navigation/verifyScreenName';
 
 import {UserVerified} from '../context/UserVerified';
 
@@ -21,7 +21,7 @@ export const Header = () => {
   const [showComeBackIcon, setShowComeBackIcon] = useState(false);
   const [showUserIcon, setShowUserIcon] = useState(false);
 
-  const [isConnected, setIsConnected] = useState(null);
+  const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -31,8 +31,6 @@ export const Header = () => {
       unsubscribe();
     };
   }, []);
-
-  console.log(isConnected, ' isConnected');
 
   const navigation = useNavigation();
 

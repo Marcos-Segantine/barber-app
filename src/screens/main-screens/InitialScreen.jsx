@@ -26,8 +26,7 @@ export const InitialScreen = ({navigation}) => {
 
   const handleButton = async () => {
     if (userData?.email && userVerified) navigation.navigate('Services');
-
-    userData ? navigation.navigate('Services') : navigation.navigate('Login');
+    else navigation.navigate('Login');
   };
 
   useEffect(() => {

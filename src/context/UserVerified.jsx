@@ -8,6 +8,14 @@ export const UserVerified = createContext(null);
 export const UserVerifiedProvider = ({children}) => {
   const [userVerified, setUserVerified] = useState(true);
 
+  useEffect(() => {
+    const user = auth().currentUser;
+    
+    console.log(user.emailVerified, ' user.emailVerified CONTEXT');
+    if (user.emailVerified) setUserVerified(true);
+    else setUserVerified(false);
+  }, []);
+
   return (
     <UserVerified.Provider value={{userVerified, setUserVerified}}>
       {children}
