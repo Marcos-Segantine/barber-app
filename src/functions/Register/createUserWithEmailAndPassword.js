@@ -11,6 +11,7 @@ export const createUserWithEmailAndPassword = async (
   setMessageError,
   setModalVisible,
   setModalMessageEmailVerification,
+  setPhoneVerificationVisible
 ) => {
   const isFieldsValid =
     email &&
@@ -46,6 +47,7 @@ export const createUserWithEmailAndPassword = async (
       res.user.sendEmailVerification(),
     ]);
 
+    setPhoneVerificationVisible(true)
     setModalMessageEmailVerification(true);
   } catch (error) {
     switch (error.code) {

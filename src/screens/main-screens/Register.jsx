@@ -10,8 +10,6 @@ import {
 import {Title} from '../../components/Title';
 import {Button} from '../../components/Button';
 
-import auth from '@react-native-firebase/auth';
-
 import {useState} from 'react';
 
 import {MessageError} from '../../components/MessageError';
@@ -21,6 +19,7 @@ import {createUserWithEmailAndPassword} from '../../functions/Register/createUse
 import {SignInWithGoogle} from '../../components/Modals/SignInWithGoogle';
 
 import {EmailVerificationModal} from '../../components/Modals/EmailVerificationModal';
+import {PhoneVerificationModal} from '../../components/Modals/PhoneVerificationModal';
 
 export const Register = ({navigation}) => {
   const [name, setName] = useState('');
@@ -32,35 +31,29 @@ export const Register = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [messageError, setMessageError] = useState('');
 
+  const [phoneVerificationVisible, setPhoneVerificationVisible] = useState(false);
+
   const [modalMessageEmailVerification, setModalMessageEmailVerification] =
     useState(false);
 
   const [MessageErrorEmailVerified, setMessageErrorEmailVerified] =
     useState(false);
 
-  const checkEmailVerified = async() => {
-    try {
-      const {user} = await auth().signInWithEmailAndPassword(email, password);
-
-      if (user.emailVerified) {
-        setMessageErrorEmailVerified(false);
-        navigation.navigate('Services');
-      } else {
-        setModalMessageEmailVerification(true);
-        setMessageErrorEmailVerified("Seu email não foi verificado!");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <ScrollView contentContainerStyle={style.container}>
       <EmailVerificationModal
         email={email}
-        checkEmailVerified={checkEmailVerified}
+        password={password}
         MessageErrorEmailVerified={MessageErrorEmailVerified}
+        setModalMessageEmailVerification={setModalMessageEmailVerification}
+        setMessageErrorEmailVerified={setMessageErrorEmailVerified}
         modalMessageEmailVerification={modalMessageEmailVerification}
+      />
+
+      <PhoneVerificationModal
+        visible={phoneVerificationVisible}
+        setVisible={setPhoneVerificationVisible}
+        phone={phone}
       />
 
       <MessageError
@@ -84,12 +77,14 @@ export const Register = ({navigation}) => {
           placeholder="Email"
           placeholderTextColor={'#FFFFFF80'}
           style={style.input}
+          keyboardType="email-address"
         />
         <TextInput
           onChangeText={text => setPhone(text)}
           placeholder="Telefone"
           placeholderTextColor={'#FFFFFF80'}
           style={style.input}
+          keyboardType="numeric"
         />
         <TextInput
           onChangeText={text => setPassword(text)}
@@ -125,7 +120,7 @@ export const Register = ({navigation}) => {
             setMessageError,
             setModalVisible,
             setModalMessageEmailVerification,
-            navigation,
+            setPhoneVerificationVisible,
           )
         }
       />
