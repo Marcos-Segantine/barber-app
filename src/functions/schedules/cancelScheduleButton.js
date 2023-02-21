@@ -1,43 +1,40 @@
-/*
-  This function delete a schedule
-*/
-
 import {verifySchedules} from './verifySchedules';
 import {getDay, getMonth, getProfessional} from '../helpers/dateHelper';
 import firestore from '@react-native-firebase/firestore';
 
 export const cancelScheduleButton = async (userData, item, navigation) => {
-  const sheduleMouth = getMonth(item);
+  const scheduleMonth = getMonth(item);
   const scheduleDay = getDay(item);
   const professional = getProfessional(item);
 
   try {
-    const userDoc = await firestore()
+    const batch = firestore().batch();
+    const userDocRef = firestore()
       .collection('schedules_by_user')
-      .doc(userData.uid)
-      .get();
+      .doc(userData.uid);
+    const userDoc = await userDocRef.get();
     const schedulesByUser = userDoc.data()?.schedules || [];
 
     const newSchedules = schedulesByUser.filter(
       itemFilter => itemFilter.scheduleUid !== item.scheduleUid,
     );
 
-    await userDoc.ref.update({schedules: newSchedules});
+    batch.update(userDocRef, {schedules: newSchedules});
 
-    const monthDoc = await firestore()
+    const monthDocRef = firestore()
       .collection('schedules_month')
-      .doc(`${sheduleMouth}_2023`)
-      .get();
+      .doc(`${scheduleMonth}_2023`);
+    const monthDoc = await monthDocRef.get();
     const monthData = monthDoc.data() || {};
 
     delete monthData[scheduleDay]?.[professional]?.[item.shedule];
 
-    await monthDoc.ref.update(monthData);
+    batch.update(monthDocRef, monthData);
 
-    const unavailableDoc = await firestore()
+    const unavailableDocRef = firestore()
       .collection('unavailable_times')
-      .doc(`${sheduleMouth}_2023`)
-      .get();
+      .doc(`${scheduleMonth}_2023`);
+    const unavailableDoc = await unavailableDocRef.get();
     const unavailableData = unavailableDoc.data() || {};
 
     const newData =
@@ -46,7 +43,9 @@ export const cancelScheduleButton = async (userData, item, navigation) => {
       ) || [];
     unavailableData[scheduleDay][professional] = newData;
 
-    await unavailableDoc.ref.update(unavailableData);
+    batch.update(unavailableDocRef, unavailableData);
+
+    await batch.commit();
     verifySchedules(item);
     navigation.navigate('InitialScreen');
   } catch (error) {

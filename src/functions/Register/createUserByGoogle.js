@@ -1,7 +1,6 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import firebase from '@react-native-firebase/app';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const createUserByGoogle = async (
@@ -34,18 +33,19 @@ export const createUserByGoogle = async (
       uid: user.uid,
     };
 
+    const batch = firestore().batch();
+    batch.set(firestore().collection('users').doc(user.uid), userData);
+    batch.set(firestore().collection('schedules_by_user').doc(user.uid), {
+      schedules: [],
+    });
+    await batch.commit();
+
     await Promise.all([
-      firestore().collection('users').doc(user.uid).set(userData),
       AsyncStorage.setItem('@barber_app__email', user.email),
-      firestore()
-        .collection('schedules_by_user')
-        .doc(user.uid)
-        .set({schedules: []}),
+      firebase.auth().sendPasswordResetEmail(user.email),
     ]);
 
-    // Verifica se o usuário é novo e envia o email de redefinição de senha
     if (user.additionalUserInfo.isNewUser) {
-      await firebase.auth().sendPasswordResetEmail(user.email);
       setModalVisible(true);
       setUserVerified(true);
     } else {

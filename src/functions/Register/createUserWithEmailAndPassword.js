@@ -23,7 +23,6 @@ export const createUserWithEmailAndPassword = async (
   if (!isFieldsValid) {
     setModalVisible(true);
     setMessageError('Por favor preencha todos os campos');
-
     return;
   }
 
@@ -33,28 +32,22 @@ export const createUserWithEmailAndPassword = async (
     const userDoc = firestore().collection('users').doc(uid);
     const scheduleDoc = firestore().collection('schedules_by_user').doc(uid);
 
-    const batch = firestore().batch();
+    await Promise.all([
+      userDoc.set({
+        name,
+        email,
+        password,
+        phone,
+        uid,
+      }),
+      scheduleDoc.set({schedules: []}),
+      AsyncStorage.setItem('@barber_app__email', email),
+      AsyncStorage.setItem('@barber_app__password', password),
+      res.user.sendEmailVerification(),
+    ]);
 
-    batch.set(userDoc, {
-      name: name,
-      email: email,
-      password: password,
-      phone: phone,
-      uid: uid,
-    });
-    batch.set(scheduleDoc, {
-      schedules: [],
-    });
-    await batch.commit();
-
-    await AsyncStorage.setItem('@barber_app__email', email);
-    await AsyncStorage.setItem('@barber_app__password', password);
-
-    await res.user.sendEmailVerification();
     setModalMessageEmailVerification(true);
-
   } catch (error) {
-    setModalVisible(true);
     switch (error.code) {
       case 'auth/invalid-email':
         setMessageError('Email inválido');
@@ -66,5 +59,6 @@ export const createUserWithEmailAndPassword = async (
         setMessageError('Ocorreu um erro');
         break;
     }
+    setModalVisible(true);
   }
 };

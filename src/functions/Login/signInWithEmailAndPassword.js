@@ -4,7 +4,7 @@ import auth from '@react-native-firebase/auth';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const signInWithEmailAndPassword = (
+export const signInWithEmailAndPassword = async (
   navigation,
   email,
   password,
@@ -12,59 +12,57 @@ export const signInWithEmailAndPassword = (
   setModalVisible,
   setMessageError,
 ) => {
-  if (!email.trim() || !password.trim()) {
-    setMessageError('Por favor preencha todos os campos'),
-      setModalVisible(true);
-
-    return;
-  }
-
-  auth()
-    .signInWithEmailAndPassword(email, password)
-    .then(async res => {
-      await AsyncStorage.setItem('@barber_app__email', email);
-      await AsyncStorage.setItem('@barber_app__password', password);
-
-      firestore()
-        .collection('users')
-        .where('uid', '==', res.user.uid)
-        .get()
-        .then(res => {
-          setUserData(res._docs[0]?._data);
-        });
-
-      const user = firebase.auth().currentUser;
-
-      if (!user?.emailVerified) {
+  try {
+    if (!email.trim() || !password.trim()) {
+      setMessageError('Por favor preencha todos os campos'),
         setModalVisible(true);
-        setMessageError('Email não verificado');
 
-        // setIsToClearEmailAndPassword(false);
+      return;
+    }
 
-        return;
-      }
+    const res = await auth().signInWithEmailAndPassword(email, password);
 
-      navigation.navigate('Services');
-    })
-    .catch(err => {
+    await AsyncStorage.setItem('@barber_app__email', email);
+    await AsyncStorage.setItem('@barber_app__password', password);
+
+    const userQuery = await firestore()
+      .collection('users')
+      .where('uid', '==', res.user.uid)
+      .get();
+
+    const [userData] = userQuery.docs.map(doc => doc.data());
+
+    setUserData(userData);
+
+    const user = firebase.auth().currentUser;
+
+    if (!user?.emailVerified) {
       setModalVisible(true);
-      console.log(err, '<<<<<<<<<<<<<<<<<<<<<<<');
+      setMessageError('Email não verificado');
 
-      switch (err.message) {
-        case '[auth/invalid-email] The email address is badly formatted.':
-          setMessageError('Email inválido');
-          break;
-        case '[auth/wrong-password] The password is invalid or the user does not have a password.':
-          setMessageError('Senha inválida');
-          break;
+      return;
+    }
 
-        case '[auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.':
-          setMessageError('Usuário não encontrado');
-          break;
+    navigation.navigate('Services');
+  } catch (err) {
+    setModalVisible(true);
+    console.log(err, '<<<<<<<<<<<<<<<<<<<<<<<');
 
-        default:
-          setMessageError('Email e/ou senha inválidos');
-          break;
-      }
-    });
+    switch (err.message) {
+      case '[auth/invalid-email] The email address is badly formatted.':
+        setMessageError('Email inválido');
+        break;
+      case '[auth/wrong-password] The password is invalid or the user does not have a password.':
+        setMessageError('Senha inválida');
+        break;
+
+      case '[auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.':
+        setMessageError('Usuário não encontrado');
+        break;
+
+      default:
+        setMessageError('Email e/ou senha inválidos');
+        break;
+    }
+  }
 };
