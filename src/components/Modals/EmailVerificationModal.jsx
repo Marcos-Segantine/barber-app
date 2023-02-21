@@ -1,14 +1,34 @@
 import {Modal, StyleSheet, Text, View} from 'react-native';
-import {useMemo, useCallback} from 'react';
+import {useMemo} from 'react';
+
+import auth from '@react-native-firebase/auth';
 
 import {Button} from '../Button';
 
 export const EmailVerificationModal = ({
   email,
-  handleContinue,
+  password,
   MessageErrorEmailVerified,
+  setModalMessageEmailVerification,
+  setMessageErrorEmailVerified,
   modalMessageEmailVerification,
 }) => {
+  const checkEmailVerified = async () => {
+    try {
+      const {user} = await auth().signInWithEmailAndPassword(email, password);
+
+      if (user.emailVerified) {
+        setMessageErrorEmailVerified(false);
+        setModalMessageEmailVerification(false);
+      } else {
+        setModalMessageEmailVerification(true);
+        setMessageErrorEmailVerified('Seu email não foi verificado!');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const modalContent = useMemo(() => {
     return (
       <View style={style.modalVerifyEmail}>
@@ -20,7 +40,7 @@ export const EmailVerificationModal = ({
           Sua conta foi criada com sucesso, agora é ó você ir na sua caixa de
           mensagens e verifica-la para poder usar o aplicativo.
         </Text>
-        <Button text={'Continuar'} action={handleContinue} />
+        <Button text={'Continuar'} action={checkEmailVerified} />
         {MessageErrorEmailVerified && (
           <Text style={style.messageErrorEmailVerified}>
             Seu email não foi verificado!
@@ -28,7 +48,7 @@ export const EmailVerificationModal = ({
         )}
       </View>
     );
-  }, [email, handleContinue, MessageErrorEmailVerified]);
+  }, [email, checkEmailVerified, MessageErrorEmailVerified]);
 
   return (
     <Modal
