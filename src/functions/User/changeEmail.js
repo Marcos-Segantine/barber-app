@@ -1,24 +1,18 @@
-import firestore from '@react-native-firebase/firestore';
-import firebase from '@react-native-firebase/app';
-
-export const changeEmail = email => {
+export const changeEmail = async (email) => {
   const user = firebase.auth().currentUser;
 
-  user.updateEmail(email).then(() => {
-    user.sendEmailVerification();
-  });
+  try {
+    await user.updateEmail(email);
+    await user.sendEmailVerification();
 
-  firestore()
-    .collection('users')
-    .doc(user.uid)
-    .get()
-    .then(({_data}) => {
-      firestore()
-        .collection('users')
-        .doc(user.uid)
-        .update({
-          ..._data,
-          email: email,
-        });
-    });
+    const userRef = firestore().collection('users').doc(user.uid);
+    const batch = firestore().batch();
+
+    batch.update(userRef, { email: email });
+    batch.update(userRef.collection('public').doc('profile'), { email: email });
+
+    await batch.commit();
+  } catch (error) {
+    console.error('Error changing email:', error);
+  }
 };

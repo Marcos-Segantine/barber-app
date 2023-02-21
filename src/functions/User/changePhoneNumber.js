@@ -10,46 +10,43 @@ export const changePhoneNumber = async (
   userData,
   setUserData,
 ) => {
-  console.log("CODe", code);
-  if(!code) {
-    setError(true)
+  if (!code) {
+    setError(true);
     setMessageError({
       type: 'phone',
-      message: "Insira o código"
-    })
-    
-    return
+      message: 'Insira o código',
+    });
+
+    return;
   }
   try {
     const credential = auth.PhoneAuthProvider.credential(
       confirm.verificationId,
       code,
     );
-    let user = await auth().currentUser.linkWithCredential(credential);
-    firestore()
+    const user = await auth().currentUser.linkWithCredential(credential);
+
+    const {_data} = await firestore()
       .collection('users')
       .doc(user.user.uid)
-      .get()
-      .then(({_data}) => {
-        firestore()
-          .collection('users')
-          .doc(user.user.uid)
-          .update({..._data, phone: phone})
-          .then(() => {
-            setUserData({
-              ...userData,
-              phone: phone,
-            });
-            setError(false)
-          });
-      });
+      .get();
+
+    const updateProfile = firestore()
+      .collection('users')
+      .doc(user.user.uid)
+      .update({..._data, phone: phone});
+
+    const updateUser = setUserData({...userData, phone: phone});
+    setError(false);
+
+    await Promise.all([updateProfile, updateUser]);
   } catch (error) {
     if (error.code == 'auth/invalid-verification-code') {
       console.log(error);
       setError(true);
       setMessageError({
         type: 'phone',
-        message: 'Código invalido'
+        message: 'Código inválido',
       });
     } else if (
       error.message ===
@@ -60,14 +57,13 @@ export const changePhoneNumber = async (
       setMessageError({
         type: 'phone',
         message: 'Verificamos que este número de telefone já está em uso.',
-      }
-      );
+      });
     } else {
       console.log(error);
       setError(true);
       setMessageError({
         type: 'phone',
-        message: 'Ocorreu um erro, por favor tente mais tarde.'
+        message: 'Ocorreu um erro, por favor tente mais tarde.',
       });
     }
   }
