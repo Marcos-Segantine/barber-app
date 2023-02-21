@@ -1,30 +1,32 @@
 import {Modal, StyleSheet, Text, View, Pressable} from 'react-native';
+import React, {useCallback} from 'react';
 
-export const MessageError = ({
-  modalVisible,
-  setModalVisible,
-  messageError,
-  action,
-}) => {
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => setModalVisible(false)}>
-      <View style={style.modalContainer}>
-        <View>
-          <Text style={style.messageError}>{messageError}.</Text>
-          <Text style={style.secondMessageError}>Tente novamente.</Text>
+export const MessageError = React.memo(
+  ({modalVisible, setModalVisible, messageError, action}) => {
+    const handleAction = useCallback(() => {
+      action();
+    }, [action]);
+
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <View style={style.modalContainer}>
+          <View>
+            <Text style={style.messageError}>{messageError}.</Text>
+            <Text style={style.secondMessageError}>Tente novamente.</Text>
+          </View>
+
+          <Pressable style={style.okButtonModal} onPress={handleAction}>
+            <Text style={style.textOkButtonModal}>OK</Text>
+          </Pressable>
         </View>
-
-        <Pressable style={style.okButtonModal} onPress={action}>
-          <Text style={style.textOkButtonModal}>OK</Text>
-        </Pressable>
-      </View>
-    </Modal>
-  );
-};
+      </Modal>
+    );
+  },
+);
 
 const style = StyleSheet.create({
   modalContainer: {

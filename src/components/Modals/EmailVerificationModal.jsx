@@ -1,4 +1,5 @@
 import {Modal, StyleSheet, Text, View} from 'react-native';
+import {useMemo, useCallback} from 'react';
 
 import {Button} from '../Button';
 
@@ -8,11 +9,8 @@ export const EmailVerificationModal = ({
   MessageErrorEmailVerified,
   modalMessageEmailVerification,
 }) => {
-  return (
-    <Modal
-      animationType="slide"
-      visible={modalMessageEmailVerification}
-      transparent={true}>
+  const modalContent = useMemo(() => {
+    return (
       <View style={style.modalVerifyEmail}>
         <Text style={style.textModalVerifyEmail}>
           Enviamos um email de verificação para:
@@ -22,28 +20,27 @@ export const EmailVerificationModal = ({
           Sua conta foi criada com sucesso, agora é ó você ir na sua caixa de
           mensagens e verifica-la para poder usar o aplicativo.
         </Text>
-
         <Button text={'Continuar'} action={handleContinue} />
-
-        {MessageErrorEmailVerified ? (
+        {MessageErrorEmailVerified && (
           <Text style={style.messageErrorEmailVerified}>
             Seu email não foi verificado!
           </Text>
-        ) : null}
+        )}
       </View>
+    );
+  }, [email, handleContinue, MessageErrorEmailVerified]);
+
+  return (
+    <Modal
+      animationType="slide"
+      visible={modalMessageEmailVerification}
+      transparent={true}>
+      {modalContent}
     </Modal>
   );
 };
 
 const style = StyleSheet.create({
-  modalMessageEmailVerification: {
-    color: 'red',
-    fontSize: 15,
-    textAlign: 'center',
-    fontWeight: '500',
-    marginTop: 5,
-  },
-
   modalVerifyEmail: {
     backgroundColor: '#1E1E1E',
     flex: 1,

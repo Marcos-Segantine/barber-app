@@ -1,14 +1,11 @@
-import {Modal, Text, StyleSheet, TextInput, View} from 'react-native';
+import { Modal, Text, StyleSheet, TextInput, View } from 'react-native';
+import { Title } from '../Title';
+import { Button } from '../Button';
+import { changePhoneNumber } from '../../functions/User/changePhoneNumber';
+import { useContext, useState, useCallback, useMemo } from 'react';
+import { UserContext } from '../../context/UserContext';
 
-import {Title} from '../Title';
-import {Button} from '../Button';
-
-import {changePhoneNumber} from '../../functions/User/changePhoneNumber';
-
-import {useContext, useState} from 'react';
-import {UserContext} from '../../context/UserContext';
-
-export const ChangeInformations = ({
+const ChangeInformations = React.memo(({
   confirm,
   phone,
   name,
@@ -19,70 +16,70 @@ export const ChangeInformations = ({
 }) => {
   const [error, setError] = useState(false);
   const [messageError, setMessageError] = useState({});
-
   const [code, setCode] = useState('');
+  const { userData, setUserData } = useContext(UserContext);
 
-  const {userData, setUserData} = useContext(UserContext);
+  const handleNameChange = useCallback(() => setNameChange(false), [setNameChange]);
+  const handleEmailChange = useCallback(() => setEmailChange(false), [setEmailChange]);
+
+  const handlePhoneChange = useCallback(async () => {
+    await changePhoneNumber(
+      confirm,
+      code,
+      setError,
+      setMessageError,
+      phone,
+      userData,
+      setUserData
+    );
+    if (!error) {
+      setPhoneChange(false);
+    }
+  }, [confirm, code, phone, userData, setUserData, error, setPhoneChange]);
+
+  const showNameModal = useMemo(() => name, [name]);
+  const showEmailModal = useMemo(() => email && !name, [email, name]);
+  const showPhoneModal = useMemo(() => phone && !email && !name, [phone, email, name]);
+
+  const messageErrorType = messageError.type;
+  const messageErrorMessage = messageError.message;
 
   return (
     <>
-      <Modal visible={name} transparent={true} animationType="slide">
-        <View style={style.container}>
+      <Modal visible={showNameModal} transparent={true} animationType="slide">
+        <View style={styles.container}>
           <Title title={'Seu nome foi atualizado com sucesso'} />
-
-          <Button text={'Confirmar'} action={() => setNameChange(false)} />
+          <Button text={'Confirmar'} action={handleNameChange} />
         </View>
       </Modal>
 
-      <Modal
-        visible={email && name === false}
-        transparent={true}
-        animationType="slide">
-        <View style={style.container}>
+      <Modal visible={showEmailModal} transparent={true} animationType="slide">
+        <View style={styles.container}>
           <Title title={'Email de verificação enviado com sucesso'} />
-
-          <Button text={'Confirmar'} action={() => setEmailChange(false)} />
+          <Button text={'Confirmar'} action={handleEmailChange} />
         </View>
       </Modal>
 
-      <Modal
-        visible={phone && email === false && name === false}
-        transparent={true}
-        animationType="slide">
-        <View style={style.container}>
-          <Title title={'Email de verificação enviado com sucesso'} />
+      <Modal visible={showPhoneModal} transparent={true} animationType="slide">
+        <View style={styles.container}>
+          <Title title={'Telefone de verificação enviado com sucesso'} />
 
           <TextInput
             placeholder="Código"
-            onChangeText={text => setCode(text)}
-            style={style.input}
+            onChangeText={(text) => setCode(text)}
+            style={styles.input}
           />
-          {messageError.type === 'phone' ? (
-            <Text style={style.messageError}>{messageError.message}</Text>
-          ) : null}
+          {messageErrorType === 'phone' && (
+            <Text style={styles.messageError}>{messageErrorMessage}</Text>
+          )}
 
-          <Button
-            text={'Confirmar'}
-            action={async () => {
-              await changePhoneNumber(
-                confirm,
-                code,
-                setError,
-                setMessageError,
-                phone,
-                userData,
-                setUserData,
-              );
-              error ? null : setPhoneChange(false);
-            }}
-          />
+          <Button text={'Confirmar'} action={handlePhoneChange} />
         </View>
       </Modal>
     </>
   );
-};
-
-const style = StyleSheet.create({
+});
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1E1E1E',
