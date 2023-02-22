@@ -21,13 +21,12 @@ export const PhoneVerificationModal = ({visible, setVisible, phone}) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    console.log("MODAL PHONE");
     const callerVerifyPhoneNumber = async () => {
       await verifyPhoneNumber('+' + phone, setConfirm);
     };
 
     visible && callerVerifyPhoneNumber();
-  }, []);
+  }, [visible]);
 
   const handleCode = async () => {
     try {
@@ -60,7 +59,7 @@ export const PhoneVerificationModal = ({visible, setVisible, phone}) => {
           keyboardType="numeric"
         />
 
-        {error ? <Text>{message.message}</Text> : null}
+        {error && <Text>{message.message}</Text>}
 
         <Button text={'Confirmar'} action={handleCode} />
       </View>

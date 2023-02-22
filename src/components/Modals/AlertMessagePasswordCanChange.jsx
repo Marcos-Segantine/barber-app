@@ -12,7 +12,7 @@ export const AlertMessagePasswordCanChange = ({
 
   const handleCLick = () => {
     setModalVisible(false);
-    navigation.navigate('Services');
+    navigation.navigate('InitialScreen');
   };
 
   return (

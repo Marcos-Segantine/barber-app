@@ -59,6 +59,5 @@ export const createUserByGoogle = async (
       'Error occurred while creating a new user with Google account:',
       error,
     );
-    // Trate o erro de forma mais robusta aqui, conforme necessário
   }
 };

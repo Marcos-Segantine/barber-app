@@ -1,6 +1,4 @@
-export const clearSchedule = (shedulesUser, setShedulesUser) => {
-    console.log(shedulesUser);
-    
+export const clearSchedule = async(shedulesUser, setShedulesUser) => {
     const propsToClear = ["day", "professional", "service", "shedule"]
     for (const data in shedulesUser) {
         if(propsToClear.includes(data)) shedulesUser[data] = null
