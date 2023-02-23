@@ -15,9 +15,9 @@ import {useIsFocused} from '@react-navigation/native';
 
 import {clearSchedule} from '../../functions/schedules/clearSchedule';
 import {ShedulesUserContext} from '../../context/ShedulesUser';
-import auth from '@react-native-firebase/auth';
 
 import {PhoneVerificationForGoogleSignIn} from '../../components/Modals/PhoneVerificationForGoogleSignIn';
+import {verifyIfHavePhoneNumber} from '../../functions/User/verifyIfHavePhoneNumber';
 
 export const InitialScreen = ({navigation}) => {
   const [modalPhoneVerification, setModalPhoneVerification] = useState(false);
@@ -30,18 +30,17 @@ export const InitialScreen = ({navigation}) => {
   const isFocused = useIsFocused();
 
   const handleButton = async () => {
+    const thereIsPhone = await verifyIfHavePhoneNumber(
+      setModalPhoneVerification,
+    );
+    if (!thereIsPhone) return;
+
     if (userData?.email && userVerified) navigation.navigate('Services');
     else navigation.navigate('Login');
   };
 
   useEffect(() => {
     clearSchedule(shedulesUser, setShedulesUser);
-
-    const {phoneNumber} = auth().currentUser;
-
-    if (!phoneNumber) {
-      setModalPhoneVerification(true);
-    }
   }, [isFocused]);
 
   return (

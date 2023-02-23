@@ -1,5 +1,12 @@
 import {useContext, useState} from 'react';
-import {Modal, View, Text, TextInput, StyleSheet} from 'react-native';
+import {
+  Modal,
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+} from 'react-native';
 
 import {Button} from '../Button';
 import {Title} from '../Title';
@@ -23,18 +30,45 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
 
   const navigation = useNavigation();
 
+  const formatPhoneNumber = text => {
+    let cleaned = ('' + text).replace(/\D/g, '');
+    let match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
+    if (match) {
+      return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+    } else {
+      return cleaned
+        .substring(0, 11)
+        .replace(/^(\d{2})(\d{0,5})(\d{0,4}).*/, '($1) $2-$3');
+    }
+  };
+
   const handlePhoneNumber = async () => {
+    if (!phone) {
+      setError('Por favor insira o número de telefone.');
+      return;
+    }
+
+    const regex = /\d+/g;
+    const phoneNumber = phone.match(regex).join('');
+
     try {
-      await verifyPhoneNumber('+' + phone, setConfirm).then(async () => {
-        setVisible(false);
-        setGetCodeModalVisible(true);
-      });
+      await verifyPhoneNumber('+55' + phoneNumber, setConfirm);
+      setVisible(false);
+      setGetCodeModalVisible(true);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      setError(
+        'Ocorreu um erro ao verificar seu número. Por favor tente mais tarde.',
+      );
     }
   };
 
   const handleCode = async () => {
+    if (!code) {
+      setError('Por favor preencha o campo acima.');
+      return;
+    }
+
     try {
       await changePhoneNumber(
         confirm,
@@ -51,7 +85,11 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
       setGetCodeModalVisible(false);
       navigation.navigate('Services');
     } catch (error) {
-      console.log(error);
+      console.log();
+      console.error(error);
+      setError(
+        'Ocorreu um erro ao verificar seu número. Por favor tente mais tarde.',
+      );
     }
   };
 
@@ -65,12 +103,30 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
           </Text>
           <TextInput
             style={styles.input}
-            placeholder="Número de telefone"
-            onChangeText={text => setPhone(text)}
+            placeholder="(00) 00000-0000"
+            value={phone}
+            onChangeText={text => setPhone(formatPhoneNumber(text))}
             keyboardType="numeric"
           />
 
-          {error && <Text>{message.message}</Text>}
+          <Pressable
+            style={{
+              width: '75%',
+              marginTop: 5
+            }}
+            onPress={() => {
+              setVisible(false);
+              setGetCodeModalVisible(false);
+            }}>
+            <Text
+              style={{
+                textAlign: 'right',
+              }}>
+              Voltar
+            </Text>
+          </Pressable>
+
+          {error && <Text style={styles.errorMessage}>{error}</Text>}
 
           <Button text={'Confirmar'} action={handlePhoneNumber} />
         </View>
@@ -84,11 +140,27 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
           <TextInput
             style={styles.input}
             placeholder="Código"
-            onChangeText={text => setPhone(text)}
+            onChangeText={text => setCode(text)}
             keyboardType="numeric"
           />
+          <Pressable
+            style={{
+              width: '75%',
+              marginTop: 5
+            }}
+            onPress={() => {
+              setVisible(false);
+              setGetCodeModalVisible(false);
+            }}>
+            <Text
+              style={{
+                textAlign: 'right',
+              }}>
+              Voltar
+            </Text>
+          </Pressable>
 
-          {error && <Text>{message.message}</Text>}
+          {error && <Text style={styles.errorMessage}>{error}</Text>}
 
           <Button text={'Confirmar'} action={handleCode} />
         </View>
@@ -107,7 +179,7 @@ const styles = StyleSheet.create({
   text: {
     width: '85%',
     marginVertical: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   input: {
     borderWidth: 3,
@@ -118,5 +190,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: 'center',
     marginTop: 15,
+  },
+
+  errorMessage: {
+    color: 'red',
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: '500',
+    marginTop: 5,
   },
 });
