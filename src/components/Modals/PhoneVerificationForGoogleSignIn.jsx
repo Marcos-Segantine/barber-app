@@ -12,9 +12,12 @@ import {Button} from '../Button';
 import {Title} from '../Title';
 
 import {verifyPhoneNumber} from '../../functions/User/verifyPhoneNumber';
-import {changePhoneNumber} from '../../functions/User/changePhoneNumber';
 import {UserContext} from '../../context/UserContext';
 import {useNavigation} from '@react-navigation/native';
+
+import {formatPhoneNumber} from '../../functions/helpers/formatPhoneNumber' 
+
+import {verifyCodeForGoogleSignIn} from '../../functions/User/verifyCodeForGoogleSignIn';
 
 export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
   const [getCodeModalVisible, setGetCodeModalVisible] = useState(false);
@@ -24,23 +27,10 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
   const [confirm, setConfirm] = useState('');
 
   const [error, setError] = useState('');
-  const [messageError, setMessageError] = useState('');
 
   const {userData, setUserData} = useContext(UserContext);
 
   const navigation = useNavigation();
-
-  const formatPhoneNumber = text => {
-    let cleaned = ('' + text).replace(/\D/g, '');
-    let match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
-    if (match) {
-      return '(' + match[1] + ') ' + match[2] + '-' + match[3];
-    } else {
-      return cleaned
-        .substring(0, 11)
-        .replace(/^(\d{2})(\d{0,5})(\d{0,4}).*/, '($1) $2-$3');
-    }
-  };
 
   const handlePhoneNumber = async () => {
     if (!phone) {
@@ -56,36 +46,6 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
       setVisible(false);
       setGetCodeModalVisible(true);
     } catch (error) {
-      console.error(error);
-      setError(
-        'Ocorreu um erro ao verificar seu número. Por favor tente mais tarde.',
-      );
-    }
-  };
-
-  const handleCode = async () => {
-    if (!code) {
-      setError('Por favor preencha o campo acima.');
-      return;
-    }
-
-    try {
-      await changePhoneNumber(
-        confirm,
-        code,
-        setError,
-        setMessageError,
-        phone,
-        userData,
-        setUserData,
-      );
-
-      if (error) return;
-
-      setGetCodeModalVisible(false);
-      navigation.navigate('Services');
-    } catch (error) {
-      console.log();
       console.error(error);
       setError(
         'Ocorreu um erro ao verificar seu número. Por favor tente mais tarde.',
@@ -112,7 +72,7 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
           <Pressable
             style={{
               width: '75%',
-              marginTop: 5
+              marginTop: 5,
             }}
             onPress={() => {
               setVisible(false);
@@ -146,7 +106,7 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
           <Pressable
             style={{
               width: '75%',
-              marginTop: 5
+              marginTop: 5,
             }}
             onPress={() => {
               setVisible(false);
@@ -162,7 +122,21 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
 
           {error && <Text style={styles.errorMessage}>{error}</Text>}
 
-          <Button text={'Confirmar'} action={handleCode} />
+          <Button
+            text={'Confirmar'}
+            action={() =>
+              verifyCodeForGoogleSignIn(
+                confirm,
+                code,
+                setError,
+                phone,
+                userData,
+                setUserData,
+                setGetCodeModalVisible,
+                navigation,
+              )
+            }
+          />
         </View>
       </Modal>
     </>

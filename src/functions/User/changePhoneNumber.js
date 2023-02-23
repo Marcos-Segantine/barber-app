@@ -5,20 +5,14 @@ export const changePhoneNumber = async (
   confirm,
   code,
   setError,
-  setMessageError,
   phone,
   userData,
-  setUserData,
 ) => {
   if (!code) {
     setError(true);
-    setMessageError({
-      type: 'phone',
-      message: 'Insira o código',
-    });
-
     return;
   }
+
   try {
     const credential = auth.PhoneAuthProvider.credential(
       confirm.verificationId,
@@ -26,45 +20,27 @@ export const changePhoneNumber = async (
     );
     const user = await auth().currentUser.linkWithCredential(credential);
 
-    const {_data} = await firestore()
-      .collection('users')
-      .doc(user.user.uid)
-      .get();
+    const userRef = firestore().collection('users').doc(user.user.uid);
+    const batch = firestore().batch();
 
-    const updateProfile = firestore()
-      .collection('users')
-      .doc(user.user.uid)
-      .update({..._data, phone: phone});
+    batch.update(userRef, {phone});
+    batch.update(userRef, {...userData, phone});
 
-    const updateUser = setUserData({...userData, phone: phone});
+    await batch.commit();
     setError(false);
-
-    await Promise.all([updateProfile, updateUser]);
   } catch (error) {
-    if (error.code == 'auth/invalid-verification-code') {
-      console.log(error);
+    if (error.code === 'auth/invalid-verification-code') {
       setError(true);
-      setMessageError({
-        type: 'phone',
-        message: 'Código inválido',
-      });
     } else if (
-      error.message ===
-      '[auth/unknown] User has already been linked to the given provider.'
+      error.code === 'auth/provider-already-linked' ||
+      error.code === 'auth/email-already-in-use'
     ) {
-      console.log(error);
+      // Expected errors
       setError(true);
-      setMessageError({
-        type: 'phone',
-        message: 'Verificamos que este número de telefone já está em uso.',
-      });
     } else {
+      // Unexpected errors
       console.log(error);
-      setError(true);
-      setMessageError({
-        type: 'phone',
-        message: 'Ocorreu um erro, por favor tente mais tarde.',
-      });
+      throw error;
     }
   }
 };

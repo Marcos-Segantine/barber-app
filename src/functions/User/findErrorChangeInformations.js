@@ -2,7 +2,6 @@ import firebase from '@react-native-firebase/app';
 
 export const findErrorChangeInformations = (
   phone,
-  phoneNotFormated,
   name,
   email,
   setError,
@@ -29,7 +28,7 @@ export const findErrorChangeInformations = (
     setError(true);
     setMessageError('Número de telefone inválido');
     return null;
-  }else if(user.phoneNumber === `+55${phoneNotFormated}`){
+  }else if(user.phoneNumber === `+55${phone}`){
     setError(true);
     setMessageError('Esse númeor já está em uso.');
     return null;
