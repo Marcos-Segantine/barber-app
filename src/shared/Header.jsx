@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useNavigationState} from '@react-navigation/native';
 import {useContext, useEffect, useState} from 'react';
 import {Text, View, StyleSheet, Pressable} from 'react-native';
@@ -15,6 +14,7 @@ import {UserVerified} from '../context/UserVerified';
 
 import NetInfo from '@react-native-community/netinfo';
 
+import auth from '@react-native-firebase/auth';
 import {BadInternet} from '../components/Modals/BadInternet';
 
 export const Header = () => {
@@ -50,12 +50,14 @@ export const Header = () => {
 
   useEffect(() => {
     (async () => {
+      console.log(userData, '<<<<<<<<<<<');
       userData
         ? firestore()
             .collection('users')
             .doc(userData?.uid)
             .get()
             .then(({_data}) => {
+              console.log(userVerified, 'userVerified');
               !!_data && userVerified
                 ? setShowUserIcon(true)
                 : setShowUserIcon(false);
