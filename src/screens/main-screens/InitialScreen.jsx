@@ -4,8 +4,6 @@ import {useContext, useEffect, useState} from 'react';
 
 import {Button} from '../../components/Button';
 
-import {UserContext} from '../../context/UserContext';
-
 import InitialScreenSvg from '../../assets/InitialScreenSvg';
 
 import {globalStyles} from '../globalStyles';
@@ -17,12 +15,11 @@ import {clearSchedule} from '../../functions/schedules/clearSchedule';
 import {ShedulesUserContext} from '../../context/ShedulesUser';
 
 import {PhoneVerificationForGoogleSignIn} from '../../components/Modals/PhoneVerificationForGoogleSignIn';
-import {verifyIfHavePhoneNumber} from '../../functions/User/verifyIfHavePhoneNumber';
+
+import auth from '@react-native-firebase/auth';
 
 export const InitialScreen = ({navigation}) => {
   const [modalPhoneVerification, setModalPhoneVerification] = useState(false);
-
-  const {userData} = useContext(UserContext);
 
   const {userVerified} = useContext(UserVerified);
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
@@ -30,12 +27,11 @@ export const InitialScreen = ({navigation}) => {
   const isFocused = useIsFocused();
 
   const handleButton = async () => {
-    const thereIsPhone = await verifyIfHavePhoneNumber(
-      setModalPhoneVerification,
-    );
-    if (!thereIsPhone) return;
-
-    if (userData?.email && userVerified) navigation.navigate('Services');
+    const user = auth().currentUser;
+    if (user && userVerified && user.phoneNumber)
+      navigation.navigate('Services');
+    else if (user && userVerified && !user.phoneNumber)
+      setModalPhoneVerification(true);
     else navigation.navigate('Login');
   };
 

@@ -1,10 +1,9 @@
 import auth from '@react-native-firebase/auth';
 
-export const verifyIfHavePhoneNumber = async setModalPhoneVerification => {
-  const {phoneNumber} = auth().currentUser;
+export const verifyIfHavePhoneNumber = () => {
+  const user = auth().currentUser;
 
-  if (!phoneNumber) {
-    setModalPhoneVerification(true);
+  if (!user?.phoneNumber || !user) {
     return false;
   }
   return true;

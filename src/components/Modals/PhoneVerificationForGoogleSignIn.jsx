@@ -15,7 +15,7 @@ import {verifyPhoneNumber} from '../../functions/User/verifyPhoneNumber';
 import {UserContext} from '../../context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
-import {formatPhoneNumber} from '../../functions/helpers/formatPhoneNumber' 
+import {formatPhoneNumber} from '../../functions/helpers/formatPhoneNumber';
 
 import {verifyCodeForGoogleSignIn} from '../../functions/User/verifyCodeForGoogleSignIn';
 
@@ -40,9 +40,17 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
 
     const regex = /\d+/g;
     const phoneNumber = phone.match(regex).join('');
+    if (phoneNumber.length < 10) {
+      setError(
+        'Número de telefone invalido. Tente novamente.',
+      );
+      return;
+    }
 
     try {
-      await verifyPhoneNumber('+55' + phoneNumber, setConfirm);
+      await verifyPhoneNumber('+55' + phoneNumber, setConfirm).then(() => {
+        setError("")
+      })
       setVisible(false);
       setGetCodeModalVisible(true);
     } catch (error) {
@@ -131,7 +139,6 @@ export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
                 setError,
                 phone,
                 userData,
-                setUserData,
                 setGetCodeModalVisible,
                 navigation,
               )

@@ -31,6 +31,7 @@ export const changePhoneNumber = async (
   } catch (error) {
     if (error.code === 'auth/invalid-verification-code') {
       setError(true);
+      throw Error('Código inválido');
     } else if (
       error.code === 'auth/provider-already-linked' ||
       error.code === 'auth/email-already-in-use'
