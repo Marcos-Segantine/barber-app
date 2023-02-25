@@ -5,6 +5,7 @@ import {
   getDay,
   getProfessional,
   getHour,
+  getYear,
 } from '../helpers/dateHelper';
 
 import {clearSchedule} from './clearSchedule';
@@ -20,9 +21,19 @@ export const addScheduleWhenMonthIsNotUse = (
   const scheduleMonth = getMonth(schedulesUser);
   const scheduleHour = getHour(schedulesUser);
   const scheduleDay = getDay(schedulesUser);
+  const scheduleYear = getYear(schedulesUser);
   const scheduleProfessional = getProfessional(schedulesUser);
 
   const batch = firestore().batch();
+
+  const deniedDaysRef = firestore().collection('denied_days');
+  deniedDaysRef.doc(`${scheduleMonth}_${scheduleYear}`).set({
+    [scheduleDay]: {
+      ['Barbeiro 1']: [],
+      ['Barbeiro 2']: [],
+      ['Barbeiro 3']: [],
+    },
+  });
 
   // Add schedule to schedules_month collection
   const schedulesMonthRef = firestore()

@@ -77,7 +77,7 @@ export const addScheduleWhenDayAlredyUse = async (
     );
   }
 
-  verifySchedules(schedule);
+  await verifySchedules(schedule, 'addSchedule');
 
   const schedulesByUserSnapshot = await schedulesByUserRef.get();
   const schedulesByUserData = schedulesByUserSnapshot.data();

@@ -5,7 +5,6 @@ import {
   getProfessional,
   getHour,
 } from '../helpers/dateHelper';
-import {verifySchedules} from './verifySchedules';
 
 export const addScheduleWhenDayNotUse = async (
   userData,
@@ -20,6 +19,20 @@ export const addScheduleWhenDayNotUse = async (
   const scheduleProfessional = getProfessional(shedulesUser);
 
   try {
+    const deniedDaysRef = firestore()
+      .collection('denied_days')
+      .doc(`${scheduleMonth}_2023`);
+    const deniedDaysData = (await deniedDaysRef.get()).data();
+
+    deniedDaysRef.update({
+      ...deniedDaysData,
+      [scheduleDay]: {
+        ['Barbeiro 1']: [],
+        ['Barbeiro 2']: [],
+        ['Barbeiro 3']: [],
+      },
+    });
+
     const schedulesMonthRef = firestore()
       .collection('schedules_month')
       .doc(`${scheduleMonth}_2023`);
@@ -62,8 +75,6 @@ export const addScheduleWhenDayNotUse = async (
     await unavailableTimesRef.set(unavailableTimesData);
 
     console.log('unavailable_times updated!!');
-
-    verifySchedules(shedulesUser);
 
     const schedulesByUserRef = firestore()
       .collection('schedules_by_user')

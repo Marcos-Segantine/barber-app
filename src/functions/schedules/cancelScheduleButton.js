@@ -46,7 +46,7 @@ export const cancelScheduleButton = async (userData, item, navigation) => {
     batch.update(unavailableDocRef, unavailableData);
 
     await batch.commit();
-    verifySchedules(item);
+    await verifySchedules(item, 'removeSchedule');
     navigation.navigate('InitialScreen');
   } catch (error) {
     console.log('Error cancelling schedule: ', error);

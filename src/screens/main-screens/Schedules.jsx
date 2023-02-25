@@ -22,6 +22,7 @@ export const Schedules = ({navigation}) => {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState('');
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
+  console.log(shedulesUser);
 
   const year = getYear(shedulesUser);
   const month = getMonth(shedulesUser);
@@ -50,11 +51,11 @@ export const Schedules = ({navigation}) => {
         let availableTimes = [];
 
         if (dayOfWeek > 0 && dayOfWeek <= 5) {
-          availableTimes = workingHours[0];
-        } else if (dayOfWeek === 6) {
-          availableTimes = workingHours[1];
-        } else {
           availableTimes = workingHours[2];
+        } else if (dayOfWeek === 6) {
+          availableTimes = workingHours[0];
+        } else {
+          availableTimes = workingHours[1];
         }
 
         const unavailableTimesForDayAndProfessional =
@@ -86,25 +87,39 @@ export const Schedules = ({navigation}) => {
     }
   };
 
+  if (!availableTimes) {
+    return (
+      <View style={globalStyles.container}>
+        <LoadingAnimation />
+      </View>
+    );
+  }
+
+  else if (availableTimes.length === 0) {
+    return (
+      <View style={[globalStyles.container, {justifyContent: 'space-around'}]}>
+        <Title title={'Não há horarios disponiveis'} />
+
+        <Button text={'Voltar'} />
+      </View>
+    );
+  }
+
   return (
     <View style={globalStyles.container}>
       <Title title="Selecione um horário" />
       <View style={styles.schedules}>
-        {availableTimes.length ? (
-          availableTimes.map((time, index) => (
-            <Pressable
-              key={index}
-              style={[
-                styles.schedule,
-                selectedTime === time && styles.scheduleSeleted,
-              ]}
-              onPress={() => handleSelectTime(time)}>
-              <Text style={styles.textSchedule}>{time}</Text>
-            </Pressable>
-          ))
-        ) : (
-          <LoadingAnimation />
-        )}
+        {availableTimes.map((time, index) => (
+          <Pressable
+            key={index}
+            style={[
+              styles.schedule,
+              selectedTime === time && styles.scheduleSeleted,
+            ]}
+            onPress={() => handleSelectTime(time)}>
+            <Text style={styles.textSchedule}>{time}</Text>
+          </Pressable>
+        ))}
       </View>
       <Button
         text="Confirmar"

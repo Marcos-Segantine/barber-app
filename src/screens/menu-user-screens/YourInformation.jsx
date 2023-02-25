@@ -31,7 +31,7 @@ export const YourInformation = ({navigation}) => {
                 </Pressable>
             </View>        
 
-            <Button text={"Alterar informações"} action={_ => navigation.navigate('ChangeInformation')} />    
+            <Button text={"Alterar informações"} action={() => navigation.navigate('ChangeInformation')} />    
         </View>
     )
 }

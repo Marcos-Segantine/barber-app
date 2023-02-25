@@ -28,7 +28,7 @@ export const ConfirmSchedule = ({navigation}) => {
   const date = dateFormated(shedulesUser);
 
   const isFocused = useIsFocused();
-
+  
   useEffect(() => {
     shedulesUser.scheduleUid = `${userData.uid}-${shedulesUser.day}-${shedulesUser.professional}-${shedulesUser.shedule}-${shedulesUser.service}`;
   }, [isFocused]);
