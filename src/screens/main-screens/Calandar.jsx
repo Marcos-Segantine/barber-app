@@ -1,6 +1,6 @@
 import {View, StyleSheet} from 'react-native';
 
-import {useContext, useEffect, useMemo, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 
@@ -12,6 +12,7 @@ import {ShedulesUserContext} from '../../context/ShedulesUser';
 import firestore from '@react-native-firebase/firestore';
 
 import {LoadingAnimation} from '../../components/LoadingAnimation';
+import {getProfessional} from '../../functions/helpers/dateHelper';
 
 LocaleConfig.locales['pt-br'] = {
   monthNames: [
@@ -59,27 +60,53 @@ export const Calandar = ({navigation}) => {
 
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
   const [deniedDays, setDeniedDays] = useState(null);
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [month, setMonth] = useState(`0${new Date().getMonth() + 1}`);
+  const [year, setYear] = useState(new Date().getFullYear());
   const [arrawLeftAvaible, setArrawLeftAvaible] = useState(false);
 
+  const scheduleProfessional = getProfessional(shedulesUser);
+
   useEffect(() => {
-    firestore()
-      .collection('denied_days')
-      .get()
-      .then(async res => {
-        const deniedDays = res._docs;
-        deniedDays.map(data => (data._data ? setDeniedDays(data._data) : {}));
-      });
+    const deniedDaysArrayToObejct = data => {
+      const dataTemp = data.reduce((obj, item) => {
+        return {
+          ...obj,
+          ...item,
+        };
+      }, {});
+      setDeniedDays(dataTemp);
+    };
+
+    (async () => {
+      const deniedDaysRef = firestore()
+        .collection('denied_days')
+        .doc(`${month}_${year}`);
+      const deniedDaysData = (await deniedDaysRef.get()).data();
+
+      const dataTemp = [];
+
+      for (const day in deniedDaysData) {
+        if (deniedDaysData[day][scheduleProfessional].length > 0) {
+          for (const deniedDay in deniedDaysData[day][scheduleProfessional]) {
+            dataTemp.push(deniedDaysData[day][scheduleProfessional][deniedDay]);
+          }
+        }
+      }
+      deniedDaysArrayToObejct(dataTemp);
+    })();
   }, []);
 
-  const handleButton = () => {
-    shedulesUser.day
-      ? navigation.navigate('Schedules')
-      : console.log('NÃO SELECIONOU UM DIA');
-  };
+  const handleButton = () =>
+    shedulesUser.day && navigation.navigate('Schedules');
 
-  const handleLeftArrow = () => setMonth(month === 1 ? 12 : month - 1);
-  const handleRightArrow = () => setMonth(month === 12 ? 1 : month + 1);
+  const handleLeftArrow = () => {
+    setMonth(month === 1 ? 12 : month - 1);
+    setYear(new Date().getFullYear());
+  };
+  const handleRightArrow = () => {
+    setMonth(month === 12 ? 1 : month + 1);
+    setYear(new Date().getFullYear());
+  };
 
   if (!deniedDays) {
     return (
@@ -88,6 +115,8 @@ export const Calandar = ({navigation}) => {
       </View>
     );
   }
+
+  // console.log([...deniedDays], 'DATA');
 
   return (
     <View style={style.container}>
