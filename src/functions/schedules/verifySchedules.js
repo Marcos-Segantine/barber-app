@@ -6,7 +6,7 @@ import {
   getProfessional,
 } from '../helpers/dateHelper';
 
-const DAYS_OF_WEEK = ['weekday', 'saturday', 'sunday'];
+const DAYS_OF_WEEK = ['saturday', 'sunday', 'weekday'];
 
 export const verifySchedules = async (schedulesUser, action) => {
   const year = getYear(schedulesUser);
@@ -15,9 +15,9 @@ export const verifySchedules = async (schedulesUser, action) => {
   const professional = getProfessional(schedulesUser);
   const date = new Date(schedulesUser.day);
   const dayOfSchedule = date.getDay() + 1;
-  const weekDay = DAYS_OF_WEEK[dayOfSchedule > 5 ? dayOfSchedule - 5 : 0];
+  const weekDay = DAYS_OF_WEEK[dayOfSchedule <= 5 ? 0 : dayOfSchedule - 6];
 
-  const workingHoursRef = firestore().collection('working_hours').doc(weekDay);
+  const workingHoursRef = firestore().collection('working_hours');
   const unavailableTimesRef = firestore()
     .collection('unavailable_times')
     .doc(`${month}_${year}`);
@@ -27,14 +27,18 @@ export const verifySchedules = async (schedulesUser, action) => {
 
   const deniedDaysData = (await deniedDaysRef.get()).data();
 
-  const workingHoursData = (await workingHoursRef.get()).data().times;
+  const workingHourDocs = await workingHoursRef.get();
+  const workingHoursData =
+    workingHourDocs._docs[DAYS_OF_WEEK.indexOf(weekDay)]._data;
+
   const unavailableTimesData = (await unavailableTimesRef.get()).data();
 
   const unavailableTimesByProfessional =
     unavailableTimesData[day][professional];
 
   if (
-    unavailableTimesByProfessional.length === workingHoursData.length - 1 &&
+    unavailableTimesByProfessional.length ===
+      workingHoursData.times.length - 1 &&
     action === 'addSchedule'
   ) {
     deniedDaysData[day][professional].push({
