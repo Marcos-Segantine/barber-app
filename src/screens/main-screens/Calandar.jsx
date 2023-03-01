@@ -9,11 +9,11 @@ import {Button} from '../../components/Button';
 
 import {ShedulesUserContext} from '../../context/ShedulesUser';
 
-import firestore from '@react-native-firebase/firestore';
-
 import {LoadingAnimation} from '../../components/LoadingAnimation';
 
-import {getProfessional} from '../../functions/helpers/dateHelper';
+import {handleRightArrow} from '../../functions/calendar/handleRightArrow';
+import {handleLeftArrow} from '../../functions/calendar/handleLeftArrow';
+import {getDeniedDays} from '../../functions/calendar/getDeniedDays';
 
 LocaleConfig.locales['pt-br'] = {
   monthNames: [
@@ -59,72 +59,23 @@ LocaleConfig.locales['pt-br'] = {
 export const Calandar = ({navigation}) => {
   LocaleConfig.defaultLocale = 'pt-br';
 
+  const initialMonth =
+    new Date().getMonth() + 1 > 10
+      ? new Date().getMonth() + 1
+      : `0${new Date().getMonth() + 1}`;
+
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
   const [deniedDays, setDeniedDays] = useState(null);
-  const [month, setMonth] = useState(`0${new Date().getMonth() + 1}`);
+  const [month, setMonth] = useState(initialMonth);
   const [year, setYear] = useState(new Date().getFullYear());
   const [arrawLeftAvaible, setArrawLeftAvaible] = useState(false);
 
-  const scheduleProfessional = getProfessional(shedulesUser);
-
   useEffect(() => {
-    const deniedDaysArrayToObejct = data => {
-      const dataTemp = data.reduce((obj, item) => {
-        return {
-          ...obj,
-          ...item,
-        };
-      }, {});
-      setDeniedDays(dataTemp);
-    };
-
-    (async () => {
-      const deniedDaysRef = firestore()
-        .collection('denied_days')
-        .doc(`${month}_${year}`);
-      const deniedDaysData = (await deniedDaysRef.get()).data();
-
-      const dataTemp = [];
-
-      for (const day in deniedDaysData) {
-        if (deniedDaysData[day][scheduleProfessional].length > 0) {
-          for (const deniedDay in deniedDaysData[day][scheduleProfessional]) {
-            dataTemp.push(deniedDaysData[day][scheduleProfessional][deniedDay]);
-          }
-        }
-      }
-      console.log(`${month}_${year}`);
-      deniedDaysArrayToObejct(dataTemp);
-    })();
+    getDeniedDays(shedulesUser, setDeniedDays, month, year);
   }, [month]);
 
   const handleButton = () =>
     shedulesUser.day && navigation.navigate('Schedules');
-
-  const handleLeftArrow = () => {
-    if (month === 10) setMonth('10');
-    else if (month === 11) setMonth('11');
-    else if (month === 12) setMonth('12');
-    else {
-      let monthTemp = month;
-      monthTemp = +monthTemp.split('').splice(1, 1).join('');
-
-      setMonth(`0${monthTemp - 1}`);
-    }
-    setYear(new Date().getFullYear());
-  };
-  const handleRightArrow = () => {
-    if (month === 10) setMonth('10');
-    else if (month === 11) setMonth('11');
-    else if (month === 12) setMonth('12');
-    else {
-      let monthTemp = month;
-      monthTemp = +monthTemp.split('').splice(1, 1).join('');
-
-      setMonth(`0${monthTemp + 1}`);
-    }
-    setYear(new Date().getFullYear());
-  };
 
   if (!deniedDays) {
     return (
@@ -141,11 +92,11 @@ export const Calandar = ({navigation}) => {
       <Calendar
         context={{date: ''}}
         onPressArrowLeft={subtractMonth => {
-          handleLeftArrow();
+          handleLeftArrow(month, setMonth, setYear);
           subtractMonth();
         }}
         onPressArrowRight={addMonth => {
-          handleRightArrow();
+          handleRightArrow(month, setMonth, setYear);
           addMonth();
         }}
         minDate={String(new Date())}
