@@ -12,6 +12,7 @@ import {ShedulesUserContext} from '../../context/ShedulesUser';
 import firestore from '@react-native-firebase/firestore';
 
 import {LoadingAnimation} from '../../components/LoadingAnimation';
+
 import {getProfessional} from '../../functions/helpers/dateHelper';
 
 LocaleConfig.locales['pt-br'] = {
@@ -92,19 +93,36 @@ export const Calandar = ({navigation}) => {
           }
         }
       }
+      console.log(`${month}_${year}`);
       deniedDaysArrayToObejct(dataTemp);
     })();
-  }, []);
+  }, [month]);
 
   const handleButton = () =>
     shedulesUser.day && navigation.navigate('Schedules');
 
   const handleLeftArrow = () => {
-    setMonth(month === 1 ? 12 : month - 1);
+    if (month === 10) setMonth('10');
+    else if (month === 11) setMonth('11');
+    else if (month === 12) setMonth('12');
+    else {
+      let monthTemp = month;
+      monthTemp = +monthTemp.split('').splice(1, 1).join('');
+
+      setMonth(`0${monthTemp - 1}`);
+    }
     setYear(new Date().getFullYear());
   };
   const handleRightArrow = () => {
-    setMonth(month === 12 ? 1 : month + 1);
+    if (month === 10) setMonth('10');
+    else if (month === 11) setMonth('11');
+    else if (month === 12) setMonth('12');
+    else {
+      let monthTemp = month;
+      monthTemp = +monthTemp.split('').splice(1, 1).join('');
+
+      setMonth(`0${monthTemp + 1}`);
+    }
     setYear(new Date().getFullYear());
   };
 
@@ -115,8 +133,6 @@ export const Calandar = ({navigation}) => {
       </View>
     );
   }
-
-  // console.log([...deniedDays], 'DATA');
 
   return (
     <View style={style.container}>
