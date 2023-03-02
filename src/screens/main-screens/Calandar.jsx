@@ -68,14 +68,48 @@ export const Calandar = ({navigation}) => {
   const [deniedDays, setDeniedDays] = useState(null);
   const [month, setMonth] = useState(initialMonth);
   const [year, setYear] = useState(new Date().getFullYear());
-  const [arrawLeftAvaible, setArrawLeftAvaible] = useState(false);
 
   useEffect(() => {
     getDeniedDays(shedulesUser, setDeniedDays, month, year);
   }, [month]);
 
-  const handleButton = () =>
-    shedulesUser.day && navigation.navigate('Schedules');
+  const markedDatesCalendar = {
+    ...deniedDays,
+    [shedulesUser.day]: {
+      selected: true,
+      marked: true,
+      selectedColor: 'white',
+    },
+  };
+
+  const themeCalendar = {
+    calendarBackground: '#E95401',
+    dayTextColor: '#FFFFFF',
+    selectedDayTextColor: '#E95401',
+    selectedDayBackgroundColor: '#FFFFFF',
+    textDisabledColor: '#FFFFFF40',
+    textSectionTitleColor: '#FFFFFF',
+    arrowColor: '#FFFFFF',
+    monthTextColor: '#FFFFFF',
+    textDayHeaderFontWeight: '700',
+  };
+
+  const styleCalendar = {
+    width: 350,
+    marginTop: 40,
+    padding: 5,
+    borderRadius: 20,
+  };
+
+  const onPressArrowLeftCalendar = subtractMonth => {
+    handleLeftArrow(month, setMonth, setYear);
+    subtractMonth();
+  };
+
+  const onPressArrowRightCalendar = addMonth => {
+    handleRightArrow(month, setMonth, setYear);
+    addMonth();
+  };
 
   if (!deniedDays) {
     return (
@@ -91,50 +125,20 @@ export const Calandar = ({navigation}) => {
 
       <Calendar
         context={{date: ''}}
-        onPressArrowLeft={subtractMonth => {
-          handleLeftArrow(month, setMonth, setYear);
-          subtractMonth();
-        }}
-        onPressArrowRight={addMonth => {
-          handleRightArrow(month, setMonth, setYear);
-          addMonth();
-        }}
+        onPressArrowLeft={onPressArrowLeftCalendar}
+        onPressArrowRight={onPressArrowRightCalendar}
         minDate={String(new Date())}
-        markedDates={{
-          ...deniedDays,
-          [shedulesUser.day]: {
-            selected: true,
-            marked: true,
-            selectedColor: 'white',
-          },
-        }}
-        // deniedDays
+        markedDates={markedDatesCalendar}
         onDayPress={day =>
           setShedulesUser({...shedulesUser, day: day.dateString})
         }
-        disableArrowLeft={arrawLeftAvaible}
-        style={{
-          width: 350,
-          marginTop: 40,
-          padding: 5,
-          borderRadius: 20,
-        }}
-        theme={{
-          calendarBackground: '#E95401',
-          dayTextColor: '#FFFFFF',
-          selectedDayTextColor: '#E95401',
-          selectedDayBackgroundColor: '#FFFFFF',
-          textDisabledColor: '#FFFFFF40',
-          textSectionTitleColor: '#FFFFFF',
-          arrowColor: '#FFFFFF',
-          monthTextColor: '#FFFFFF',
-          textDayHeaderFontWeight: '700',
-        }}
+        style={styleCalendar}
+        theme={themeCalendar}
       />
 
       <Button
         text="Comfirmar"
-        action={handleButton}
+        action={() => shedulesUser.day && navigation.navigate('Schedules')}
         waitingData={!!shedulesUser.day}
       />
     </View>
