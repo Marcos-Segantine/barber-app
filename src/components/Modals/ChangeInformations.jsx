@@ -2,7 +2,7 @@ import {Modal, Text, StyleSheet, TextInput, View} from 'react-native';
 import {Title} from '../Title';
 import {Button} from '../Button';
 import {changePhoneNumber} from '../../functions/User/changePhoneNumber';
-import {useContext, useState, useCallback, useMemo} from 'react';
+import React, {useContext, useState, useCallback, useMemo} from 'react';
 import {UserContext} from '../../context/UserContext';
 
 export const ChangeInformations = React.memo(

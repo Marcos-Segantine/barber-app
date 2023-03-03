@@ -26,7 +26,7 @@ export const ChangeInformation = () => {
 
   const {userData, setUserData} = useContext(UserContext);
 
-  const handleSave = () => {
+  const handleInformations = () => [
     hadleNewInfomation(
       phone,
       name,
@@ -43,8 +43,8 @@ export const ChangeInformation = () => {
       userData,
       setUserData,
       setConfirm,
-    );
-  };
+    ),
+  ];
 
   return (
     <View style={globalStyles.container}>
@@ -84,7 +84,7 @@ export const ChangeInformation = () => {
             keyboardType="numeric"
           />
           {error && <Text style={styles.errorMessage}>{messageError}.</Text>}
-          <Button text="Salvar" action={handleSave} />
+          <Button text="Salvar" action={handleInformations} />
         </View>
       )}
     </View>
