@@ -1,49 +1,27 @@
-import {View, StyleSheet, TextInput} from 'react-native';
+import { View, StyleSheet, TextInput } from 'react-native';
 
-import {globalStyles} from '../globalStyles';
+import { useContext, useState } from 'react';
+import { globalStyles } from '../globalStyles';
 
-import {Title} from '../../components/Title';
-import {Button} from '../../components/Button';
-import {useContext, useState} from 'react';
+import { Title } from '../../components/Title';
+import { Button } from '../../components/Button';
 
-import firestore from '@react-native-firebase/firestore';
-import {UserContext} from '../../context/UserContext';
+import { Feedback } from '../../components/modals/Feedback';
+
+import { UserContext } from '../../context/UserContext';
+
+import { handleFeedback } from '../../functions/user/handleFeedback';
 
 export const FeedBack = () => {
   const [feedback, setFeedback] = useState('');
 
-  const verifyWords = () => {};
+  const verifyWords = () => { };
 
-  const {userData} = useContext(UserContext);
-
-  const handleFeedback = async () => {
-    try {
-      if (!feedback.trim()) {
-        setModalVisible(true);
-        setMessageError('Por favor, preencha o campo de feedback.');
-        return;
-      }
-
-      const feedbackRef = firestore().collection('feedbacks').doc(userData.uid);
-      const feedbackDoc = await feedbackRef.get();
-      const feedbackData = feedbackDoc.exists
-        ? feedbackDoc.data()
-        : {feedbacks: []};
-      const updatedFeedbacks = [...feedbackData.feedbacks, feedback];
-
-      await feedbackRef.set({feedbacks: updatedFeedbacks});
-
-      setModalVisible(true);
-      setMessageError('Obrigado por compartilhar o seu feedback!');
-
-      setFeedback('');
-    } catch (error) {
-      console.log('Erro ao enviar feedback: ', error);
-    }
-  };
+  const { userData } = useContext(UserContext);
 
   return (
     <View style={globalStyles.container}>
+      <Feedback />
       <Title title={'Sua opinião importa muito para nós'} />
 
       <TextInput
@@ -56,7 +34,13 @@ export const FeedBack = () => {
         textAlignVertical="top"
       />
 
-      <Button text={'Enviar'} action={handleFeedback} />
+      <Button text={'Enviar'} action={() =>
+        handleFeedback(
+          feedback,
+          setFeedback,
+          setModalVisible,
+          userData
+        )} />
     </View>
   );
 };

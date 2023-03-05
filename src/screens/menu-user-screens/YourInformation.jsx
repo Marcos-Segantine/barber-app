@@ -6,32 +6,32 @@ import { Button } from "../../components/Button";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 
-export const YourInformation = ({navigation}) => {
+export const YourInformation = ({ navigation }) => {
     const { userData } = useContext(UserContext)
 
-    return(
+    return (
         <View style={style.container}>
             <Title title={"Suas informações"} />
 
             <View style={style.content}>
                 <Pressable style={style.info}>
-                    <Text style={style.text}>Nome: {userData ? userData.name : "---"} </Text>
+                    <Text style={style.text}>Nome: {userData && userData.name} </Text>
                 </Pressable>
 
                 <Pressable style={style.info}>
                     <Text style={style.text}>
-                        Email: {userData ? userData.email : "   ---------"}
+                        Email: {userData && userData.email}
                     </Text>
                 </Pressable>
 
                 <Pressable style={style.info}>
                     <Text style={style.text}>
-                        Telefone: {userData ? userData.phone : "   ---------"}
+                        Telefone: {userData && userData.phone}
                     </Text>
                 </Pressable>
-            </View>        
+            </View>
 
-            <Button text={"Alterar informações"} action={() => navigation.navigate('ChangeInformation')} />    
+            <Button text={"Alterar informações"} action={() => navigation.navigate('ChangeInformation')} />
         </View>
     )
 }

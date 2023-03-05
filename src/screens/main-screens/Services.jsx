@@ -6,31 +6,25 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {Title} from '../../components/Title';
-import {Button} from '../../components/Button';
-import {useContext, useEffect, useState} from 'react';
+import { Title } from '../../components/Title';
+import { Button } from '../../components/Button';
+import { useContext, useEffect, useState } from 'react';
 
-import {ShedulesUserContext} from '../../context/ShedulesUser';
+import { ShedulesUserContext } from '../../context/ShedulesUser';
 
-import {globalStyles} from '../globalStyles';
+import { globalStyles } from '../globalStyles';
 
-import firestore from '@react-native-firebase/firestore';
+import { LoadingAnimation } from '../../components/LoadingAnimation';
 
-import {LoadingAnimation} from '../../components/LoadingAnimation';
+import { getServices } from '../../functions/schedules/getServices';
 
-export const Services = ({navigation}) => {
-  const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
+export const Services = ({ navigation }) => {
+  const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext);
   const [serviceUserSelected, setServiceUserSelected] = useState();
   const [services, setServices] = useState(null);
 
   useEffect(() => {
-    firestore()
-      .collection('services')
-      .doc('services')
-      .get()
-      .then(({_data}) => {
-        setServices(_data);
-      });
+    getServices()
   }, []);
 
   const handleComfirmButton = () => {
@@ -60,7 +54,7 @@ export const Services = ({navigation}) => {
                 }
                 key={index}
                 onPress={() => {
-                  setShedulesUser({...shedulesUser, service: `${service}`});
+                  setShedulesUser({ ...shedulesUser, service: `${service}` });
                   setServiceUserSelected(service);
                 }}>
                 <Text style={style.serviceText}>{service}</Text>

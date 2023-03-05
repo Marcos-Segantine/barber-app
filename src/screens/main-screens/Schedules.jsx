@@ -9,69 +9,15 @@ import {ShedulesUserContext} from '../../context/ShedulesUser';
 
 import {globalStyles} from '../globalStyles';
 
-import firestore from '@react-native-firebase/firestore';
-
-import {
-  getProfessional,
-  getDay,
-  getMonth,
-  getYear,
-} from '../../functions/helpers/dateHelper';
+import { getAvailableTimes } from '../../functions/schedules/getAvailableTimes';
 
 export const Schedules = ({navigation}) => {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState('');
   const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
-  console.log(shedulesUser);
-
-  const year = getYear(shedulesUser);
-  const month = getMonth(shedulesUser);
-  const day = getDay(shedulesUser);
-  const professional = getProfessional(shedulesUser);
 
   useEffect(() => {
-    const getAvailableTimes = async () => {
-      try {
-        const workingHoursSnapshot = await firestore()
-          .collection('working_hours')
-          .get();
-        const workingHours = workingHoursSnapshot.docs.map(
-          doc => doc.data().times,
-        );
-
-        const unavailableTimesSnapshot = await firestore()
-          .collection('unavailable_times')
-          .doc(`${month}_${year}`)
-          .get();
-
-        const unavailableTimes = unavailableTimesSnapshot.data() || {};
-
-        const dayOfWeek = new Date(shedulesUser.day).getDay() + 1;
-
-        let availableTimes = [];
-
-        if (dayOfWeek > 0 && dayOfWeek <= 5) {
-          availableTimes = workingHours[2];
-        } else if (dayOfWeek === 6) {
-          availableTimes = workingHours[0];
-        } else {
-          availableTimes = workingHours[1];
-        }
-
-        const unavailableTimesForDayAndProfessional =
-          unavailableTimes[day]?.[professional] || [];
-
-        availableTimes = availableTimes.filter(
-          time => !unavailableTimesForDayAndProfessional.includes(time),
-        );
-
-        setAvailableTimes(availableTimes);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    getAvailableTimes();
+    getAvailableTimes(shedulesUser, setAvailableTimes);
   }, []);
 
   const handleSelectTime = time => {

@@ -1,69 +1,32 @@
-import {Text, View, StyleSheet} from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 
-import {Title} from '../../components/Title';
-import {Button} from '../../components/Button';
+import { Title } from '../../components/Title';
+import { Button } from '../../components/Button';
 
-import {useContext, useEffect} from 'react';
-import {ShedulesUserContext} from '../../context/ShedulesUser';
+import { useContext, useEffect } from 'react';
+import { ShedulesUserContext } from '../../context/ShedulesUser';
 
-import firestore from '@react-native-firebase/firestore';
+import { globalStyles } from '../globalStyles';
 
-import {globalStyles} from '../globalStyles';
+import { dateFormated } from '../../functions/helpers/dateHelper';
 
-import { dateFormated,getDay, getMonth } from '../../functions/helpers/dateHelper';
+import { UserContext } from '../../context/UserContext';
+import { useIsFocused } from '@react-navigation/native';
 
-import {addScheduleWhenDayAlredyUse} from '../../functions/schedules/addScheduleWhenDayAlredyUse';
-import {addScheduleWhenDayNotUse} from '../../functions/schedules/addScheduleWhenDayNotUse';
-import {addScheduleWhenMonthIsNotUse} from '../../functions/schedules/addScheduleWhenMonthIsNotUse';
+import { handleComfirmNewSchedule } from '../../functions/schedules/handleComfirmNewSchedule';
 
-import {UserContext} from '../../context/UserContext';
-import {useIsFocused} from '@react-navigation/native';
+export const ConfirmSchedule = ({ navigation }) => {
+  const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext);
 
-
-export const ConfirmSchedule = ({navigation}) => {
-  const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
-
-  const {userData} = useContext(UserContext);
+  const { userData } = useContext(UserContext);
 
   const date = dateFormated(shedulesUser);
 
   const isFocused = useIsFocused();
-  
+
   useEffect(() => {
     shedulesUser.scheduleUid = `${userData.uid}-${shedulesUser.day}-${shedulesUser.professional}-${shedulesUser.shedule}-${shedulesUser.service}`;
   }, [isFocused]);
-
-  const handleComfirm = async () => {
-    const sheduleMouth = getMonth(shedulesUser);
-    const sheduleDay = getDay(shedulesUser);
-
-    firestore()
-      .collection('schedules_month')
-      .doc(`${sheduleMouth}_2023`)
-      .get()
-      .then(({_data}) => {
-        if (_data === undefined) {
-          addScheduleWhenMonthIsNotUse(
-            userData,
-            navigation,
-            shedulesUser,
-            setShedulesUser,
-          );
-          return;
-        }
-
-        const dayIsAlredyUse = _data[sheduleDay];
-
-        dayIsAlredyUse
-          ? addScheduleWhenDayAlredyUse(navigation, userData, shedulesUser)
-          : addScheduleWhenDayNotUse(
-              userData,
-              navigation,
-              shedulesUser,
-              setShedulesUser,
-            );
-      });
-  };
 
   return (
     <View style={globalStyles.container}>
@@ -91,7 +54,12 @@ export const ConfirmSchedule = ({navigation}) => {
         </View>
       </View>
 
-      <Button text="Confirmar" action={handleComfirm} />
+      <Button text="Confirmar" action={() => handleComfirmNewSchedule(
+        shedulesUser,
+        userData,
+        navigation,
+        setShedulesUser
+      )} />
     </View>
   );
 };

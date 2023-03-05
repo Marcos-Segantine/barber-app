@@ -3,22 +3,12 @@ import { Modal, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../Button';
 import { Title } from '../Title';
 
-import auth from '@react-native-firebase/auth';
+import { handleSendEmailToChangePassword } from '../../functions/user/handleSendEmailToChangePassword';
 
 export const ChangePassword = ({
   modalChangePassword,
   setModalChangePassword,
 }) => {
-
-  const handleSendEmailToChangePassword = async () => {
-    const user = auth().currentUser
-    try {
-      await auth().sendPasswordResetEmail(user.email)
-      setModalChangePassword(false)
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   return (
     <Modal
@@ -32,7 +22,7 @@ export const ChangePassword = ({
           Ao clicar no link presente voce sera redirecionado a uma pagina para que possa alterar sua senha
         </Text>
 
-        <Button text={'OK'} action={handleSendEmailToChangePassword} />
+        <Button text={'OK'} action={() => handleSendEmailToChangePassword(setModalChangePassword)} />
       </View>
     </Modal>
   );

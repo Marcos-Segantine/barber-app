@@ -1,4 +1,5 @@
-import React, {useState, useContext} from 'react';
+import React, { useState, useContext } from 'react';
+
 import {
   View,
   Text,
@@ -7,63 +8,23 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import {globalStyles} from '../globalStyles';
-import {Title} from '../../components/Title';
-import {Button} from '../../components/Button';
-import {UserContext} from '../../context/UserContext';
-import {MessageError} from '../../components/MessageError';
-import {firebase, firestore} from '@react-native-firebase/auth';
 
-export const ChangePassword = ({navigation}) => {
+import { globalStyles } from '../globalStyles';
+import { Title } from '../../components/Title';
+import { Button } from '../../components/Button';
+import { MessageError } from '../../components/MessageError';
+
+import { UserContext } from '../../context/UserContext';
+
+import { handleNewPassword } from '../../functions/user/handleNewPassword';
+
+export const ChangePassword = ({ navigation }) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [messageError, setMessageError] = useState('');
-  const {userData, setUserData} = useContext(UserContext);
-
-  const handleNewPassword = async () => {
-    if (
-      !oldPassword.trim() ||
-      !newPassword.trim() ||
-      !confirmNewPassword.trim()
-    ) {
-      setModalVisible(true);
-      setMessageError('Por favor preencha todos os campos');
-      return;
-    }
-
-    if (newPassword !== confirmNewPassword) {
-      setModalVisible(true);
-      setMessageError('Os campos da nova senha não são iguais');
-      return;
-    }
-
-    if (userData.password !== oldPassword) {
-      setModalVisible(true);
-      setMessageError('Senha Incorreta');
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      setModalVisible(true);
-      setMessageError('Nova senha muito pequena');
-      return;
-    }
-
-    try {
-      const user = firebase.auth().currentUser;
-      await user.updatePassword(newPassword);
-      await firestore()
-        .collection('users')
-        .doc(user.uid)
-        .update({password: newPassword});
-      setUserData({...userData, password: newPassword});
-      navigation.navigate('Main');
-    } catch (error) {
-      console.log('Erro ao atualizar a senha: ', error);
-    }
-  };
+  const { userData, setUserData } = useContext(UserContext);
 
   return (
     <KeyboardAvoidingView
@@ -108,7 +69,17 @@ export const ChangePassword = ({navigation}) => {
         </View>
       </View>
 
-      <Button text="Comfirmar" action={handleNewPassword} waitingData />
+      <Button text="Comfirmar" action={() =>
+        handleNewPassword(
+          oldPassword,
+          newPassword,
+          confirmNewPassword,
+          setModalVisible,
+          setMessageError,
+          navigation,
+          userData,
+          setUserData
+        )} />
     </KeyboardAvoidingView>
   );
 };
@@ -121,7 +92,7 @@ const style = StyleSheet.create({
     flex: 1,
   },
 
-  textOrietation: {
+  textOrientation: {
     fontSize: 20,
     fontWeight: '700',
     color: '#FFFFFF',

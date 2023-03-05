@@ -7,33 +7,28 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {useContext, useState} from 'react';
+import { useContext, useState } from 'react';
 
-import {Title} from '../../components/Title';
-import {Button} from '../../components/Button';
+import { Title } from '../../components/Title';
+import { Button } from '../../components/Button';
 
-import {UserContext} from '../../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 
-import {MessageError} from '../../components/MessageError';
+import { MessageError } from '../../components/MessageError';
 
-import {signInWithEmailAndPassword} from '../../functions/login/signInWithEmailAndPassword';
+import { signInWithEmailAndPassword } from '../../functions/login/signInWithEmailAndPassword';
+import { clearEmailAndPassword } from '../../functions/login/clearEmailAndPassword';
 
-import {SignInWithGoogle} from '../../components/modals/SignInWithGoogle';
+import { SignInWithGoogle } from '../../components/modals/SignInWithGoogle';
 
-export const Login = ({navigation}) => {
+export const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [modalVisible, setModalVisible] = useState(false);
   const [messageError, setMessageError] = useState('');
 
-  const {setUserData} = useContext(UserContext);
-
-  const clearEmailAndPassword = () => {
-    setEmail('');
-    setPassword('');
-    setModalVisible(false);
-  };
+  const { setUserData } = useContext(UserContext);
 
   return (
     <>
@@ -41,7 +36,7 @@ export const Login = ({navigation}) => {
         modalVisible={modalVisible}
         messageError={messageError}
         setModalVisible={setModalVisible}
-        action={clearEmailAndPassword}
+        action={() => clearEmailAndPassword(setEmail, setPassword, setModalVisible)}
       />
 
       <ScrollView contentContainerStyle={style.container}>

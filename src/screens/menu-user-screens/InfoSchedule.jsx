@@ -4,9 +4,9 @@ import { Title } from "../../components/Title";
 import { Button } from "../../components/Button";
 
 export const InfoSchedule = () => {
-    return(
+    return (
         <View style={style.container}>
-            
+
             <Title title={"Dia 09/09/2022"} />
 
             <View style={style.content}>
