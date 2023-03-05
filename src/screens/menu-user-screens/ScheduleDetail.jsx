@@ -1,24 +1,24 @@
-import {Text, StyleSheet, View} from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 
-import {Title} from '../../components/Title';
-import {Button} from '../../components/Button';
+import { Title } from '../../components/Title';
+import { Button } from '../../components/Button';
 
-import {useContext} from 'react';
-import {UserContext} from '../../context/UserContext';
-
-import {cancelScheduleButton} from '../../functions/schedules/cancelScheduleButton';
+import { useState } from 'react';
 
 import { dateFormated } from '../../functions/helpers/dateHelper';
 
-export const ScheduleDetail = ({route, navigation}) => {
-  const {item} = route.params;
+import { ConfirmCancelSchedule } from '../../components/Modals/ConfirmCancelSchedule';
 
-  const {userData} = useContext(UserContext);
+export const ScheduleDetail = ({ route }) => {
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const { item } = route.params;
 
   const date = dateFormated(item)
 
   return (
     <View style={style.container}>
+      <ConfirmCancelSchedule modalVisible={modalVisible} setModalVisible={setModalVisible} />
       <Title title={date} />
 
       <View style={style.content}>
@@ -29,7 +29,7 @@ export const ScheduleDetail = ({route, navigation}) => {
 
       <Button
         text="Cancelar Horario"
-        action={() => cancelScheduleButton(userData, item, navigation)}
+        action={() => setModalVisible(true)}
       />
     </View>
   );
