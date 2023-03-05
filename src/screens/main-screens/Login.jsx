@@ -16,9 +16,9 @@ import {UserContext} from '../../context/UserContext';
 
 import {MessageError} from '../../components/MessageError';
 
-import {signInWithEmailAndPassword} from '../../functions/Login/signInWithEmailAndPassword';
+import {signInWithEmailAndPassword} from '../../functions/login/signInWithEmailAndPassword';
 
-import {SignInWithGoogle} from '../../components/Modals/SignInWithGoogle';
+import {SignInWithGoogle} from '../../components/modals/SignInWithGoogle';
 
 export const Login = ({navigation}) => {
   const [email, setEmail] = useState('');

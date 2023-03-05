@@ -11,13 +11,13 @@ import {
 import {Button} from '../Button';
 import {Title} from '../Title';
 
-import {verifyPhoneNumber} from '../../functions/User/verifyPhoneNumber';
+import {verifyPhoneNumber} from '../../functions/user/verifyPhoneNumber';
 import {UserContext} from '../../context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
 import {formatPhoneNumber} from '../../functions/helpers/formatPhoneNumber';
 
-import {verifyCodeForGoogleSignIn} from '../../functions/User/verifyCodeForGoogleSignIn';
+import {verifyCodeForGoogleSignIn} from '../../functions/user/verifyCodeForGoogleSignIn';
 
 export const PhoneVerificationForGoogleSignIn = ({visible, setVisible}) => {
   const [getCodeModalVisible, setGetCodeModalVisible] = useState(false);

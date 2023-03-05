@@ -3,10 +3,10 @@ import {View, StyleSheet, TextInput, Text} from 'react-native';
 
 import {UserContext} from '../../context/UserContext';
 import {globalStyles} from '../globalStyles';
-import {hadleNewInfomation} from '../../functions/User/hadleNewInfomation';
+import {hadleNewInfomation} from '../../functions/user/hadleNewInfomation';
 import {Title} from '../../components/Title';
 import {Button} from '../../components/Button';
-import {ChangeInformations} from '../../components/Modals/ChangeInformations';
+import {ChangeInformations} from '../../components/modals/ChangeInformations';
 import {LoadingAnimation} from '../../components/LoadingAnimation';
 import {formatPhoneNumber} from '../../functions/helpers/formatPhoneNumber';
 

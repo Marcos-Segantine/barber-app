@@ -4,8 +4,8 @@ import {Title} from '../Title';
 import {Button} from '../Button';
 import {useContext, useEffect, useState} from 'react';
 
-import {verifyPhoneNumber} from '../../functions/User/verifyPhoneNumber';
-import {changePhoneNumber} from '../../functions/User/changePhoneNumber';
+import {verifyPhoneNumber} from '../../functions/user/verifyPhoneNumber';
+import {changePhoneNumber} from '../../functions/user/changePhoneNumber';
 import {UserContext} from '../../context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 

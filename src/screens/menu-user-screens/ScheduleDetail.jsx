@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 import { dateFormated } from '../../functions/helpers/dateHelper';
 
-import { ConfirmCancelSchedule } from '../../components/Modals/ConfirmCancelSchedule';
+import { ConfirmCancelSchedule } from '../../components/modals/ConfirmCancelSchedule';
 
 export const ScheduleDetail = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false)

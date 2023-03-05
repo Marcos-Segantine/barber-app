@@ -7,10 +7,10 @@ import { Title } from '../../components/Title';
 import { UserContext } from '../../context/UserContext';
 import { useNavigation } from '@react-navigation/native';
 
-import { ChangePassword } from '../../components/Modals/ChangePassword';
+import { ChangePassword } from '../../components/modals/ChangePassword';
 
-import { handleLogOut } from '../../functions/User/handleLogOut';
-import { handleChangePassword } from '../../functions/User/handleChangePassword';
+import { handleLogOut } from '../../functions/user/handleLogOut';
+import { handleChangePassword } from '../../functions/user/handleChangePassword';
 
 export const Main = () => {
   const [modalChangePassword, setModalChangePassword] = useState(false);

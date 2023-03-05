@@ -1,7 +1,7 @@
 import {Modal, Text, StyleSheet, TextInput, View} from 'react-native';
 import {Title} from '../Title';
 import {Button} from '../Button';
-import {changePhoneNumber} from '../../functions/User/changePhoneNumber';
+import {changePhoneNumber} from '../../functions/user/changePhoneNumber';
 import React, {useContext, useState, useCallback, useMemo} from 'react';
 import {UserContext} from '../../context/UserContext';
 

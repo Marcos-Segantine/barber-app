@@ -9,8 +9,8 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {UserContext} from '../../context/UserContext';
 import {UserVerified} from '../../context/UserVerified';
 
-import {signInWithGoogle} from '../../functions/Login/signInWithGoogle';
-import {createUserByGoogle} from '../../functions/Register/createUserByGoogle';
+import {signInWithGoogle} from '../../functions/login/signInWithGoogle';
+import {createUserByGoogle} from '../../functions/register/createUserByGoogle';
 
 import {AlertMessagePasswordCanChange} from './AlertMessagePasswordCanChange';
 

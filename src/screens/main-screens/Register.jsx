@@ -14,12 +14,12 @@ import {useState} from 'react';
 
 import {MessageError} from '../../components/MessageError';
 
-import {createUserWithEmailAndPassword} from '../../functions/Register/createUserWithEmailAndPassword';
+import {createUserWithEmailAndPassword} from '../../functions/register/createUserWithEmailAndPassword';
 
-import {SignInWithGoogle} from '../../components/Modals/SignInWithGoogle';
+import {SignInWithGoogle} from '../../components/modals/SignInWithGoogle';
 
-import {EmailVerificationModal} from '../../components/Modals/EmailVerificationModal';
-import {PhoneVerificationModal} from '../../components/Modals/PhoneVerificationModal';
+import {EmailVerificationModal} from '../../components/modals/EmailVerificationModal';
+import {PhoneVerificationModal} from '../../components/modals/PhoneVerificationModal';
 
 export const Register = ({navigation}) => {
   const [name, setName] = useState('');

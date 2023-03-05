@@ -15,7 +15,7 @@ import {UserVerified} from '../context/UserVerified';
 import NetInfo from '@react-native-community/netinfo';
 
 import auth from '@react-native-firebase/auth';
-import {BadInternet} from '../components/Modals/BadInternet';
+import {BadInternet} from '../components/modals/BadInternet';
 
 export const Header = () => {
   const [showComeBackIcon, setShowComeBackIcon] = useState(false);

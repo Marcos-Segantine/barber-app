@@ -14,7 +14,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {clearSchedule} from '../../functions/schedules/clearSchedule';
 import {ShedulesUserContext} from '../../context/ShedulesUser';
 
-import {PhoneVerificationForGoogleSignIn} from '../../components/Modals/PhoneVerificationForGoogleSignIn';
+import {PhoneVerificationForGoogleSignIn} from '../../components/modals/PhoneVerificationForGoogleSignIn';
 
 import auth from '@react-native-firebase/auth';
 
