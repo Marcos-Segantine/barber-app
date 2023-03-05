@@ -1,63 +1,29 @@
-import {View, StyleSheet, Pressable, Text} from 'react-native';
+import { View, StyleSheet, Pressable, Text } from 'react-native';
 
-import {useContext, useState} from 'react';
+import { useContext, useState } from 'react';
 
-import {Title} from '../../components/Title';
+import { Title } from '../../components/Title';
 
-import auth, {firebase} from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import { UserContext } from '../../context/UserContext';
+import { useNavigation } from '@react-navigation/native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ChangePassword } from '../../components/Modals/ChangePassword';
 
-import {UserContext} from '../../context/UserContext';
-import {useNavigation} from '@react-navigation/native';
-
-import {ChangePassword} from '../../components/Modals/ChangePassword';
+import { handleLogOut } from '../../functions/User/handleLogOut';
+import { handleChangePassword } from '../../functions/User/handleChangePassword';
 
 export const Main = () => {
-  const [modalChangePassword, setmodalChangePassword] = useState(false);
+  const [modalChangePassword, setModalChangePassword] = useState(false);
 
-  const {userData, setUserData} = useContext(UserContext);
+  const { userData, setUserData } = useContext(UserContext);
 
   const navigation = useNavigation();
-  const handleLogOut = async () => {
-    try {
-      const keys = ['@barber_app__email', '@barber_app__password'];
-      await AsyncStorage.multiRemove(keys);
-
-      await auth().signOut();
-      setUserData(null);
-      navigation.navigate('InitialScreen');
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-  const handleChangePassword = async () => {
-    const userDoc = await firestore()
-      .collection('users')
-      .doc(userData.uid)
-      .get();
-    const user = userDoc.data();
-
-    if (user.password === null || !user.password) {
-      setmodalChangePassword(true);
-
-      try {
-        await firebase.auth().sendPasswordResetEmail(user.email);
-        console.log('Email sent!');
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      navigation.navigate('ChangePassword');
-    }
-  };
 
   return (
     <>
       <ChangePassword
         modalChangePassword={modalChangePassword}
-        setmodalChangePassword={setmodalChangePassword}
+        setModalChangePassword={setModalChangePassword}
       />
       <View style={style.container}>
         <Title title={`Olá ${userData?.name}`} />
@@ -77,7 +43,7 @@ export const Main = () => {
             <Text style={style.text}>Suas informações</Text>
           </Pressable>
 
-          <Pressable style={style.link} onPress={handleChangePassword}>
+          <Pressable style={style.link} onPress={() => handleChangePassword(userData, setModalChangePassword, navigation)}>
             <Text style={style.text}>Redefinir senha</Text>
           </Pressable>
 
@@ -87,7 +53,7 @@ export const Main = () => {
             <Text style={style.text}>Enviar um feedback</Text>
           </Pressable>
 
-          <Pressable style={style.link} onPress={handleLogOut}>
+          <Pressable style={style.link} onPress={() => handleLogOut(setUserData, navigation)}>
             <Text style={style.text}>Sair</Text>
           </Pressable>
         </View>
