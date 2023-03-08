@@ -24,7 +24,7 @@ export const Services = ({ navigation }) => {
   const [services, setServices] = useState(null);
 
   useEffect(() => {
-    getServices()
+    getServices(setServices)
   }, []);
 
   const handleComfirmButton = () => {
