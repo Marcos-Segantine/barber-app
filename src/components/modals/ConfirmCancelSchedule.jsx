@@ -10,14 +10,14 @@ import { useContext } from "react";
 import { cancelScheduleButton } from "../../functions/schedules/cancelScheduleButton"
 import { useNavigation } from "@react-navigation/native";
 
-export const ConfirmCancelSchedule = ({ modalVisible, setModalVisible }) => {
+export const ConfirmCancelSchedule = ({ modalVisible, setModalVisible, schedule }) => {
     const { userData } = useContext(UserContext);
 
     const navigation = useNavigation()
 
     const handleConfirm = () => {
         setModalVisible(false)
-        cancelScheduleButton(userData, item, navigation)
+        cancelScheduleButton(userData, schedule, navigation)
     }
 
     return (

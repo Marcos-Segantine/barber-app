@@ -18,7 +18,7 @@ export const ScheduleDetail = ({ route }) => {
 
   return (
     <View style={style.container}>
-      <ConfirmCancelSchedule modalVisible={modalVisible} setModalVisible={setModalVisible} />
+      <ConfirmCancelSchedule modalVisible={modalVisible} setModalVisible={setModalVisible} schedule={item} />
       <Title title={date} />
 
       <View style={style.content}>
