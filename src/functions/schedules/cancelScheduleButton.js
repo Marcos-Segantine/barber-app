@@ -1,5 +1,5 @@
-import {verifySchedules} from './verifySchedules';
-import {getDay, getMonth, getProfessional} from '../helpers/dateHelper';
+import { verifySchedules } from './verifySchedules';
+import { getDay, getMonth, getProfessional } from '../helpers/dateHelper';
 import firestore from '@react-native-firebase/firestore';
 
 export const cancelScheduleButton = async (userData, item, navigation) => {
@@ -8,46 +8,48 @@ export const cancelScheduleButton = async (userData, item, navigation) => {
   const professional = getProfessional(item);
 
   try {
-    const batch = firestore().batch();
-    const userDocRef = firestore()
-      .collection('schedules_by_user')
-      .doc(userData.uid);
-    const userDoc = await userDocRef.get();
-    const schedulesByUser = userDoc.data()?.schedules || [];
 
+    // collections reference
+    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(userData.uid);
+    const schedulesMonthRef = firestore().collection('schedules_month').doc(`${scheduleMonth}_2023`);
+    const unavailableTimesRef = firestore().collection('unavailable_times').doc(`${scheduleMonth}_2023`);
+
+    const batch = firestore().batch();
+
+    const schedulesByUserData = (await schedulesByUserRef.get()).data()
+    const schedulesByUser = schedulesByUserData.schedules || [];
+
+    // remove the schedule that user want
     const newSchedules = schedulesByUser.filter(
       itemFilter => itemFilter.scheduleUid !== item.scheduleUid,
     );
 
-    batch.update(userDocRef, {schedules: newSchedules});
+    // get all schedules in the month and delete the schedule selected
+    const schedulesMonthData = (await schedulesMonthRef.get()).data()
+    delete schedulesMonthData[scheduleDay]?.[professional]?.[item.shedule];
 
-    const monthDocRef = firestore()
-      .collection('schedules_month')
-      .doc(`${scheduleMonth}_2023`);
-    const monthDoc = await monthDocRef.get();
-    const monthData = monthDoc.data() || {};
+    // get all unavailable days
+    const unavailableTimesData = (await unavailableTimesRef.get()).data()
+    const unavailableData = unavailableTimesData;
 
-    delete monthData[scheduleDay]?.[professional]?.[item.shedule];
-
-    batch.update(monthDocRef, monthData);
-
-    const unavailableDocRef = firestore()
-      .collection('unavailable_times')
-      .doc(`${scheduleMonth}_2023`);
-    const unavailableDoc = await unavailableDocRef.get();
-    const unavailableData = unavailableDoc.data() || {};
-
+    // filtering unavailable days to remove that that select by client, and make it free (makes possible other client get this schedule)
     const newData =
       unavailableData[scheduleDay]?.[professional]?.filter(
         schedule => schedule !== item.shedule,
       ) || [];
+
     unavailableData[scheduleDay][professional] = newData;
 
-    batch.update(unavailableDocRef, unavailableData);
+
+    batch.update(schedulesByUserRef, { schedules: newSchedules });
+    batch.update(schedulesMonthRef, schedulesMonthData);
+    batch.update(unavailableTimesRef, unavailableData);
 
     await batch.commit();
+
     await verifySchedules(item, 'removeSchedule');
     navigation.navigate('InitialScreen');
+
   } catch (error) {
     console.log('Error cancelling schedule: ', error);
   }

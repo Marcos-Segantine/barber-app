@@ -19,30 +19,27 @@ export const handleComfirmNewSchedule = async (
 
     const dateForDoc = `${scheduleMouth}_${scheduleYear}`
 
-    firestore()
-        .collection('schedules_month')
-        .doc(dateForDoc)
-        .get()
-        .then(({ _data }) => {
-            if (_data === undefined) {
-                addScheduleWhenMonthIsNotUse(
-                    userData,
-                    navigation,
-                    schedulesUser,
-                    setSchedulesUser,
-                );
-                return;
-            }
+    const schedulesMonthRef = firestore().collection('schedules_month').doc(dateForDoc)
+    const schedulesMonthData = (await schedulesMonthRef.get()).data()
 
-            const dayIsAlredyUse = _data[scheduleDay];
+    if (schedulesMonthData === undefined) {
+        addScheduleWhenMonthIsNotUse(
+            userData,
+            navigation,
+            schedulesUser,
+            setSchedulesUser,
+        );
+        return;
+    }
 
-            dayIsAlredyUse
-                ? addScheduleWhenDayAlredyUse(navigation, userData, schedulesUser)
-                : addScheduleWhenDayNotUse(
-                    userData,
-                    navigation,
-                    schedulesUser,
-                    setSchedulesUser,
-                );
-        });
+    const dayIsAlredyUse = schedulesMonthData[scheduleDay]
+
+    dayIsAlredyUse
+        ? addScheduleWhenDayAlredyUse(navigation, userData, schedulesUser)
+        : addScheduleWhenDayNotUse(
+            userData,
+            navigation,
+            schedulesUser,
+            setSchedulesUser,
+        );
 };

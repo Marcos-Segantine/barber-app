@@ -73,6 +73,7 @@ export const Calandar = ({navigation}) => {
     getDeniedDays(shedulesUser, setDeniedDays, month, year);
   }, [month]);
 
+  // configs and data to calandar
   const markedDatesCalendar = {
     ...deniedDays,
     [shedulesUser.day]: {
@@ -101,6 +102,7 @@ export const Calandar = ({navigation}) => {
     borderRadius: 20,
   };
 
+  // some calandar's controllers
   const onPressArrowLeftCalendar = subtractMonth => {
     handleLeftArrow(month, setMonth, setYear);
     subtractMonth();

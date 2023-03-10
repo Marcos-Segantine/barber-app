@@ -1,4 +1,4 @@
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,22 +9,26 @@ export const createUserByGoogle = async (
   setUserData,
 ) => {
   try {
-    // Configura o Google Signin e verifica se o Play Services estão disponíveis
-    await GoogleSignin.configure({
+    GoogleSignin.configure({
       webClientId:
         '10724457964-o7b9idafundq6uhu1ls8upa5c53013gs.apps.googleusercontent.com',
     });
 
-    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-    // Faz o login com o Google
-    const {idToken} = await GoogleSignin.signIn();
+    // login with Google
+    const { idToken } = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-    // Cria o usuário no Firebase Auth
-    const {user} = await auth().signInWithCredential(googleCredential);
+    // create firebase's user
+    const { user } = await auth().signInWithCredential(googleCredential);
 
-    // Cria o usuário no Firestore
+    const usersRef = firestore().collection('users').doc(user.uid)
+    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(user.uid)
+
+    const batch = firestore().batch();
+
+    // data to create a user in firestore
     const userData = {
       email: user.email,
       name: user.displayName,
@@ -33,11 +37,11 @@ export const createUserByGoogle = async (
       uid: user.uid,
     };
 
-    const batch = firestore().batch();
-    batch.set(firestore().collection('users').doc(user.uid), userData);
-    batch.set(firestore().collection('schedules_by_user').doc(user.uid), {
+    batch.set(usersRef, userData);
+    batch.set(schedulesByUserRef, {
       schedules: [],
     });
+
     await batch.commit();
 
     await Promise.all([

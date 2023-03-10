@@ -14,35 +14,29 @@ export const getAvailableTimes = async (shedulesUser, setAvailableTimes) => {
     const professional = getProfessional(shedulesUser);
 
     try {
-        const workingHoursSnapshot = await firestore()
-            .collection('working_hours')
-            .get();
-        const workingHours = workingHoursSnapshot.docs.map(
+
+        // collections reference
+        const workingHoursRef = await firestore().collection('working_hours').get();
+        const unavailableTimesRef = firestore().collection('unavailable_times').doc(`${month}_${year}`)
+        
+        // getting data to compare and see avaible times
+        const workingHours = workingHoursRef.docs.map(
             doc => doc.data().times,
         );
+        const unavailableTimesData = (unavailableTimesRef.get()).data() || {};
 
-        const unavailableTimesSnapshot = await firestore()
-            .collection('unavailable_times')
-            .doc(`${month}_${year}`)
-            .get();
-
-        const unavailableTimes = unavailableTimesSnapshot.data() || {};
-
+        // get the day that client want to mark
         const dayOfWeek = new Date(shedulesUser.day).getDay() + 1;
-
         let availableTimes = [];
 
-        if (dayOfWeek > 0 && dayOfWeek <= 5) {
-            availableTimes = workingHours[2];
-        } else if (dayOfWeek === 6) {
-            availableTimes = workingHours[0];
-        } else {
-            availableTimes = workingHours[1];
-        }
+        if (dayOfWeek > 0 && dayOfWeek <= 5) availableTimes = workingHours[2];
+        else if (dayOfWeek === 6) availableTimes = workingHours[0];
+        else availableTimes = workingHours[1];
 
-        const unavailableTimesForDayAndProfessional =
-            unavailableTimes[day]?.[professional] || [];
+        // get days unavailable times (days that alredy have a schedule)
+        const unavailableTimesForDayAndProfessional = unavailableTimesData[day]?.[professional] || [];
 
+        // compare both (all times that professional works and schedules marked)
         availableTimes = availableTimes.filter(
             time => !unavailableTimesForDayAndProfessional.includes(time),
         );

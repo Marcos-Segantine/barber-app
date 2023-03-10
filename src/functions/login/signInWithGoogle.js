@@ -19,12 +19,8 @@ export const signInWithGoogle = async (
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
 
     const {idToken} = await GoogleSignin.signIn();
-
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
     const res = await auth().signInWithCredential(googleCredential);
-
-    console.log('Login by google');
 
     await firestore().runTransaction(async transaction => {
       await transaction.set(firestore().collection('users').doc(res.user.uid), {
@@ -56,8 +52,6 @@ export const signInWithGoogle = async (
     if (res.additionalUserInfo.isNewUser) {
       await firebase.auth().sendPasswordResetEmail(res.user.email);
 
-      console.log('EMAIL TO REDEFINITION OF PASSWORD SEND SUCESSFULLY');
-
       setModalVisible(true);
       setUserVerified(true);
     } else {
@@ -65,6 +59,5 @@ export const signInWithGoogle = async (
     }
   } catch (error) {
     console.log(error);
-    console.log('ERROR RO SEND A EMAIL TO CHANGE PASSWORD');
   }
 };
