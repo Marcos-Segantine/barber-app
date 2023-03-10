@@ -8,9 +8,9 @@ import {
   getYear,
 } from '../helpers/dateHelper';
 
-import {clearSchedule} from './clearSchedule';
+import { clearSchedule } from './clearSchedule';
 
-export const addScheduleWhenMonthIsNotUse = (
+export const addScheduleWhenMonthIsNotUse = async (
   userData,
   navigation,
   schedulesUser,
@@ -24,57 +24,58 @@ export const addScheduleWhenMonthIsNotUse = (
   const scheduleYear = getYear(schedulesUser);
   const scheduleProfessional = getProfessional(schedulesUser);
 
+  const nameDocMonth_Year = `${scheduleMonth}_${scheduleYear}`
+  
   const batch = firestore().batch();
 
-  const deniedDaysRef = firestore().collection('denied_days');
-  deniedDaysRef.doc(`${scheduleMonth}_${scheduleYear}`).set({
-    [scheduleDay]: {
-      ['Barbeiro 1']: [],
-      ['Barbeiro 2']: [],
-      ['Barbeiro 3']: [],
-    },
-  });
+  try {
 
-  // Add schedule to schedules_month collection
-  const schedulesMonthRef = firestore()
-    .collection('schedules_month')
-    .doc(`${scheduleMonth}_2023`);
-  const scheduleMonthData = {
-    [scheduleDay]: {
-      [scheduleProfessional]: {
-        [scheduleHour]: {...schedulesUser},
+    // collections reference
+    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(userData.uid);
+    const schedulesMonthRef = firestore().collection('schedules_month').doc(nameDocMonth_Year);
+    const unavailableTimesRef = firestore().collection('unavailable_times').doc(nameDocMonth_Year);
+    const deniedDaysRef = firestore().collection('denied_days').doc(nameDocMonth_Year)
+
+    // defining a new doc on `schedules_by_user` collection
+    const scheduleMonthData = {
+      [scheduleDay]: {
+        [scheduleProfessional]: {
+          [scheduleHour]: { ...schedulesUser },
+        },
       },
-    },
-  };
-  batch.set(schedulesMonthRef, scheduleMonthData);
+    };
 
-  // Add schedule to unavailable_times collection
-  const unavailableTimesRef = firestore()
-    .collection('unavailable_times')
-    .doc(`${scheduleMonth}_2023`);
-  const unavailableTimesData = {
-    [scheduleDay]: {
-      [scheduleProfessional]: [schedulesUser.shedule],
-    },
-  };
-  batch.set(unavailableTimesRef, unavailableTimesData);
+    // defining a new doc on `unavailable_times` collection
+    const unavailableTimesData = {
+      [scheduleDay]: {
+        [scheduleProfessional]: [schedulesUser.shedule],
+      },
+    };
 
-  // Add schedule to schedules_by_user collection
-  const schedulesByUserRef = firestore()
-    .collection('schedules_by_user')
-    .doc(userData.uid);
-  batch.update(schedulesByUserRef, {
-    schedules: firestore.FieldValue.arrayUnion({...schedulesUser}),
-  });
+    // defining a new field' doc in `denied_days` collection
+    const deniedDaysData = {
+      [scheduleDay]: {
+        ['Barbeiro 1']: [],
+        ['Barbeiro 2']: [],
+        ['Barbeiro 3']: [],
+      },
+    }
 
-  batch
-    .commit()
-    .then(() => {
-      console.log('SCHEDULES UPDATED!!');
-      clearSchedule(schedulesUser, setSchedulesUser);
-      navigation.navigate('FinalScreen');
-    })
-    .catch(error => {
-      console.error('Error updating schedules:', error);
+    batch.set(schedulesMonthRef, scheduleMonthData);
+    batch.set(unavailableTimesRef, unavailableTimesData);
+    batch.update(schedulesByUserRef, {
+      schedules: firestore.FieldValue.arrayUnion({ ...schedulesUser }),
     });
+    batch.set(deniedDaysRef, deniedDaysData);
+
+    await batch.commit()
+
+    clearSchedule(schedulesUser, setSchedulesUser);
+
+    navigation.navige("InitialScreen")
+
+  } catch (error) {
+    console.log(error);
+  }
+
 };

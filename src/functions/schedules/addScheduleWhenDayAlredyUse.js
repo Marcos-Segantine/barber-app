@@ -5,88 +5,96 @@ import {
   getDay,
   getProfessional,
   getHour,
+  getYear,
 } from '../helpers/dateHelper';
 
-import {verifySchedules} from './verifySchedules';
+import { verifySchedules } from './verifySchedules';
 
 export const addScheduleWhenDayAlredyUse = async (
   navigation,
   userData,
   schedule,
 ) => {
+  console.log('addScheduleWhenDayAlredyUse CALLED');
+
   const scheduleMonth = getMonth(schedule);
   const scheduleDay = getDay(schedule);
   const scheduleHour = getHour(schedule);
+  const scheduleYear = getYear(schedule)
   const scheduleProfessional = getProfessional(schedule);
 
-  console.log('addScheduleWhenDayAlredyUse CALLED');
+  const nameDocMonth_Year = `${scheduleMonth}_${scheduleYear}`
 
-  const schedulesMonthRef = firestore()
-    .collection('schedules_month')
-    .doc(`${scheduleMonth}_2023`);
-  const unavailableTimesRef = firestore()
-    .collection('unavailable_times')
-    .doc(`${scheduleMonth}_2023`);
-  const schedulesByUserRef = firestore()
-    .collection('schedules_by_user')
-    .doc(userData.uid);
+  try {
 
-  const batch = firestore().batch();
+    // collections reference
+    const schedulesMonthRef = firestore().collection('schedules_month').doc(nameDocMonth_Year);
+    const unavailableTimesRef = firestore().collection('unavailable_times').doc(nameDocMonth_Year);
+    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(userData.uid);
 
-  const schedulesMonthSnapshot = await schedulesMonthRef.get();
-  const schedulesMonthData = schedulesMonthSnapshot.data();
+    const batch = firestore().batch();
 
-  if (schedulesMonthData[scheduleDay]?.[scheduleProfessional]) {
-    const existingSchedule =
-      schedulesMonthData[scheduleDay][scheduleProfessional][scheduleHour];
-    if (existingSchedule) {
-      throw new Error(
-        'There is already a schedule at the same time for this professional.',
-      );
+    // getting data from collections
+    const schedulesMonthData = (await schedulesMonthRef.get()).data();
+    const unavailableTimesData = (await unavailableTimesRef.get()).data();
+    const schedulesByUserData = (await schedulesByUserRef.get()).data();
+
+    // if alredy have a field for the professional selected, just add the `schedule` data
+    if (schedulesMonthData[scheduleDay]?.[scheduleProfessional]) {
+
+      // creating const to store data that will be used to update the collections
+      const dataToUpdateSchedulesMonth = {
+        [`${scheduleDay}.${scheduleProfessional}.${scheduleHour}`]: schedule,
+      }
+
+      const dataToUpdateUnavailableTimes = {
+        [`${scheduleDay}.${scheduleProfessional}`]:
+          firestore.FieldValue.arrayUnion(schedule.shedule),
+      }
+
+      batch.update(schedulesMonthRef, dataToUpdateSchedulesMonth);
+      batch.update(unavailableTimesRef, dataToUpdateUnavailableTimes);
     }
-    batch.update(schedulesMonthRef, {
-      [`${scheduleDay}.${scheduleProfessional}.${scheduleHour}`]: schedule,
-    });
-  } else {
-    batch.set(
-      schedulesMonthRef,
-      {
+    // else create a new doc with the field
+    else {
+
+      // creating const to store data that will be used to update the collections
+      const dataToUpdateSchedulesMonth = {
         [`${scheduleDay}.${scheduleProfessional}`]: {
           [scheduleHour]: schedule,
         },
-      },
-      {merge: true},
-    );
-  }
+      }
 
-  const unavailableTimesSnapshot = await unavailableTimesRef.get();
-  const unavailableTimesData = unavailableTimesSnapshot.data();
-
-  if (unavailableTimesData[scheduleDay]?.[scheduleProfessional]) {
-    batch.update(unavailableTimesRef, {
-      [`${scheduleDay}.${scheduleProfessional}`]:
-        firestore.FieldValue.arrayUnion(schedule.shedule),
-    });
-  } else {
-    batch.set(
-      unavailableTimesRef,
-      {
+      const dataToUpdateUnavailableTimes = {
         [`${scheduleDay}.${scheduleProfessional}`]: [schedule.shedule],
-      },
-      {merge: true},
-    );
+      }
+
+      batch.set(
+        schedulesMonthRef,
+        dataToUpdateSchedulesMonth,
+        { merge: true },
+      );
+
+      batch.set(
+        unavailableTimesRef,
+        dataToUpdateUnavailableTimes,
+        { merge: true },
+      );
+    }
+
+    const updatedSchedulesByUser = {
+      schedules: [...schedulesByUserData.schedules, schedule],
+    };
+
+    batch.update(schedulesByUserRef, updatedSchedulesByUser);
+
+
+    await verifySchedules(schedule, 'addSchedule');
+    await batch.commit();
+
+    navigation.navigate('FinalScreen');
+
+  } catch (error) {
+    console.log(error);
   }
-
-  await verifySchedules(schedule, 'addSchedule');
-
-  const schedulesByUserSnapshot = await schedulesByUserRef.get();
-  const schedulesByUserData = schedulesByUserSnapshot.data();
-  const updatedSchedulesByUser = {
-    schedules: [...schedulesByUserData.schedules, schedule],
-  };
-  batch.update(schedulesByUserRef, updatedSchedulesByUser);
-
-  await batch.commit();
-
-  navigation.navigate('FinalScreen');
 };

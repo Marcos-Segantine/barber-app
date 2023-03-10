@@ -4,6 +4,7 @@ import {
   getDay,
   getProfessional,
   getHour,
+  getYear,
 } from '../helpers/dateHelper';
 
 export const addScheduleWhenDayNotUse = async (
@@ -16,44 +17,24 @@ export const addScheduleWhenDayNotUse = async (
   const scheduleMonth = getMonth(shedulesUser);
   const scheduleDay = getDay(shedulesUser);
   const scheduleHour = getHour(shedulesUser);
+  const scheduleYear = getYear(shedulesUser)
   const scheduleProfessional = getProfessional(shedulesUser);
 
+  const nameDocMonth_Year = `${scheduleMonth}_${scheduleYear}`
+
+  const batch = firestore().batch()
+
   try {
-    const deniedDaysRef = firestore()
-      .collection('denied_days')
-      .doc(`${scheduleMonth}_2023`);
-    const deniedDaysData = (await deniedDaysRef.get()).data();
 
-    deniedDaysRef.update({
-      ...deniedDaysData,
-      [scheduleDay]: {
-        ['Barbeiro 1']: [],
-        ['Barbeiro 2']: [],
-        ['Barbeiro 3']: [],
-      },
-    });
+    // collections reference
+    const deniedDaysRef = firestore().collection('denied_days').doc(nameDocMonth_Year);
+    const schedulesMonthRef = firestore().collection('schedules_month').doc(nameDocMonth_Year);
+    const unavailableTimesRef = firestore().collection('unavailable_times').doc(nameDocMonth_Year);
+    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(userData.uid);
 
-    const schedulesMonthRef = firestore()
-      .collection('schedules_month')
-      .doc(`${scheduleMonth}_2023`);
-    const schedulesMonthDoc = await schedulesMonthRef.get();
-    const schedulesMonthData = schedulesMonthDoc.data();
+    let unavailableTimesData = (await unavailableTimesRef.get()).data() || {}
 
-    await schedulesMonthRef.update({
-      ...schedulesMonthData,
-      [scheduleDay]: {
-        [scheduleProfessional]: {
-          [scheduleHour]: {...shedulesUser},
-        },
-      },
-    });
-
-    const unavailableTimesRef = firestore()
-      .collection('unavailable_times')
-      .doc(`${scheduleMonth}_2023`);
-    const unavailableTimesDoc = await unavailableTimesRef.get();
-    let unavailableTimesData = unavailableTimesDoc.data() || {};
-
+    // if day selected have a field on doc
     if (!unavailableTimesData[scheduleDay]) {
       unavailableTimesData = {
         ...unavailableTimesData,
@@ -61,34 +42,46 @@ export const addScheduleWhenDayNotUse = async (
           [scheduleProfessional]: [`${shedulesUser.shedule}`],
         },
       };
-    } else {
-      unavailableTimesData[scheduleDay][scheduleProfessional]
-        ? unavailableTimesData[scheduleDay][scheduleProfessional].push(
-            `${shedulesUser.shedule}`,
-          )
-        : (unavailableTimesData[scheduleDay] = {
-            ...unavailableTimesData[scheduleDay],
-            [scheduleProfessional]: [`${shedulesUser.shedule}`],
-          });
     }
 
-    await unavailableTimesRef.set(unavailableTimesData);
-
-    console.log('unavailable_times updated!!');
-
-    const schedulesByUserRef = firestore()
-      .collection('schedules_by_user')
-      .doc(userData.uid);
     const schedulesByUserDoc = await schedulesByUserRef.get();
     const schedulesByUserData = schedulesByUserDoc.data();
 
-    await schedulesByUserRef.update({
-      schedules: [...schedulesByUserData.schedules, {...shedulesUser}],
-    });
+    // creating consts to update collections
+    const dataToUpdateSchedulesByUser = {
+      schedules: [...schedulesByUserData.schedules, { ...shedulesUser }],
+    }
 
-    console.log('schedules_by_user UPDATED!!');
+    const deniedDaysData = (await deniedDaysRef.get()).data();
+    const schedulesMonthData = (await schedulesMonthRef.get()).data();
+
+    const dataToUpdateDeniedDays = {
+      ...deniedDaysData,
+      [scheduleDay]: {
+        ['Barbeiro 1']: [],
+        ['Barbeiro 2']: [],
+        ['Barbeiro 3']: [],
+      },
+    }
+
+    const dataToUpdateSchedulesMonth = {
+      ...schedulesMonthData,
+      [scheduleDay]: {
+        [scheduleProfessional]: {
+          [scheduleHour]: { ...shedulesUser },
+        },
+      },
+    }
+
+    batch.set(unavailableTimesRef, unavailableTimesData);
+    batch.update(deniedDaysRef, dataToUpdateDeniedDays);
+    batch.update(schedulesMonthRef, dataToUpdateSchedulesMonth);
+    batch.update(schedulesByUserRef, dataToUpdateSchedulesByUser);
+
+    await batch.commit()
 
     navigation.navigate('FinalScreen');
+
   } catch (error) {
     console.error('Error adding schedule:', error);
   }
