@@ -1,27 +1,27 @@
-import {Text, View, StyleSheet, Pressable} from 'react-native';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
 
-import {Title} from '../../components/Title';
-import {Button} from '../../components/Button';
-import {LoadingAnimation} from '../../components/LoadingAnimation';
+import { Title } from '../../components/Title';
+import { Button } from '../../components/Button';
+import { LoadingAnimation } from '../../components/LoadingAnimation';
 
-import {useContext, useEffect, useState} from 'react';
-import {ShedulesUserContext} from '../../context/ShedulesUser';
+import { useContext, useEffect, useState } from 'react';
+import { ShedulesUserContext } from '../../context/ShedulesUser';
 
-import {globalStyles} from '../globalStyles';
+import { globalStyles } from '../globalStyles';
 
 import { getAvailableTimes } from '../../functions/schedules/getAvailableTimes';
 
-export const Schedules = ({navigation}) => {
+export const Schedules = ({ navigation }) => {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState('');
-  const {shedulesUser, setShedulesUser} = useContext(ShedulesUserContext);
+  const { shedulesUser, setShedulesUser } = useContext(ShedulesUserContext);
 
   useEffect(() => {
     getAvailableTimes(shedulesUser, setAvailableTimes);
   }, []);
 
   const handleSelectTime = time => {
-    setShedulesUser({...shedulesUser, shedule: time});
+    setShedulesUser({ ...shedulesUser, shedule: time });
     setSelectedTime(time);
   };
 
@@ -43,7 +43,7 @@ export const Schedules = ({navigation}) => {
 
   else if (availableTimes.length === 0) {
     return (
-      <View style={[globalStyles.container, {justifyContent: 'space-around'}]}>
+      <View style={[globalStyles.container, { justifyContent: 'space-around' }]}>
         <Title title={'Não há horarios disponiveis'} />
 
         <Button text={'Voltar'} />

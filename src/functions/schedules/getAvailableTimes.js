@@ -18,12 +18,12 @@ export const getAvailableTimes = async (shedulesUser, setAvailableTimes) => {
         // collections reference
         const workingHoursRef = await firestore().collection('working_hours').get();
         const unavailableTimesRef = firestore().collection('unavailable_times').doc(`${month}_${year}`)
-        
+
         // getting data to compare and see avaible times
         const workingHours = workingHoursRef.docs.map(
             doc => doc.data().times,
         );
-        const unavailableTimesData = (unavailableTimesRef.get()).data() || {};
+        const unavailableTimesData = (await unavailableTimesRef.get()).data() || {};
 
         // get the day that client want to mark
         const dayOfWeek = new Date(shedulesUser.day).getDay() + 1;
