@@ -6,8 +6,8 @@ export const Title = ({title}) => {
 
 const style = StyleSheet.create({
   title: {
-    fontSize: 34,
-    fontWeight: '900',
+    fontSize: 32,
+    fontFamily: 'Satoshi-Bold',
     color: '#FFFFFF',
     paddingHorizontal: 10,
     width: '100%',

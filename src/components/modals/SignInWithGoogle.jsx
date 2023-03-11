@@ -61,21 +61,6 @@ const SignInWithGoogle = React.memo(() => {
   );
 });
 
-const style = StyleSheet.create({
-  button: {
-    paddingVertical: 5,
-    alignItems: 'center',
-    borderRadius: 15,
-    marginVertical: 5,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-
-  svg: {
-    backgroundColor: '#FFFFFF',
-    padding: 5,
-    borderRadius: 20,
-  },
-});
+const style = StyleSheet.create({});
 
 export {SignInWithGoogle};

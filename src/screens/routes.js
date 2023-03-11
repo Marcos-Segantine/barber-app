@@ -26,43 +26,32 @@ const {Screen, Navigator} = createNativeStackNavigator();
 export const UserScreens = () => {
   return (
     <Navigator
-      screenOptions={{headerShown: false}}>
+      screenOptions={{
+        gestureEnabled: false,
+        headerShown: false,
+        gestureDirection: 'horizontal',
+        animation: 'slide_from_right',
+        navigationBarColor: 'rgba(0,0,0,0.002))',
+        statusBarColor: 'transparent',
+      }}>
       <Screen name="InitialScreen" component={InitialScreen} />
-
       <Screen name="Login" component={Login} />
-
       <Screen name="Register" component={Register} />
-
       <Screen name="Services" component={Services} />
-
       <Screen name="Professionals" component={Professionals} />
-
       <Screen name="Calandar" component={Calandar} />
-
       <Screen name="ConfirmSchedule" component={ConfirmSchedule} />
-
       <Screen name="FinalScreen" component={FinalScreen} />
-
       <Screen name="Schedules" component={Schedules} />
-
       <Screen name="Main" component={Main} />
-
       <Screen name="YourSchedules" component={YourSchedules} />
-
       <Screen name="InfoSchedule" component={InfoSchedule} />
-
       <Screen name="CancelScreen" component={CancelScreen} />
-
       <Screen name="YourInformation" component={YourInformation} />
-
       <Screen name="ScheduleDetail" component={ScheduleDetail} />
-
       <Screen name="ForgotPassword" component={ForgotPassword} />
-
       <Screen name="ChangePassword" component={ChangePassword} />
-
       <Screen name="FeedBack" component={FeedBack} />
-
       <Screen name="ChangeInformation" component={ChangeInformation} />
     </Navigator>
   );

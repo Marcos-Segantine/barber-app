@@ -8,24 +8,15 @@ import {UserVerifiedProvider} from './src/context/UserVerified';
 
 import {UserScreens} from './src/screens/routes';
 
-import {Header} from './src/shared/Header';
-import {Footer} from './src/shared/Footer';
-
 const App = () => {
   return (
     <NavigationContainer>
       <UserVerifiedProvider>
-        
         <UserProvider>
-          <Header />
-
           <ShedulesUserProvider>
             <UserScreens />
           </ShedulesUserProvider>
-
-          <Footer />
         </UserProvider>
-
       </UserVerifiedProvider>
     </NavigationContainer>
   );
