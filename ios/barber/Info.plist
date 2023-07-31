@@ -23,6 +23,12 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
+	
+	<key>NSCameraUsageDescription</key>
+	<string>Allow access to the camera to take photos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow access to the photo library to select photos</string>
+
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
