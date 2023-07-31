@@ -8,7 +8,6 @@ import { WarningChangeInformation } from "../components/modals/WarningChangeInfo
 import { DefaultModal } from "../components/modals/DefaultModal"
 
 import { handleNewPicture } from "../handlers/handleNewPicture"
-
 import { handleConfirmNewInformationFillProfile } from "../handlers/handleConfirmNewInformationFillProfile"
 import { handleConfirmEmailPhoneChangeFillProfile } from "../handlers/handleConfirmEmailPhoneChangeFillProfile"
 
