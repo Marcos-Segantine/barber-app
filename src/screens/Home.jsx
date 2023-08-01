@@ -81,6 +81,8 @@ export const Home = ({ navigation }) => {
 
   const screenWidth = Dimensions.get('window').width;
 
+  if(scheduleClientInfo === undefined) return <Loading flexSize={1} />
+
   return (
     <>
       <ScrollView
@@ -89,8 +91,6 @@ export const Home = ({ navigation }) => {
         onContentSizeChange={() => canScrollToEnd && scrollViewRef.current.scrollToEnd({ animated: true })}
       >
         <HeaderScreensMenu screenName={"WD3 Barbearia"} />
-
-        {scheduleClientInfo === undefined && <Loading />}
 
         {scheduleClientInfo ? (
           <>
@@ -178,7 +178,7 @@ export const Home = ({ navigation }) => {
               preferProfessional={preferProfessional}
               setCanScrollToEnd={setCanScrollToEnd}
             /> :
-            <SchedulesLimitAnimation width={"100%"} height={400} />
+            <SchedulesLimitAnimation width={screenWidth} height={400} />
         }
 
         {
