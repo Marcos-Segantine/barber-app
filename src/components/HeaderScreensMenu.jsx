@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { getPreviousScreensName } from "../utils/getPreviousScreensName";
 
 import { handleNavigation } from "../handlers/handleNavigation";
+import { Positions } from "react-native-calendars/src/expandableCalendar";
 
 export const HeaderScreensMenu = ({ screenName }) => {
   const { somethingWrong } = useContext(SomethingWrongContext)
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     signItems: "center",
     width: "90%",
     marginBottom: 50,
-    alignItems: "center"
+    alignItems: "center",
   },
 
   text: {

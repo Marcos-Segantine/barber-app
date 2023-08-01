@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native"
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native"
 import { useContext, useEffect, useState } from "react"
 
 import { UserContext } from "../context/UserContext"
@@ -26,15 +26,18 @@ export const MySchedules = ({ navigation }) => {
 
     }, []);
 
+    const screenWidth = Dimensions.get('window').width;
+    const screenHeight = Dimensions.get('window').height / 2;
+
     if (schedulesUser == null) return <Loading flexSize={1} />
 
     return (
         <>
-            <ScrollView contentContainerStyle={globalStyles.container}>
+            <ScrollView contentContainerStyle={[globalStyles.container, { minHeight: "90%", justifyContent: "space-between" }]}>
                 <HeaderScreensMenu screenName={"Meus Horários"} />
 
                 {
-                    !schedulesUser.length && <NoSchedule width={300} height={300} />
+                    !schedulesUser.length && <NoSchedule width={screenWidth} height={screenHeight} />
                 }
 
                 <View style={{ marginBottom: 50, width: "100%" }}>

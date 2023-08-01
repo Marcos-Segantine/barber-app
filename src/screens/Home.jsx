@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
+  Dimensions
 } from "react-native";
 import { useContext, useEffect, useRef, useState } from "react";
 
@@ -78,6 +79,8 @@ export const Home = ({ navigation }) => {
     ]
     : styles.btn;
 
+  const screenWidth = Dimensions.get('window').width;
+
   return (
     <>
       <ScrollView
@@ -93,16 +96,16 @@ export const Home = ({ navigation }) => {
           <>
             <Text style={styles.title}>Seu agendamento mais próximo</Text>
             <Schedule schedule={scheduleClientInfo} />
-            <View style={styles.line}></View>
           </>
         ) :
           (
             <>
-              <NoSchedule />
-              <View style={styles.line}></View>
+              <NoSchedule width={screenWidth} />
             </>
           )
         }
+
+        <View style={styles.line}></View>
 
         {
           (schedulesUserCount < 2) &&
