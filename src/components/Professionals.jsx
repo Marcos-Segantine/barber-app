@@ -37,12 +37,12 @@ export const Professionals = ({ preferProfessional }) => {
     const fetchAvailableProfessionals = async () => {
       if (schedule.day && schedule.schedule && preferProfessional === false) {
         setAvailableProfessional(null)
-
+        
         getAvailableProfessional(
           schedule,
           setAvailableProfessional,
           setSomethingWrong
-        );
+          );
 
         return
       }
@@ -52,6 +52,8 @@ export const Professionals = ({ preferProfessional }) => {
 
     fetchAvailableProfessionals();
   }, [schedule.day, schedule.schedule]);
+
+  // console.log(availableProfessional, "PROFESSIONAL COMPONENT", preferProfessional);
 
   if (availableProfessional === null) return <Loading />;
 

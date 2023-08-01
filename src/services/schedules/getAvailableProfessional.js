@@ -24,7 +24,6 @@ export const getAvailableProfessional = async (schedule, setAvailableProfessiona
         }))
 
         const dayWeek = getWeekDay(schedule.day)
-
         const dataTemp = []
 
         for (const professional of barbersData) {
