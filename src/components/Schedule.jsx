@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
         width: 120,
         height: 120,
         marginRight: 15,
+        borderRadius: 150
     },
 
     barbershopName: {
