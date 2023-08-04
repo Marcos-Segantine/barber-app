@@ -59,7 +59,6 @@ export const Home = ({ navigation }) => {
 
   }, [userData]);
 
-
   const preferProfessionalStyle__Yes = preferProfessional
     ? [
       styles.btn,
@@ -81,7 +80,7 @@ export const Home = ({ navigation }) => {
 
   const screenWidth = Dimensions.get('window').width;
 
-  if(scheduleClientInfo === undefined) return <Loading flexSize={1} />
+  if (scheduleClientInfo === undefined) return <Loading flexSize={1} />
 
   return (
     <>
@@ -99,9 +98,7 @@ export const Home = ({ navigation }) => {
           </>
         ) :
           (
-            <>
-              <NoSchedule width={screenWidth} />
-            </>
+            <NoSchedule width={screenWidth} />
           )
         }
 

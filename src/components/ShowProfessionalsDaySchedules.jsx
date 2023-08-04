@@ -19,14 +19,14 @@ export const ShowProfessionalsDaySchedules = ({ preferProfessional, setCanScroll
             (
                 <>
                     <Professionals preferProfessional={preferProfessional} />
-                    {schedule.professional && <CalendarComponent />}
+                    {schedule.professional && <CalendarComponent preferProfessional={preferProfessional} />}
                     {schedule.day && schedule.professional && <Schedules preferProfessional={preferProfessional} />}
                 </>
             ) :
             (
                 <>
                     <Schedules preferProfessional={preferProfessional} />
-                    {schedule.schedule && <CalendarComponent />}
+                    {schedule.schedule && <CalendarComponent preferProfessional={preferProfessional} />}
                     {schedule.day && schedule.schedule && <Professionals preferProfessional={preferProfessional} />}
                 </>
             )

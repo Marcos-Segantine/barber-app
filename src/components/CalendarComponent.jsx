@@ -47,12 +47,16 @@ LocaleConfig.locales["pt-br"] = {
   dayNamesShort: ["Dom", "Seg", "Terç", "Qua", "Qui", "Sex", "Sáb"],
 };
 
-export const CalendarComponent = () => {
+export const CalendarComponent = ({ preferProfessional }) => {
   LocaleConfig.defaultLocale = "pt-br";
 
   const { schedule, setSchedule } = useContext(ScheduleContext);
 
-  const deniedDays = {};
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth() + 1}`;
+  const day = new Date().getDate() < 10 ? `0${new Date().getDate()}` : `${new Date().getDate()}`;
+
+  const deniedDays = preferProfessional || { [`${year}-${month}-${day}`]: { disabled: true, disableTouchEvent: true } };
 
   const markedDatesCalendar = {
     ...deniedDays,
