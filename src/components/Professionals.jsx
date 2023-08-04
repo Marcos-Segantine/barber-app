@@ -53,8 +53,6 @@ export const Professionals = ({ preferProfessional }) => {
     fetchAvailableProfessionals();
   }, [schedule.day, schedule.schedule]);
 
-  // console.log(availableProfessional, "PROFESSIONAL COMPONENT", preferProfessional);
-
   if (availableProfessional === null) return <Loading />;
 
   if (availableProfessional === undefined) {
@@ -140,7 +138,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 5,
     borderWidth: 2,
-    borderRadius: 15,
+    borderRadius: 150,
     borderColor: "#00000010",
     paddingHorizontal: 20,
     paddingVertical: 5,
