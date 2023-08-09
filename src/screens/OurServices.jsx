@@ -47,7 +47,7 @@ export const OurServices = ({ navigation, route }) => {
     const scrollServicesHeight = 60 - servicesSelected.length * 5
     const totalPriceServicesSelected = formatServicePrice(servicesSelected.reduce((acc, service) => acc + Number(service.price), 0))
 
-    if(services === null) return <Loading flexSize={1} />
+    if (services === null) return <Loading flexSize={1} />
 
     return (
         <View style={globalStyles.container}>
@@ -82,7 +82,7 @@ export const OurServices = ({ navigation, route }) => {
             </View>
 
             <View style={[styles.contentScroll, { height: `${scrollServicesHeight}%` }]}>
-                <ScrollView >
+                <ScrollView>
                     {
                         services &&
                         (
@@ -112,7 +112,7 @@ export const OurServices = ({ navigation, route }) => {
         </View >
     )
 }
-    
+
 const styles = StyleSheet.create({
     contentServicesSelected: {
         backgroundColor: '#FFFFFF',

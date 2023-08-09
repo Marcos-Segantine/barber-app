@@ -21,11 +21,11 @@ export const Service = ({
     setServicesSelected((prev) => [...prev, service]);
   };
 
-  const style = servicesSelected.includes(service)
+  const style = servicesSelected.map(service => service.name).includes(service.name)
     ? [styles.container, { borderColor: globalStyles.orangeColor }]
     : styles.container;
 
-    const servicePrice = formatServicePrice(service.price)
+  const servicePrice = formatServicePrice(service.price)
 
   return (
     <TouchableOpacity

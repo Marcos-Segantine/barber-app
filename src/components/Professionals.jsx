@@ -111,12 +111,12 @@ export const Professionals = ({ preferProfessional }) => {
             {professional.profilePicture ? (
               <Image
                 source={{ uri: professional.profilePicture }}
-                style={{ width: 130, height: 130, borderRadius: 15 }}
+                style={styles.img}
               />
             ) : (
               <Image
                 source={DefaultPicture}
-                style={{ width: 130, height: 130, borderRadius: 15 }}
+                style={styles.img}
               />
             )}
           </TouchableOpacity>
@@ -138,16 +138,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 5,
     borderWidth: 2,
-    borderRadius: 150,
+    borderRadius: 15,
     borderColor: "#00000010",
     paddingHorizontal: 20,
     paddingVertical: 5,
   },
 
   img: {
-    width: 50,
-    height: 50,
-    borderRadius: 15,
+    width: 125,
+    height: 125,
+    borderRadius: 150,
   },
 
   professionalName: {
