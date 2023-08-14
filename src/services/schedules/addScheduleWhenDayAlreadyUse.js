@@ -3,7 +3,6 @@ import firestore from '@react-native-firebase/firestore';
 import {
   getMonth,
   getDay,
-  getProfessional,
   getHour,
   getYear,
 } from "../../utils/dateHelper"
@@ -29,7 +28,6 @@ export const addScheduleWhenDayAlreadyUse = async (
     const scheduleDay = getDay(scheduleInfo);
     const scheduleHour = getHour(scheduleInfo);
     const scheduleYear = getYear(scheduleInfo)
-    const scheduleProfessional = getProfessional(scheduleInfo);
 
     const nameDocMonth_Year = `${scheduleMonth}_${scheduleYear}`
 
@@ -42,20 +40,20 @@ export const addScheduleWhenDayAlreadyUse = async (
 
     // getting data from collections
     const schedulesMonthData = (await schedulesMonthRef.get({ source: "server" })).data();
-    const unavailableTimesData = (await unavailableTimesRef.get({ source: "server" })).data()[scheduleDay][scheduleProfessional];
+    const unavailableTimesData = (await unavailableTimesRef.get({ source: "server" })).data()[scheduleDay][scheduleInfo.professionalUid];
     const schedulesByUserData = (await schedulesByUserRef.get({ source: "server" })).data()
 
     // if alredy have a field for the professional selected, just add the `schedule` data
-    if (schedulesMonthData[scheduleDay][scheduleProfessional]) {
+    if (schedulesMonthData[scheduleDay][scheduleInfo.professionalUid]) {
 
       // creating const to store data that will be used to update the collections
       const dataToUpdateSchedulesMonth = {
-        [`${scheduleDay}.${scheduleProfessional}.${scheduleHour}`]: scheduleInfo,
+        [`${scheduleDay}.${scheduleInfo.professionalUid}.${scheduleHour}`]: scheduleInfo,
       }
 
       const dataToUpdateUnavailableTimes = {
         [scheduleDay]: {
-          [scheduleProfessional]:
+          [scheduleInfo.professionalUid]:
             [...unavailableTimesData, scheduleHour]
         }
       }
@@ -70,7 +68,7 @@ export const addScheduleWhenDayAlreadyUse = async (
       // creating const to store data that will be used to update the collections
       const dataToUpdateSchedulesMonth = {
         [scheduleDay]: {
-          [scheduleProfessional]: {
+          [scheduleInfo.professionalUid]: {
             [scheduleHour]: scheduleInfo,
           }
         }
@@ -78,7 +76,7 @@ export const addScheduleWhenDayAlreadyUse = async (
 
       const dataToUpdateUnavailableTimes = {
         [scheduleDay]: {
-          [scheduleProfessional]: [scheduleInfo.schedule],
+          [scheduleInfo.professionalUid]: [scheduleInfo.schedule],
         }
       }
 
