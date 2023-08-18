@@ -21,7 +21,6 @@ export const addScheduleWhenDayAlreadyUse = async (
   setIsLoading,
   navigation
 ) => {
-  console.log('addScheduleWhenDayAlredyUse CALLED');
 
   try {
     const scheduleMonth = getMonth(scheduleInfo);

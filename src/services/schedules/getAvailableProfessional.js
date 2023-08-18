@@ -4,7 +4,12 @@ import { getDay, getHour, getMonth, getYear } from '../../utils/dateHelper';
 
 import { getWeekDay } from '../../utils/getWeekDay';
 
-export const getAvailableProfessional = async (schedule, setAvailableProfessional, setSomethingWrong) => {
+export const getAvailableProfessional = async (
+    schedule,
+    setAvailableProfessional,
+    handleProfessionalSelected,
+    setSomethingWrong
+) => {
     try {
 
         const month = getMonth(schedule)
@@ -56,6 +61,10 @@ export const getAvailableProfessional = async (schedule, setAvailableProfessiona
                 dataTemp.push(professional)
                 continue
             }
+        }
+
+        if(dataTemp.length === 1) {
+            await handleProfessionalSelected({ name: dataTemp[0].name, professionalUid:  dataTemp[0].professionalUid })
         }
 
         setAvailableProfessional(dataTemp);

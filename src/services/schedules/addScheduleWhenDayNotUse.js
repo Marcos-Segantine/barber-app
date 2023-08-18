@@ -21,7 +21,6 @@ export const addScheduleWhenDayNotUse = async (
   setIsLoading,
   navigation
 ) => {
-  console.log('addScheduleWhenDayNotUse CALLED');
   try {
 
     const scheduleMonth = getMonth(scheduleInfo);

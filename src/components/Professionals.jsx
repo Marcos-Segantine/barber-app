@@ -34,26 +34,50 @@ export const Professionals = ({ preferProfessional }) => {
   };
 
   useEffect(() => {
-    const fetchAvailableProfessionals = async () => {
+    (async () => {
+
       if (schedule.day && schedule.schedule && preferProfessional === false) {
         setAvailableProfessional(null)
-        
-        getAvailableProfessional(
+
+        await getAvailableProfessional(
           schedule,
           setAvailableProfessional,
+          handleProfessionalSelected,
           setSomethingWrong
-          );
+        );
 
         return
       }
 
-      setAvailableProfessional(await getAllProfessionals(setSomethingWrong));
-    };
+      getAllProfessionals(handleProfessionalSelected, setAvailableProfessional, setSomethingWrong)
+    })();
 
-    fetchAvailableProfessionals();
   }, [schedule.day, schedule.schedule]);
 
   if (availableProfessional === null) return <Loading />;
+
+  if (availableProfessional?.length === 1) {
+    return (
+      <TouchableOpacity
+        style={[professionalSelectedStyle, { marginTop: 50 }]}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.professionalName}>{availableProfessional[0].name}</Text>
+
+        {availableProfessional[0].profilePicture ? (
+          <Image
+            source={{ uri: availableProfessional[0].profilePicture }}
+            style={styles.img}
+          />
+        ) : (
+          <Image
+            source={DefaultPicture}
+            style={styles.img}
+          />
+        )}
+      </TouchableOpacity>
+    )
+  }
 
   if (availableProfessional === undefined) {
     return (
@@ -74,9 +98,9 @@ export const Professionals = ({ preferProfessional }) => {
     );
   }
 
-  if (availableProfessional.length === 0 && preferProfessional === false) {
+  if (availableProfessional?.length === 0 && preferProfessional === false) {
     return (
-      <Text style={styles.text}>Infelizmente não tem nenhum profissional disponível para o dia {getDay(schedule)} de {getMonthName(schedule.day)} às {schedule.schedule}</Text>
+      <Text style={styles.text}>Infelizmente o horario das {schedule.schedule} do dia {getDay(schedule)} de {getMonthName(schedule.day)} não está disponível</Text>
     )
   }
 
@@ -142,6 +166,7 @@ const styles = StyleSheet.create({
     borderColor: "#00000010",
     paddingHorizontal: 20,
     paddingVertical: 5,
+    width: "100%"
   },
 
   img: {
