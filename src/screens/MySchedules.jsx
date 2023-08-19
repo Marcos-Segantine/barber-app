@@ -6,7 +6,7 @@ import { SomethingWrongContext } from "../context/SomethingWrongContext"
 
 import { globalStyles } from "../assets/globalStyles"
 
-import { HeaderScreensMenu } from "../components/HeaderScreensMenu"
+import { HeaderScreens } from "../components/HeaderScreens"
 import { Menu } from "../components/Menu"
 import { Schedule } from "../components/Schedule"
 import { Button } from "../components/Button"
@@ -34,7 +34,7 @@ export const MySchedules = ({ navigation }) => {
     return (
         <>
             <ScrollView contentContainerStyle={[globalStyles.container, { minHeight: "90%", justifyContent: "space-between" }]}>
-                <HeaderScreensMenu screenName={"Meus Horários"} />
+                <HeaderScreens screenName={"Meus Horários"} />
 
                 {
                     !schedulesUser.length && <NoSchedule width={screenWidth} height={screenHeight} />

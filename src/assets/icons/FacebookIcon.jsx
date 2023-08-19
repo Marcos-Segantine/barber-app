@@ -1,6 +1,6 @@
 import { Path, Svg } from "react-native-svg";
 
-export const FabebookIcon = () => {
+export const FacebookIcon = () => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"

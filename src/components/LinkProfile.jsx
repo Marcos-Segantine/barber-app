@@ -1,3 +1,12 @@
+/**
+ * Renders a link profile component.
+ *
+ * @param {string} text - The text to display.
+ * @param {ReactNode} icon - The icon to display.
+ * @param {function} action - The action to perform when pressed.
+ * @returns {ReactNode} The link profile component.
+ */
+
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 
 import { globalStyles } from "../assets/globalStyles";

@@ -1,3 +1,8 @@
+/**
+ * Render a component that allows the user to navigate back to the previous screen.
+ * @param {string} text - The text to display.
+ */
+
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import { useContext } from "react"
 
@@ -21,6 +26,7 @@ export const ComeBack = ({ text }) => {
     const { somethingWrong } = useContext(SomethingWrongContext)
     const { userData } = useContext(UserContext)
 
+    // Handle the navigation when the user presses the back button.
     const handleComeBack = () => {
         const [previousScreen, lastScreen] = getPreviousScreensName(navigation)
 

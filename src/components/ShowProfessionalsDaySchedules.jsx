@@ -1,3 +1,11 @@
+/**
+ * Show the schedules for professionals based on preferences.
+ * 
+ * @param {boolean} preferProfessional - Indicates if user prefer professional or schedules.
+ * @param {function} setCanScrollToEnd - Callback function to set if scrolling to end is possible.
+ * @returns {JSX.Element} - The rendered component.
+ */
+
 import { useContext, useEffect } from "react"
 
 import { Professionals } from "./Professionals"
@@ -15,6 +23,7 @@ export const ShowProfessionalsDaySchedules = ({ preferProfessional, setCanScroll
     }, [schedule.professional, schedule.day, schedule.schedule])
 
     return (
+        // Render components based on preferences
         preferProfessional ?
             (
                 <>

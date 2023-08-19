@@ -1,3 +1,9 @@
+/**
+ * Renders a calendar component.
+ * @param {boolean} preferProfessional - Flag indicating if professional calendar is preferred.
+ * @returns {JSX.Element} - The rendered calendar component.
+ */
+
 import { StyleSheet, Text, View } from "react-native";
 import { useContext } from "react";
 import { ScheduleContext } from "../context/ScheduleContext";
@@ -56,8 +62,10 @@ export const CalendarComponent = ({ preferProfessional }) => {
   const month = new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth() + 1}`;
   const day = new Date().getDate() < 10 ? `0${new Date().getDate()}` : `${new Date().getDate()}`;
 
+  // Determine the denied days for the calendar
   const deniedDays = preferProfessional || { [`${year}-${month}-${day}`]: { disabled: true, disableTouchEvent: true } };
 
+  // Set the marked dates for the calendar
   const markedDatesCalendar = {
     ...deniedDays,
     [schedule.day]: {

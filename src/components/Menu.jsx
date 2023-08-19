@@ -1,11 +1,13 @@
+/**
+ * Renders a menu with selectable items and handles navigation to different screens.
+ * @returns {JSX.Element} The rendered component.
+ */
+
 import { useContext, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 
 import { HomeIcon, HomeIconSelected } from "../assets/icons/HomeIcon";
-import {
-  SchedulesIcon,
-  SchedulesIconSelected,
-} from "../assets/icons/Schedules.Icon";
+import { SchedulesIcon, SchedulesIconSelected } from "../assets/icons/Schedules.Icon";
 import { ProfileIcon, ProfileIconSelected } from "../assets/icons/ProfileIcon";
 import { globalStyles } from "../assets/globalStyles";
 
@@ -27,10 +29,15 @@ export const Menu = () => {
     (stateNavigation) => stateNavigation
   );
 
+  // Set the selected item based on the current screen name
   useEffect(() => {
     setItemSelected(verifyScreenName(stateNavigation, setSomethingWrong));
   }, [stateNavigation]);
 
+  /**
+   * Handles navigation to a specific screen.
+   * @param {string} navigateTo - The name of the screen to navigate to.
+   */
   const handleNavigation = (navigateTo) => {
     navigation.navigate(navigateTo);
   };

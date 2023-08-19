@@ -1,3 +1,12 @@
+/**
+ * Renders a view with a Lottie animation when there are no professionals available.
+ *
+ * @param {number} flexSize - The size of the flex for the view.
+ * @param {number} width - The width of the Lottie animation.
+ * @param {number} height - The height of the Lottie animation.
+ * @returns {JSX.Element} The rendered component.
+ */
+
 import { View } from "react-native";
 
 import LottieView from "lottie-react-native";

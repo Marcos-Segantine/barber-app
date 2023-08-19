@@ -1,3 +1,12 @@
+/**
+ * Renders a component displaying a "No Schedule" animation.
+ * 
+ * @param {number} flexSize - The flex size of the component.
+ * @param {number} width - The width of the animation.
+ * @param {number} height - The height of the animation.
+ * @returns {JSX.Element} - The rendered component.
+ */
+
 import { View } from "react-native";
 
 import LottieView from "lottie-react-native";

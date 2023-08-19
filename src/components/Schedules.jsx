@@ -1,3 +1,10 @@
+/**
+ * Renders the schedules component.
+ * 
+ * @param {boolean} preferProfessional - Indicates if user prefer professionals or schedules.
+ * @returns {JSX.Element} The schedules component.
+ */
+
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 
@@ -20,8 +27,10 @@ export const Schedules = ({ preferProfessional }) => {
   const { schedule, setSchedule } = useContext(ScheduleContext);
   const { setSomethingWrong } = useContext(SomethingWrongContext);
 
+  // Get the day based on the selected schedule
   const day = schedule.day && getDay(schedule);
 
+  // Fetch available times when professional or day changes
   useEffect(() => {
     handleAvailableTimesSchedules(
       schedule,
@@ -33,8 +42,10 @@ export const Schedules = ({ preferProfessional }) => {
 
   }, [schedule.professional, schedule.day]);
 
+  // Render loading screen if times is still being fetched
   if (availableTimes === null && allTimes === null) return <Loading />;
 
+  // Render error message if there's not times registered in the database
   else if (availableTimes === undefined || allTimes === undefined) {
     return (
       <View style={{ width: "100%" }}>
@@ -60,12 +71,14 @@ export const Schedules = ({ preferProfessional }) => {
         (availableTimes || allTimes) && (
           <>
             {
+              // Render the available times in the selected day
               availableTimes?.length || allTimes?.length ?
                 <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
                   <Text style={styles.text}>Escolha um horário</Text>
                   <Text style={[styles.text, { color: globalStyles.orangeColor, fontFamily: globalStyles.fontFamilyBold }]}>{preferProfessional ? "3 / 3" : " 1 / 3"}</Text>
                 </View>
                 :
+                // Render message if there are not available times in the selected day
                 <Text style={styles.text}>
                   Infelizmente o {schedule.professional} não tem nenhum horário vago no dia {day}
                 </Text>
@@ -75,6 +88,7 @@ export const Schedules = ({ preferProfessional }) => {
         )
       }
       {
+        // Render availableTimes or allTimes
         (availableTimes || allTimes).map((time, index) => (
           <TouchableOpacity
             activeOpacity={0.9}

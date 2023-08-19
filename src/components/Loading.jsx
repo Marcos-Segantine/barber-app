@@ -1,3 +1,12 @@
+/**
+ * Component that displays a loading animation.
+ *
+ * @param {number} flexSize - The flex size of the component.
+ * @param {number} width - The width of the loading animation.
+ * @param {number} height - The height of the loading animation.
+ * @returns {JSX.Element} - The loading component.
+ */
+
 import { View } from "react-native";
 
 import LottieView from "lottie-react-native";

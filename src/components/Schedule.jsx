@@ -1,3 +1,19 @@
+/**
+ * Render a schedule component.
+ * 
+ * @param {Object} schedule - The schedule object.
+ * @param {boolean} schedule.confirmCancelScheduleVisible - Flag indicating if the confirm cancel schedule modal is visible.
+ * @param {string} schedule.date - The date of the schedule.
+ * @param {string} schedule.weekDay - The week day of the schedule.
+ * @param {string} schedule.scheduleHour - The hour of the schedule.
+ * @param {Array<Object>} schedule.services - The list of services in the schedule.
+ * @param {string} schedule.professional - The name of the professional in the schedule.
+ * @param {string} schedule.professionalPicture - The picture of the professional in the schedule.
+ * @param {Function} schedule.setConfirmCancelSchedule - Function to set the confirm cancel schedule visibility.
+ * @param {Function} schedule.setProfessionalPicture - Function to set the professional picture.
+ * @returns {JSX.Element} The rendered component.
+ */
+
 import { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native"
 

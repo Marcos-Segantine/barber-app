@@ -1,3 +1,11 @@
+/**
+ * Renders a list of professionals and allows the user to select a professional.
+ * It also handles the logic for retrieving available professionals based on the schedule and preference.
+ * 
+ * @param {boolean} preferProfessional - Indicates if the user has a preferred by professionals or schedules.
+ * @returns {JSX.Element} - The rendered component.
+*/
+
 import { useContext, useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 
@@ -24,6 +32,10 @@ export const Professionals = ({ preferProfessional }) => {
 
   const professionalSelectedStyle = [styles.professional, { borderColor: globalStyles.orangeColor }];
 
+  /**
+  * Handles the selection of a professional.
+  * @param {Object} professionalInfo - The information of the selected professional.
+  */
   const handleProfessionalSelected = async (professionalInfo) => {
     setSchedule({
       ...schedule,
@@ -36,6 +48,7 @@ export const Professionals = ({ preferProfessional }) => {
   useEffect(() => {
     (async () => {
 
+      // If a day, schedule, and no preference for professional are set, fetch available professionals
       if (schedule.day && schedule.schedule && preferProfessional === false) {
         setAvailableProfessional(null)
 
@@ -48,14 +61,17 @@ export const Professionals = ({ preferProfessional }) => {
 
         return
       }
-
+      // Fetch all professionals if no conditions are met
       getAllProfessionals(handleProfessionalSelected, setAvailableProfessional, setSomethingWrong)
+
     })();
 
   }, [schedule.day, schedule.schedule]);
 
+  // Render loading component if professionals are still being fetched
   if (availableProfessional === null) return <Loading />;
 
+  // Render selected professional if only one is available
   if (availableProfessional?.length === 1) {
     return (
       <TouchableOpacity
@@ -79,6 +95,7 @@ export const Professionals = ({ preferProfessional }) => {
     )
   }
 
+  // Render message if there's not professionals in the database
   if (availableProfessional === undefined) {
     return (
       <>
@@ -98,12 +115,14 @@ export const Professionals = ({ preferProfessional }) => {
     );
   }
 
+  // Render message if no professionals are available for the selected schedule
   if (availableProfessional?.length === 0 && preferProfessional === false) {
     return (
       <Text style={styles.text}>Infelizmente o horario das {schedule.schedule} do dia {getDay(schedule)} de {getMonthName(schedule.day)} não está disponível</Text>
     )
   }
 
+  // Render list of professionals
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between", alignItems: "center" }}>

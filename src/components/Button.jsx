@@ -1,3 +1,14 @@
+/**
+ * Button component.
+ * 
+ * @param {string} text - The text to display on the button.
+ * @param {function} action - The function to execute when the button is pressed.
+ * @param {object} addStyles - Additional styles to apply to the button.
+ * @param {object} addStylesText - Additional styles to apply to the button text.
+ * @param {boolean} isToBlockButton - Determines if the button should be disabled.
+ * @returns {JSX.Element} - The rendered button component.
+ */
+
 import { Text, TouchableOpacity, StyleSheet } from "react-native"
 
 import { globalStyles } from "../assets/globalStyles"

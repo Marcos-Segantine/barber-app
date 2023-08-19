@@ -4,7 +4,7 @@ import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
 import { SomethingWrongContext } from "../context/SomethingWrongContext"
 
-import { HeaderScreensMenu } from "../components/HeaderScreensMenu"
+import { HeaderScreens } from "../components/HeaderScreens"
 import { LinkProfile } from "../components/LinkProfile"
 import { Menu } from "../components/Menu"
 
@@ -24,7 +24,7 @@ export const Profile = ({ navigation }) => {
     return (
         <>
             <ScrollView contentContainerStyle={globalStyles.container}>
-                <HeaderScreensMenu screenName={"Perfil"} />
+                <HeaderScreens screenName={"Perfil"} />
                 <View style={{ alignItems: 'center' }}>
                     <View>
                         {

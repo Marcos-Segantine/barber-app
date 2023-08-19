@@ -1,10 +1,18 @@
+/**
+ * Renders the login buttons with media icons.
+ * 
+ * @param {boolean} isToShowJustIcon - Indicates if only the media icons should be shown.
+ * @param {function} setIsLoading - The function to set the loading state.
+ * @returns {JSX.Element} The rendered component.
+ */
+
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useContext } from "react";
 
 import { SomethingWrongContext } from "../context/SomethingWrongContext";
 
 import { AppleIcon } from "../assets/icons/AppleIcon";
-import { FabebookIcon } from "../assets/icons/FacebookIcon";
+import { FacebookIcon } from "../assets/icons/FacebookIcon";
 import { GoogleIcon } from "../assets/icons/GoogleIcon";
 import { globalStyles } from "../assets/globalStyles";
 
@@ -38,7 +46,7 @@ export const LoginWithMedia = ({ isToShowJustIcon, setIsLoading }) => {
             ]}
             disabled={true}
           >
-            <FabebookIcon />
+            <FacebookIcon />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -63,7 +71,7 @@ export const LoginWithMedia = ({ isToShowJustIcon, setIsLoading }) => {
             style={[styles.button, styles.buttonDisabled]}
             disabled={true}
           >
-            <FabebookIcon />
+            <FacebookIcon />
             <Text style={styles.text}>Facebook</Text>
           </TouchableOpacity>
 

@@ -1,3 +1,10 @@
+/**
+ * Renders the header screens component.
+ *
+ * @param {string} screenName - The name of the screen.
+ * @returns {JSX.Element} - The rendered component.
+ */
+
 import { useContext, useEffect } from "react";
 import { View, Text, StyleSheet, BackHandler } from "react-native";
 
@@ -13,16 +20,15 @@ import { useNavigation } from '@react-navigation/native';
 import { getPreviousScreensName } from "../utils/getPreviousScreensName";
 
 import { handleNavigation } from "../handlers/handleNavigation";
-import { Positions } from "react-native-calendars/src/expandableCalendar";
 
-export const HeaderScreensMenu = ({ screenName }) => {
+export const HeaderScreens = ({ screenName }) => {
   const { somethingWrong } = useContext(SomethingWrongContext)
   const {userData} = useContext(UserContext)
 
   const navigation = useNavigation();
 
   useEffect(() => {
-
+    // Add a hardware back press event listener
     BackHandler.addEventListener('hardwareBackPress', () => {
       const [previousScreen, lastScreen] = getPreviousScreensName(navigation)
       return handleNavigation(previousScreen, lastScreen, navigation, userData)

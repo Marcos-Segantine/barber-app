@@ -16,7 +16,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import { globalStyles } from "../assets/globalStyles";
 
-import { HeaderScreensMenu } from "../components/HeaderScreensMenu";
+import { HeaderScreens } from "../components/HeaderScreens";
 import { Menu } from "../components/Menu";
 import { Schedule } from "../components/Schedule";
 import { Button } from "../components/Button";
@@ -89,7 +89,7 @@ export const Home = ({ navigation }) => {
         contentContainerStyle={globalStyles.container}
         onContentSizeChange={() => canScrollToEnd && scrollViewRef.current.scrollToEnd({ animated: true })}
       >
-        <HeaderScreensMenu screenName={"WD3 Barbearia"} />
+        <HeaderScreens screenName={"WD3 Barbearia"} />
 
         {scheduleClientInfo ? (
           <>

@@ -1,3 +1,12 @@
+/**
+ * Renders a service component with selectable functionality.
+ * @param {Object} service - The service object to render.
+ * @param {Array} servicesSelected - The array of selected services.
+ * @param {Function} setServicesSelected - The function to set the selected services.
+ * @param {Function} removeServiceSelected - The function to remove a selected service.
+ * @returns {JSX.Element} The rendered service component.
+ */
+
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 import { globalStyles } from "../assets/globalStyles";
@@ -9,6 +18,11 @@ export const Service = ({
   setServicesSelected,
   removeServiceSelected,
 }) => {
+
+  /**
+ * Handles the selection or removal of a service.
+ * @param {Object} service - The service object.
+ */
   const handleSelectServices = (service) => {
     if (servicesSelected.length >= 4) return;
 
@@ -21,6 +35,7 @@ export const Service = ({
     setServicesSelected((prev) => [...prev, service]);
   };
 
+  // Determine the style of the container based on whether the service is selected
   const style = servicesSelected.map(service => service.name).includes(service.name)
     ? [styles.container, { borderColor: globalStyles.orangeColor }]
     : styles.container;
