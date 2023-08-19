@@ -1,3 +1,20 @@
+/**
+ * Renders a default modal component with the given modal content.
+ *
+ * @param {Object} modalContent - The content of the modal.
+ * @param {Object} modalContent.image - The image to be displayed in the modal.
+ * @param {string} modalContent.mainMessage - The main message to be displayed in the modal.
+ * @param {string} modalContent.message - The additional message to be displayed in the modal.
+ * @param {string} modalContent.firstButtonText - The text for the first button in the modal.
+ * @param {Object} modalContent.firstButtonStyles - The additional styles for the first button in the modal.
+ * @param {Object} modalContent.firstButtonTextStyles - The additional styles for the text of the first button in the modal.
+ * @param {Function} modalContent.firstButtonAction - The action to be performed when the first button is pressed.
+ * @param {string} modalContent.secondButtonText - The text for the second button in the modal.
+ * @param {Object} modalContent.secondButtonStyles - The additional styles for the second button in the modal.
+ * @param {Object} modalContent.secondButtonTextStyles - The additional styles for the text of the second button in the modal.
+ * @param {Function} modalContent.secondButtonAction - The action to be performed when the second button is pressed.
+ */
+
 import { Modal, View, StyleSheet, Text } from "react-native"
 
 import { globalStyles } from "../../assets/globalStyles"

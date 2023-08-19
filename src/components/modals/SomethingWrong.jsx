@@ -1,3 +1,10 @@
+/**
+ * Renders a modal displaying an error message.
+ * 
+ * @param {boolean} somethingWrongVisible - Flag indicating if the modal should be visible
+ * @returns {JSX.Element} - The rendered modal component
+ */
+
 import { Modal, StyleSheet, View, Text } from "react-native"
 
 import { globalStyles } from "../../assets/globalStyles"

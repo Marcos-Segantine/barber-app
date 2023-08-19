@@ -1,3 +1,12 @@
+/**
+ * Renders a modal for confirming the cancellation of a schedule.
+ * 
+ * @param {boolean} confirmCancelScheduleVisible - Determines if the modal is visible.
+ * @param {function} setConfirmCancelSchedule - Function to update the visibility of the modal.
+ * @param {object} scheduleInfo - Information about the schedule.
+ * @returns {JSX.Element} - The rendered component.
+ */
+
 import { Modal, View, StyleSheet, Text, TouchableOpacity } from "react-native"
 import { useContext } from "react"
 
@@ -13,6 +22,13 @@ export const ConfirmCancelSchedule = ({ confirmCancelScheduleVisible, setConfirm
     const { setSomethingWrong } = useContext(SomethingWrongContext)
     const { userData } = useContext(UserContext)
 
+    /**
+  * Handles the cancellation of a schedule.
+  * 
+  * Calls the cancelSchedule function with the user ID and schedule information.
+  * If successful, cancel the schedule and updates the visibility of the modal.
+  * If an error occurs, logs the error and sets "something wrong" state to true.
+  */
     const handleCancelSchedule = async () => {
         try {
             cancelSchedule(userData.uid, scheduleInfo)

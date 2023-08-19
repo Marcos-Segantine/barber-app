@@ -1,3 +1,8 @@
+/**
+ * Component to display a modal when there is no internet connection.
+ * It listens for network state changes and renders a modal with a message.
+ */
+
 import { useEffect, useState } from "react";
 import { Modal, StyleSheet, Text, View } from "react-native";
 
@@ -9,6 +14,7 @@ import { globalStyles } from "../../assets/globalStyles";
 export const NetInformation = () => {
     const [isConnected, setIsConnected] = useState(null);
 
+    // Subscribe to network state changes
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener((state) => {
             setIsConnected(state.isConnected);
@@ -18,6 +24,7 @@ export const NetInformation = () => {
         };
     }, []);
 
+    // Render the modal if there is no internet connection
     return (isConnected !== null && !isConnected) && (
         <Modal
             animationType="slide"

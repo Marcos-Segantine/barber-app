@@ -1,3 +1,12 @@
+/**
+ * Displays a modal to confirm a change in information.
+ * 
+ * @param {boolean} modalConfirmationNewInfo - Flag indicating if the modal is visible.
+ * @param {function} setModalConfirmationNewInfo - Function to update the modal visibility.
+ * @param {function} handleNewInformation - Function to handle the new information.
+ * @returns {JSX.Element} - The modal component.
+ */
+
 import { Modal, StyleSheet, View, Text } from "react-native"
 
 import { Button } from "../Button"
@@ -6,7 +15,11 @@ import { globalStyles } from "../../assets/globalStyles"
 import { ConfirmationChangeInfoImage } from "../../assets/imgs/ConfirmationChangeInfoImage"
 import { useEffect, useState } from "react"
 
-export const WarningChangeInformation = ({ modalConfirmationNewInfo, setModalConfirmationNewInfo, handleNewInformation }) => {
+export const WarningChangeInformation = ({
+    modalConfirmationNewInfo,
+    setModalConfirmationNewInfo,
+    handleNewInformation
+}) => {
     const [time, setTime] = useState(15)
 
     useEffect(() => {
