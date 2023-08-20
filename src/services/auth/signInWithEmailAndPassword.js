@@ -1,3 +1,17 @@
+/**
+ * Sign in with email and password.
+ * 
+ * @param {object} navigation - The navigation object to navigate to other screens.
+ * @param {string} email - The user's email.
+ * @param {string} password - The user's password.
+ * @param {function} setModalContent - The function to set the content of a modal.
+ * @param {function} setUserData - The function to set the user data.
+ * @param {function} setEmail - The function to set the email input value.
+ * @param {function} setPassword - The function to set the password input value.
+ * @param {function} setSomethingWrong - The function to set the somethingWrong state.
+ * @param {function} setIsLoading - The function to set the isLoading state.
+ */
+
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
@@ -18,6 +32,7 @@ export const signInWithEmailAndPassword = async (
 ) => {
   try {
 
+    // Check for errors in authentication, if there are errors the function will stop the process
     if (!await findErrorAuth(
       email,
       password,
@@ -26,12 +41,16 @@ export const signInWithEmailAndPassword = async (
       setModalContent,
       navigation)) return
 
+    // Get the user data using the email provided
     const usersRef = firestore().collection("users").where("email", "==", email);
     const userDataCollection = (await usersRef.get()).docs.length ? (await usersRef.get()).docs[0].data() : null
 
+    // Check if user data exists and matches the input email and password
     if (userDataCollection && userDataCollection?.password === password && userDataCollection?.email === email) {
       await auth().signInWithEmailAndPassword(email, password)
         .then(async () => {
+
+          // Check if user's email is verified
           if (!auth().currentUser.emailVerified) {
             setModalContent({
               firstButtonMessage: "Email não verificado",
@@ -40,6 +59,8 @@ export const signInWithEmailAndPassword = async (
               secondButtonMessage: "Reenviar",
               firstButtonAction: () => setModalContent(null),
               secondButtonAction: () => {
+
+                // Resend verification email
                 auth().currentUser.sendEmailVerification()
                 setModalContent(null)
               }
@@ -50,9 +71,11 @@ export const signInWithEmailAndPassword = async (
             return
           }
 
+          // Set email and password in AsyncStorage for auto-login
           await AsyncStorage.setItem('@barber_app__email', email);
           await AsyncStorage.setItem('@barber_app__password', password);
 
+          // Set user data and navigate to Home screen
           setUserData(userDataCollection);
           navigation.navigate('Home');
 
@@ -72,9 +95,11 @@ export const signInWithEmailAndPassword = async (
             await auth().createUserWithEmailAndPassword(email, password)
             await auth().signInWithEmailAndPassword(email, password)
 
+            // Set email and password in AsyncStorage for auto-login
             await AsyncStorage.setItem('@barber_app__email', email);
             await AsyncStorage.setItem('@barber_app__password', password);
 
+            // Set user data and navigate to Home screen
             setUserData(userDataCollection);
             navigation.navigate('Home');
 

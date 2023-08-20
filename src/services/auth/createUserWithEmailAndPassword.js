@@ -1,3 +1,14 @@
+/**
+ * Creates a new user with the provided information.
+ * 
+ * @param {object} informationNewUser - The information of the new user.
+ * @param {string} password - The password of the new user.
+ * @param {object} navigation - The navigation object used for screen navigation.
+ * @param {function} setIsLoading - The function to set the loading state.
+ * @param {function} setModalInfo - The function to set the modal information.
+ * @param {function} setSomethingWrong - The function to set the something wrong state.
+ */
+
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
@@ -30,7 +41,8 @@ export const createUserWithEmailAndPassword = async (
     } catch (error) {
       console.log(error.message);
 
-      // IF THIS ERROR OCCURRED IS BECAUSE THE USER IS CREATING NEW ACCOUNT BY GOOGLE
+      // If this error ocurred means that the user create your account using media(Google, Facebook or Apple)
+      // So just update the password, to link the Media provider with the EmailAndPassword provider in the Firebase Auth
       if (error.message === "[auth/email-already-in-use] The email address is already in use by another account.") {
         auth().currentUser.updatePassword(password)
 
@@ -42,6 +54,7 @@ export const createUserWithEmailAndPassword = async (
 
     const uid = generateNewUid()
 
+    // Upload profile picture if provided
     if (informationNewUser.profilePicture) {
       const reference = storage().ref("clients/profilePictures/" + uid);
       await reference.putString(informationNewUser.profilePicture, 'base64')
@@ -50,6 +63,7 @@ export const createUserWithEmailAndPassword = async (
 
     const url = informationNewUser.profilePicture ? await storage().ref("clients/profilePictures/" + uid).getDownloadURL() : null
 
+    // Set schedules filed in the database for the user
     const scheduleDoc = firestore().collection('schedules_by_user').doc(uid);
     scheduleDoc.set({ schedules: [] })
 

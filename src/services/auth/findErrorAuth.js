@@ -1,3 +1,15 @@
+/**
+ * This function finds errors in authentication.
+ * 
+ * @param {string} email - The email entered by the user.
+ * @param {string} password - The password entered by the user.
+ * @param {function} setSomethingWrong - The function to set an error when an error happens.
+ * @param {function} setIsLoading - The function to set a loading flag.
+ * @param {function} setModalContent - The function to set the content of a modal.
+ * @param {object} navigation - The navigation object.
+ * @returns {boolean} - True if there are no errors, false otherwise.
+ */
+
 import firestore from '@react-native-firebase/firestore';
 
 import { isValidEmail } from '../../validation/isValidEmail';
@@ -18,6 +30,7 @@ export const findErrorAuth = async (
         const usersRef = firestore().collection("users").where("email", "==", email)
         const user = (await usersRef.get()).docs.length ? (await usersRef.get()).docs[0].data() : null
 
+        // Verify if the email and password is empty
         if (!email || !password) {
             setModalContent({
                 image: <StopProcessError />,
@@ -37,6 +50,7 @@ export const findErrorAuth = async (
             return
         }
 
+        // Validation of email
         else if (!isValidEmail(email)) {
             setModalContent({
                 image: <StopProcessError />,
@@ -56,6 +70,7 @@ export const findErrorAuth = async (
             return
         }
 
+        // Verify if a user with the provided email exists
         else if (!user) {
             setModalContent({
                 image: <StopProcessError />,
@@ -75,6 +90,7 @@ export const findErrorAuth = async (
             return
         }
 
+        // Verify if the password is valid
         else if (password.length < 6) {
             setModalContent({
                 image: <StopProcessError />,
@@ -94,6 +110,7 @@ export const findErrorAuth = async (
             return
         }
 
+        // Verify if the email and password are correct
         else if (email !== user.email || password !== user.password) {
             setModalContent({
                 image: <StopProcessError />,
