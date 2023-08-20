@@ -36,7 +36,7 @@ export const FillProfile = ({ navigation, route }) => {
         gender: "",
         profilePicture: null,
     })
-    const [error, setModalInfo] = useState(null)
+    const [modalInfo, setModalInfo] = useState(null)
 
     const [isLoading, setIsLoading] = useState(false)
     const [modalConfirmationNewInfo, setModalConfirmationNewInfo] = useState(false)
@@ -84,7 +84,7 @@ export const FillProfile = ({ navigation, route }) => {
                 handleNewInformation={handleConfirmNewInformationFillProfile}
             />
             <DefaultModal
-                modalContent={error}
+                modalContent={modalInfo}
             />
 
             {

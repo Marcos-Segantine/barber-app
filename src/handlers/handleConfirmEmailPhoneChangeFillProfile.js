@@ -1,3 +1,14 @@
+/**
+ * Handles the confirmation of email or phone change by filling the user's profile.
+ * 
+ * @param {Object} informationNewUser - The new user information.
+ * @param {Object} userData - The existing user information.
+ * @param {Function} setModalInfo - The function to set the modal information.
+ * @param {Function} setInformationNewUser - The function to set the new user information.
+ * @param {Function} setModalConfirmationNewInfo - The function to set the modal confirmation for new information.
+ * @param {Function} handleNewInformation - The function to handle the new information.
+ */
+
 import { isValidPhoneNumber } from "../validation/isValidPhoneNumber"
 import { isValidEmail } from "../validation/isValidEmail"
 import { verifyIfDataAlreadyExist } from "../validation/verifyIfDataAlreadyExist"
@@ -15,10 +26,13 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
     if (informationNewUser.email.trim() ||
         informationNewUser.phone.trim()
     ) {
+        // Verify if email and phone number is valid
         const isValidPhone = isValidPhoneNumber(informationNewUser.phone)
         const emailValidated = isValidEmail(informationNewUser.email)
 
         if (!isValidPhone && !emailValidated) {
+
+            // Show error message if email and phone number if wrong
             setModalInfo({
                 image: <StopProcessError />,
                 mainMessage: "Campo(s) Inválido(s)",
@@ -30,6 +44,7 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
         }
     }
 
+    // Verify if there are fields that is already use by user
     const verifyIfFieldsAreSame = () => {
         if (informationNewUser.name.trim() && informationNewUser.name === userData.name) return true
         else if (informationNewUser.email.trim() && informationNewUser.email === userData.email) return true
@@ -54,6 +69,7 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
         return
     }
 
+    // Verify if email and phone number is already use by other user
     const emailAlreadyExist = await verifyIfDataAlreadyExist("email", informationNewUser.email)
     const phoneAlreadyExist = await verifyIfDataAlreadyExist("phone", informationNewUser.phone)
 
@@ -90,6 +106,9 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
         return
     }
 
-    if (informationNewUser.email || informationNewUser.phone) setModalConfirmationNewInfo(true)
+    // If the data is valid show a modal to user to confirm the new information
+    else if (informationNewUser.email || informationNewUser.phone) setModalConfirmationNewInfo(true)
+
+    // Updates the user information
     else handleNewInformation()
 }

@@ -7,7 +7,7 @@ import { ComeBack } from "../components/ComeBack"
 
 import { UserContext } from "../context/UserContext"
 
-import { handleRememberEmailPassword } from "../handlers/handleRememberEmailPassword"
+import { handleAutomaticLogin } from "../handlers/handleAutomaticLogin"
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -27,7 +27,7 @@ export const Security = ({ navigation }) => {
                     </Text>
                     <Pressable
                         style={styles.button}
-                        onPress={async () => setIsToRememberEmailAndPassword(await handleRememberEmailPassword(
+                        onPress={async () => setIsToRememberEmailAndPassword(await handleAutomaticLogin(
                             userData.email,
                             isToRememberEmailAndPassword
                         ))}

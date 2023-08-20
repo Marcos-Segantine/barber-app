@@ -1,3 +1,13 @@
+/**
+ * Handles navigation based on the previous and last screens.
+ *
+ * @param {string} previousScreen - The name of the previous screen.
+ * @param {string} lastScreen - The name of the last screen (current screen when the function is called).
+ * @param {object} navigation - The navigation object.
+ * @param {object} userData - The user data object.
+ * @returns {boolean} - Indicates if the navigation was successful.
+ */
+
 import auth from '@react-native-firebase/auth';
 
 export const handleNavigation = (
@@ -16,6 +26,8 @@ export const handleNavigation = (
         lastScreen === "Login" && previousScreen === "Welcome" ||
         lastScreen === "LoginWay" && previousScreen === "Welcome"
     ) {
+
+        // Check if the user is authenticated and user data is available
         if (auth().currentUser && userData) {
             navigation.navigate('Home')
 
