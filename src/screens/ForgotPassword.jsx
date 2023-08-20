@@ -50,7 +50,7 @@ export const ForgotPassword = ({ navigation }) => {
                             style={styles.input}
                             placeholder={"Insira seu email"}
                             placeholderTextColor={"#00000050"}
-                            onChangeText={text => setEmail(text)}
+                            onChangeText={text => setEmail(text.trim())}
                             keyboardType={"email-address"}
                         />
                     </View>
@@ -79,7 +79,7 @@ export const ForgotPassword = ({ navigation }) => {
                             style={styles.input}
                             placeholder={"Insira seu número"}
                             placeholderTextColor={"#00000050"}
-                            onChangeText={text => setPhone(text)}
+                            onChangeText={text => setPhone(text.trim())}
                             keyboardType={"number-pad"}
                         />
                     </TouchableOpacity>

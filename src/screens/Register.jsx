@@ -65,7 +65,7 @@ export const Register = ({ navigation }) => {
                         value={emailNewUser}
                         placeholderTextColor={"#00000050"}
                         onFocus={() => handleFocusInput("email")}
-                        onChangeText={text => setEmailNewUser(text)}
+                        onChangeText={text => setEmailNewUser(text.trim())}
                         keyboardType="email-address"
                     />
                 </View>
@@ -80,7 +80,7 @@ export const Register = ({ navigation }) => {
                         placeholderTextColor={"#00000050"}
                         secureTextEntry={hiddenPassword}
                         onFocus={() => handleFocusInput("password")}
-                        onChangeText={text => setPasswordNewUser(text)}
+                        onChangeText={text => setPasswordNewUser(text.trim())}
 
                     />
                     <Pressable style={styles.iconPasswordVisibility} onPress={() => setHiddenPassword(!hiddenPassword)}>

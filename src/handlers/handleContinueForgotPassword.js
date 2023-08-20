@@ -25,7 +25,7 @@ export const handleContinueForgotPassword = async (
     setIsLoading(true)
 
     // Check if both email and phone inputs are empty
-    if (!email.trim() && !phone.trim()) {
+    if (!email && !phone) {
         setModalInfo({
             image: <StopProcessError />,
             mainMessage: "Campo(s) vazios",

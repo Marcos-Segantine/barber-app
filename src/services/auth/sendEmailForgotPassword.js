@@ -13,7 +13,7 @@ export const sendEmailForgotPassword = async (
 ) => {
     try {
 
-        if (email.trim()) {
+        if (email) {
             await auth().sendPasswordResetEmail(email)
             setModalInfo({
                 image: <EmailSendImage />,
@@ -26,7 +26,7 @@ export const sendEmailForgotPassword = async (
                 }
             })
         }
-        else if (phone.trim()) {
+        else if (phone) {
             const userByPhoneNumber = await getUserByPhoneNumber(phone)
 
             if (phone) await auth().sendPasswordResetEmail(userByPhoneNumber.email)

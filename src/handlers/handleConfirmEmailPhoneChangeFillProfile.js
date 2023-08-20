@@ -23,8 +23,8 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
     setModalConfirmationNewInfo,
     handleNewInformation
 ) => {
-    if (informationNewUser.email.trim() ||
-        informationNewUser.phone.trim()
+    if (informationNewUser.email ||
+        informationNewUser.phone
     ) {
         // Verify if email and phone number is valid
         const isValidPhone = isValidPhoneNumber(informationNewUser.phone)
@@ -46,11 +46,11 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
 
     // Verify if there are fields that is already use by user
     const verifyIfFieldsAreSame = () => {
-        if (informationNewUser.name.trim() && informationNewUser.name === userData.name) return true
-        else if (informationNewUser.email.trim() && informationNewUser.email === userData.email) return true
-        else if (informationNewUser.nickname.trim() && informationNewUser.nickname === userData.nickname) return true
-        else if (informationNewUser.phone.trim() && informationNewUser.phone === userData.phone) return true
-        else if (informationNewUser.gender.trim() && informationNewUser.gender === userData.gender) return true
+        if (informationNewUser.name && informationNewUser.name === userData.name) return true
+        else if (informationNewUser.email && informationNewUser.email === userData.email) return true
+        else if (informationNewUser.nickname && informationNewUser.nickname === userData.nickname) return true
+        else if (informationNewUser.phone && informationNewUser.phone === userData.phone) return true
+        else if (informationNewUser.gender && informationNewUser.gender === userData.gender) return true
 
         return false
     }

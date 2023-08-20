@@ -14,7 +14,7 @@ export const verifyEmailAndPasswordToRegister = async (
     const usersRef = firestore().collection('users').where("email", "==", email);
     const usersData = await usersRef.get();
 
-    if (!email.trim() || !password.trim()) {
+    if (!email || !password) {
         setModalContent({
             image: <StopProcessError />,
             mainMessage: "Campos vazios",

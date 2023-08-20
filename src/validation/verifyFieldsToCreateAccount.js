@@ -5,7 +5,7 @@ import { StopProcessError } from "../assets/imgs/StopProcessError"
 
 export const verifyFieldsToCreateAccount = (userInformation, fields, setError) => {
     for (const field of fields) {
-        if (!userInformation[field] || userInformation[field].trim().length === 0) {
+        if (!userInformation[field] || userInformation[field].length === 0) {
             setError({
                 image: <StopProcessError />,
                 mainMessage: "Campos Vazios",

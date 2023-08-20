@@ -18,7 +18,7 @@ export const findErrorAuth = async (
         const usersRef = firestore().collection("users").where("email", "==", email)
         const user = (await usersRef.get()).docs.length ? (await usersRef.get()).docs[0].data() : null
 
-        if (!email.trim() || !password.trim()) {
+        if (!email || !password) {
             setModalContent({
                 image: <StopProcessError />,
                 mainMessage: "Campos vazios",
