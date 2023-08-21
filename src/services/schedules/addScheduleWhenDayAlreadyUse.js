@@ -1,3 +1,15 @@
+/**
+ * Adds a schedule when the day selected is already in use.
+ * That is, If in the database already has a another schedule in the same day
+ * 
+ * @param {string} userUid - The UID of the user.
+ * @param {object} scheduleInfo - The schedule information.
+ * @param {function} setModalContent - The function to set the content of a modal.
+ * @param {function} setSomethingWrong - Function to set a flag indicating if something went wrong.
+ * @param {function} setIsLoading - The function to set a flag indicating if the app is loading.
+ * @param {object} navigation - The navigation object.
+ */
+
 import firestore from '@react-native-firebase/firestore';
 
 import {
@@ -14,7 +26,7 @@ import { NewScheduleConfirmation } from '../../assets/imgs/NewScheduleConfirmati
 import { ScheduleUnavailableNow } from '../../assets/imgs/ScheduleUnavailableNow';
 
 export const addScheduleWhenDayAlreadyUse = async (
-  clientUid,
+  userUid,
   scheduleInfo,
   setModalContent,
   setSomethingWrong,
@@ -23,6 +35,7 @@ export const addScheduleWhenDayAlreadyUse = async (
 ) => {
 
   try {
+    // Extracting schedule information
     const scheduleMonth = getMonth(scheduleInfo);
     const scheduleDay = getDay(scheduleInfo);
     const scheduleHour = getHour(scheduleInfo);
@@ -30,22 +43,20 @@ export const addScheduleWhenDayAlreadyUse = async (
 
     const nameDocMonth_Year = `${scheduleMonth}_${scheduleYear}`
 
-    // collections reference
     const schedulesMonthRef = firestore().collection('schedules_month').doc(nameDocMonth_Year);
     const unavailableTimesRef = firestore().collection('unavailable_times').doc(nameDocMonth_Year);
-    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(clientUid);
+    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(userUid);
 
     const batch = firestore().batch();
 
-    // getting data from collections
     const schedulesMonthData = (await schedulesMonthRef.get({ source: "server" })).data();
     const unavailableTimesData = (await unavailableTimesRef.get({ source: "server" })).data()[scheduleDay][scheduleInfo.professionalUid];
     const schedulesByUserData = (await schedulesByUserRef.get({ source: "server" })).data()
 
-    // if alredy have a field for the professional selected, just add the `schedule` data
+    // If there is already a field for the selected professional, just add the schedule data
     if (schedulesMonthData[scheduleDay][scheduleInfo.professionalUid]) {
 
-      // creating const to store data that will be used to update the collections
+      // Creating data to update the collections
       const dataToUpdateSchedulesMonth = {
         [`${scheduleDay}.${scheduleInfo.professionalUid}.${scheduleHour}`]: scheduleInfo,
       }
@@ -61,10 +72,9 @@ export const addScheduleWhenDayAlreadyUse = async (
       batch.update(unavailableTimesRef, dataToUpdateUnavailableTimes);
 
     }
-    // else create a new doc with the field
     else {
 
-      // creating const to store data that will be used to update the collections
+      // Creating data to update the collections
       const dataToUpdateSchedulesMonth = {
         [scheduleDay]: {
           [scheduleInfo.professionalUid]: {
@@ -92,12 +102,15 @@ export const addScheduleWhenDayAlreadyUse = async (
       );
     }
 
+    // Updating schedules by user data
     const updatedSchedulesByUser = {
       schedules: [...schedulesByUserData.schedules, scheduleInfo],
     };
 
     batch.update(schedulesByUserRef, updatedSchedulesByUser);
 
+    // Check for the last time if the day, time and professional selected by the user is still available
+    // If the time is available, add the schedule, if not, show a modal explaining that
     const canConfirmSchedule = await verifySchedulesUid(nameDocMonth_Year, scheduleInfo.scheduleUid);
 
     if (canConfirmSchedule) {

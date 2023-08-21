@@ -1,3 +1,12 @@
+/**
+ * Retrieves the available times from a professional selected by user.
+ * 
+ * @param {Object} scheduleInfo - The schedule information.
+ * @param {string} professionalUid - The unique identifier of the professional.
+ * @param {Function} setSomethingWrong - Function to set a flag indicating if something went wrong.
+ * @returns {Array} - The available times for the professional.
+ */
+
 import firestore from '@react-native-firebase/firestore';
 
 import { getDay, getMonth, getProfessional, getYear } from '../../utils/dateHelper';
@@ -28,23 +37,41 @@ export const getAvailableTimesByProfessional = async (
         const currentMonth = new Date().getMonth() + 1;
         const currentHour = getCurrentHour();
 
+        // Check if the current date matches the schedule date
         const currentDate = Number(day) === Number(currentDay) && Number(currentMonth) === Number(month)
 
+        // Return undefined if there are no working hours for the professional
+        // The frontend will show a message explaining that
         if (workingHoursData === undefined) return undefined
 
+        // Return all working hours if there are no unavailable times
         if (!unavailableTimesData) return workingHoursData
+
+        // Return the working hours filtered by unavailable times from the professional and
+        // Current hour, that is, just return the hour that doesn't passed
         else if (unavailableTimesData[day] && currentDate)
             return workingHoursData.filter(schedule => Number(schedule.split(":")[0]) > Number(currentHour) && !unavailableTimesData[day][professional].includes(schedule))
+
+        // If there's no unavailable times for the day selected, means that the professional is available 
+        // So, just return the hour that doesn't passed
         else if (!unavailableTimesData[day] && currentDate)
             return workingHoursData.filter(schedule => Number(schedule.split(":")[0]) > Number(currentHour))
+
+        // Return the working hours filtered by unavailable times from the professional and
+        // Current hour, that is, just return the hour that doesn't passed
         else if (unavailableTimesData[day]?.[professional] && currentDate)
             return workingHoursData.filter(schedule => Number(schedule.split(":")[0]) > Number(currentHour) && !unavailableTimesData[day][professional].includes(schedule))
+
+        // If the there's no unavailable times for the professional in selected day
+        // So, just return the hour that doesn't passed
         else if (!unavailableTimesData[day]?.[professional] && currentDate)
             return workingHoursData.filter(schedule => Number(schedule.split(":")[0]) > Number(currentHour))
 
+        // If there's no unavailable times in the selected day and professional, just return all working hours
         else if (!unavailableTimesData[day]) return workingHoursData
         else if (!unavailableTimesData[day][professional]) return workingHoursData
 
+        // Filter the working hours by removing the unavailable times from the professional
         const dataTemp = workingHoursData.filter(time => {
             return !unavailableTimesData[day][professional].includes(time)
         })

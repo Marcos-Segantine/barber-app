@@ -1,19 +1,31 @@
+/**
+ * Cancels a schedule for the user.
+ *
+ * @param {string} userUid - The UID of the user.
+ * @param {Object} scheduleInfo - The information about the schedule to cancel.
+ * @param {function} setSomethingWrong - Function to set a flag indicating if something went wrong.
+ */
+
 import firestore from '@react-native-firebase/firestore';
 
 import { getYear, getDay, getMonth, getProfessional } from '../../utils/dateHelper';
 
-export const cancelSchedule = async (clientUid, scheduleInfo, setSomethingWrong) => {
-  const scheduleMonth = getMonth(scheduleInfo);
-  const scheduleYear = getYear(scheduleInfo)
-  const scheduleDay = getDay(scheduleInfo);
-  const professional = getProfessional(scheduleInfo);
-
-  const nameDocMonth_Year = `${scheduleMonth}_${scheduleYear}`
+export const cancelSchedule = async (
+  userUid,
+  scheduleInfo,
+  setSomethingWrong
+) => {
 
   try {
 
-    // collections reference
-    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(clientUid);
+    const scheduleMonth = getMonth(scheduleInfo);
+    const scheduleYear = getYear(scheduleInfo)
+    const scheduleDay = getDay(scheduleInfo);
+    const professional = getProfessional(scheduleInfo);
+
+    const nameDocMonth_Year = `${scheduleMonth}_${scheduleYear}`
+
+    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(userUid);
     const schedulesMonthRef = firestore().collection('schedules_month').doc(nameDocMonth_Year);
     const unavailableTimesRef = firestore().collection('unavailable_times').doc(nameDocMonth_Year);
     const schedulesUidRef = firestore().collection('schedules_uid').doc(nameDocMonth_Year);
@@ -23,30 +35,31 @@ export const cancelSchedule = async (clientUid, scheduleInfo, setSomethingWrong)
     const schedulesByUserData = (await schedulesByUserRef.get()).data()
     const schedulesByUser = schedulesByUserData.schedules || [];
 
-    // remove the schedule that user want
+    // Remove the schedule that the user wants to cancel
     const newSchedules = schedulesByUser.filter(
       itemFilter => itemFilter.scheduleUid !== scheduleInfo.scheduleUid,
     );
 
-    // get all schedules in the month and delete the schedule selected
+    // Get all schedules in the month and delete the schedule selected by user
     const schedulesMonthData = (await schedulesMonthRef.get()).data()
     delete schedulesMonthData[scheduleDay]?.[professional]?.[scheduleInfo.schedule];
 
-
-    // get all unavailable days
+    // Get all unavailable days
     const unavailableTimesData = (await unavailableTimesRef.get()).data()
     const unavailableData = unavailableTimesData;
 
-    // filtering unavailable days to remove that was selected by client, and make it free (makes possible other client get this schedule)
+    // Filter the unavailable days to remove the selected schedule and make it available for other clients
     const newData =
       unavailableData[scheduleDay]?.[professional]?.filter(
         schedule => schedule !== scheduleInfo.schedule,
       ) || [];
 
-
     unavailableData[scheduleDay][professional] = newData;
 
+    // Format the schedule UID
     const scheduleUidFormatted = scheduleInfo.scheduleUid.split('-').slice(1, 6).join('-')
+    
+    // Get and update the schedules_uid
     const schedulesUidData = (await schedulesUidRef.get()).data().schedules
     const schedulesUidUpdated = schedulesUidData.filter(scheduleUid => scheduleUid !== scheduleUidFormatted);
 

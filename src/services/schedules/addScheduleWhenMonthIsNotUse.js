@@ -1,3 +1,15 @@
+/**
+ * Adds a schedule when the month is not in use.
+ * That is, if there is not another schedule with the month selected by user
+ * 
+ * @param {string} userUid - The user UID.
+ * @param {object} scheduleInfo - The schedule information.
+ * @param {function} setModalContent - Function to set the modal content.
+ * @param {function} setSomethingWrong - Function to set a flag indicating if something went wrong.
+ * @param {function} setIsLoading - Function to set the loading state.
+ * @param {object} navigation - The navigation object.
+ */
+
 import firestore from '@react-native-firebase/firestore';
 
 import {
@@ -14,7 +26,7 @@ import { NewScheduleConfirmation } from '../../assets/imgs/NewScheduleConfirmati
 import { ScheduleUnavailableNow } from '../../assets/imgs/ScheduleUnavailableNow';
 
 export const addScheduleWhenMonthIsNotUse = async (
-  clientUid,
+  userUid,
   scheduleInfo,
   setModalContent,
   setSomethingWrong,
@@ -33,12 +45,11 @@ export const addScheduleWhenMonthIsNotUse = async (
     const batch = firestore().batch();
 
 
-    // collections reference
-    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(clientUid);
+    const schedulesByUserRef = firestore().collection('schedules_by_user').doc(userUid);
     const schedulesMonthRef = firestore().collection('schedules_month').doc(nameDocMonth_Year);
     const unavailableTimesRef = firestore().collection('unavailable_times').doc(nameDocMonth_Year);
 
-    // defining a new doc on `schedules_by_user` collection
+    // Create schedule_month data object
     const scheduleMonthData = {
       [scheduleDay]: {
         [scheduleInfo.professionalUid]: {
@@ -47,14 +58,12 @@ export const addScheduleWhenMonthIsNotUse = async (
       },
     };
 
-    // defining a new doc on `unavailable_times` collection
+    // Create unavailable_times data object
     const unavailableTimesData = {
       [scheduleDay]: {
         [scheduleInfo.professionalUid]: [scheduleHour]
       }
     }
-
-    // defining a new field' doc in `denied_days` collection
 
     batch.set(schedulesMonthRef, scheduleMonthData);
     batch.set(unavailableTimesRef, unavailableTimesData);
@@ -62,6 +71,8 @@ export const addScheduleWhenMonthIsNotUse = async (
       schedules: firestore.FieldValue.arrayUnion({ ...scheduleInfo }),
     });
 
+    // Check for the last time if the day, time and professional selected by the user is still available
+    // If the time is available, add the schedule, if not, show a modal explaining that
     const canConfirmSchedule = await verifySchedulesUid(nameDocMonth_Year, scheduleInfo.scheduleUid);
 
     if (canConfirmSchedule) {
