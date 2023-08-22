@@ -1,5 +1,6 @@
 /**
  * Handle the continue create new password action.
+ * 
  * @param {string} password - The new password.
  * @param {string} confirmPassword - The confirmation of the new password.
  * @param {function} setProcessMessage - Function to set the process message.

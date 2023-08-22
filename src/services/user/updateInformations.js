@@ -1,3 +1,16 @@
+/**
+ * Updates user information in the database.
+ * 
+ * @param {Object} informationNewUser - The updated user information.
+ * @param {string} password - The user's password.
+ * @param {string} uid - The user's unique id.
+ * @param {Object} navigation - The navigation object.
+ * @param {function} setUserData - The function to set the user data.
+ * @param {function} setSomethingWrong - Function to set a flag indicating if something went wrong.
+ * @param {boolean} isToCreateUser - Flag indicating if it's a new user.
+ * @param {function} setIsLoading - The function to set the loading state.
+ */
+
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
@@ -18,21 +31,27 @@ export const updateInformations = async (
         const schedulesByUserRef = firestore().collection('schedules_by_user').doc(uid)
 
         const userRef = firestore().collection('users').doc(uid)
+
+        // Get the current user data
         const userData = (await userRef.get()).data()
 
         const batch = firestore().batch()
 
+        // Set a document with an empty array in the schedules_by_user collection
         batch.set(schedulesByUserRef, {
             schedules: [],
         })
 
+        // Upload the new profile picture if provided
         if (informationNewUser.profilePicture) {
             const referenceProfilePicture = storage().ref('clients/profilePictures/' + uid);
             await referenceProfilePicture.putString(informationNewUser.profilePicture, 'base64')
         }
 
+        // Get the download URL of the profile picture if it exists
         const pic = informationNewUser.profilePicture ? await storage().ref("clients/profilePictures/" + uid).getDownloadURL() : null
 
+        // Create an object with the updated user data
         const userDataObj = {
             name: informationNewUser.name || userData.name,
             nickname: informationNewUser.nickname || userData.nickname,
@@ -52,6 +71,7 @@ export const updateInformations = async (
 
         setIsLoading(false)
 
+        // Navigate to the appropriate screen based on whether it's a new user or not
         if (isToCreateUser) navigation.navigate("Home")
         else navigation.navigate("Profile")
 
