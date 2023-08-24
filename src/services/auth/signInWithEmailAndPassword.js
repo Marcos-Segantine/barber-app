@@ -19,6 +19,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { findErrorAuth } from './findErrorAuth';
 
+import { StopProcessError } from '../../assets/imgs/StopProcessError';
+
 export const signInWithEmailAndPassword = async (
   navigation,
   email,
@@ -53,10 +55,13 @@ export const signInWithEmailAndPassword = async (
           // Check if user's email is verified
           if (!auth().currentUser.emailVerified) {
             setModalContent({
-              firstButtonMessage: "Email não verificado",
+              image: <StopProcessError />,
+              mainMessage: "Email não verificado",
+              message: `Enviamos um email para ${email}, verifique sua caixa de spam se não o encontrar ou clique em "Reenviar".`,
+              firstButtonText: "Email não verificado",
               description: "Verifique seu email e clique em 'Reenviar'. Verifique sua caixa de spam se não o encontrar.",
-              firstButtonMessage: "Tentar Novamente",
-              secondButtonMessage: "Reenviar",
+              firstButtonText: "Tentar Novamente",
+              secondButtonText: "Reenviar",
               firstButtonAction: () => setModalContent(null),
               secondButtonAction: () => {
 

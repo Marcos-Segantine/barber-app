@@ -16,7 +16,7 @@ export const verifyIfUserHasLogged = async (navigation) => {
                 return
             }
 
-            const userEmailVerified = auth().currentUser.emailVerified
+            const userEmailVerified = auth().currentUser?.emailVerified
 
             if (userEmailVerified) navigation.navigate("Home");
             else if (user.empty || !userEmailVerified) navigation.navigate("Login");
