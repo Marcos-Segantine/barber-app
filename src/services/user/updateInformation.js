@@ -14,7 +14,7 @@
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
-export const updateInformations = async (
+export const updateInformation = async (
     informationNewUser,
     password,
     uid,
@@ -27,12 +27,10 @@ export const updateInformations = async (
     try {
         setIsLoading(true)
 
-
         const schedulesByUserRef = firestore().collection('schedules_by_user').doc(uid)
 
-        const userRef = firestore().collection('users').doc(uid)
-
         // Get the current user data
+        const userRef = firestore().collection('users').doc(uid)
         const userData = (await userRef.get()).data()
 
         const batch = firestore().batch()
@@ -51,9 +49,16 @@ export const updateInformations = async (
         // Get the download URL of the profile picture if it exists
         const pic = informationNewUser.profilePicture ? await storage().ref("clients/profilePictures/" + uid).getDownloadURL() : null
 
+
+        const name = informationNewUser?.name?.split("").map((letter, index) => {
+            if(index === 0) return informationNewUser.name[index].toUpperCase()
+            else if (informationNewUser.name[index - 1] === " ") return letter.toUpperCase()
+            return letter
+        }).join("")
+
         // Create an object with the updated user data
         const userDataObj = {
-            name: informationNewUser.name || userData.name,
+            name: name || userData.name,
             nickname: informationNewUser.nickname || userData.nickname,
             email: informationNewUser.email || userData.email,
             password: password || userData.password,

@@ -19,7 +19,7 @@ import { verifyFieldsToCreateAccount } from "../validation/verifyFieldsToCreateA
 import { verifyFieldsToUpdateInformation } from "../validation/verifyFieldsToUpdateInformation"
 
 import { createUserWithEmailAndPassword } from "../services/auth/createUserWithEmailAndPassword"
-import { updateInformations } from "../services/user/updateInformations"
+import { updateInformation } from "../services/user/updateInformation"
 
 export const handleConfirmNewInformationFillProfile = async (
     informationNewUser,
@@ -74,7 +74,7 @@ export const handleConfirmNewInformationFillProfile = async (
 
         if (!isFieldsValidToUpdateInfo) return
 
-        updateInformations(
+        updateInformation(
             { ...informationNewUser, gender },
             userData ? userData.password : null,
             userData.uid,
