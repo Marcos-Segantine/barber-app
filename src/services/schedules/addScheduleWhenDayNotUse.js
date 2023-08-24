@@ -108,7 +108,7 @@ export const addScheduleWhenDayNotUse = async (
     }
 
     setModalContent({
-      image: <ScheduleUnavailableNow />,
+      image: <ScheduleUnavailableNow width={"100%"} height={300} />,
       mainMessage: "Opa!!, espera um pouco",
       message: "Infelizmente alguém acabou de fazer um agendamento no mesmo horário e dia do que voc. Você terá que refazer o processo.",
       firstButtonText: "Entendi",
