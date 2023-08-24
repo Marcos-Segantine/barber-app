@@ -16,7 +16,7 @@ export const NewSchedule = ({ navigation, route }) => {
     const preferProfessionalStyle__Yes = preferProfessional ? [styles.btn, { backgroundColor: globalStyles.orangeColor, borderColor: 'transparent' }] : styles.btn
     const preferProfessionalStyle__No = !preferProfessional ? [styles.btn, { backgroundColor: globalStyles.orangeColor, borderColor: 'transparent' }] : styles.btn
 
-    const { headerText, scheduleToUpdate, isToUpdateSchedule } = route.params
+    const { headerText, scheduleToUpdate, isToUpdateSchedule } = route.params || {}
 
     const { schedule, setSchedule } = useContext(ScheduleContext)
 
@@ -43,7 +43,7 @@ export const NewSchedule = ({ navigation, route }) => {
             contentContainerStyle={globalStyles.container}
             onContentSizeChange={() => canScrollToEnd && scrollViewRef.current.scrollToEnd({ animated: true })}
         >
-            <ComeBack text={headerText} />
+            <ComeBack text={headerText || "Meus horários"} />
 
             <Text style={styles.text}>Voce tem preferência por profissional?</Text>
             <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'space-around' }}>
