@@ -24,6 +24,11 @@ export const ForgotPassword = ({ navigation }) => {
 
     const { setSomethingWrong } = useContext(SomethingWrongContext)
 
+    const clearFields = () => {
+        setEmail("")
+        setPhone("")
+    }
+
     if (isLoading) return <Loading flexSize={1} />
 
     return (
@@ -95,6 +100,7 @@ export const ForgotPassword = ({ navigation }) => {
                     setModalInfo,
                     setSomethingWrong,
                     navigation,
+                    clearFields
                 )}
                 addStyles={{ marginTop: 30, marginBottom: 20 }}
             />

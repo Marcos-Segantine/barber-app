@@ -7,12 +7,15 @@
  * @param {function} setModalInfo - Function to set the modal info.
  * @param {function} setSomethingWrong - Function to set the something wrong state.
  * @param {object} navigation - The navigation object.
+ * @param {function} clearFields - Function to clear the email and phone fields.
  */
 
 import { StopProcessError } from "../assets/imgs/StopProcessError"
 import { isValidPhoneNumber } from "../validation/isValidPhoneNumber"
 import { isValidEmail } from "../validation/isValidEmail"
 import { sendEmailForgotPassword } from "../services/auth/sendEmailForgotPassword"
+import { getUserByEmail } from "../services/user/getUserByEmail"
+import { getUserByPhoneNumber } from "../services/user/getUserByPhoneNumber"
 
 export const handleContinueForgotPassword = async (
     setIsLoading,
@@ -21,6 +24,7 @@ export const handleContinueForgotPassword = async (
     setModalInfo,
     setSomethingWrong,
     navigation,
+    clearFields
 ) => {
     setIsLoading(true)
 
@@ -35,6 +39,8 @@ export const handleContinueForgotPassword = async (
         })
 
         setIsLoading(false)
+        clearFields()
+
         return
     }
 
@@ -53,6 +59,48 @@ export const handleContinueForgotPassword = async (
         })
 
         setIsLoading(false)
+        clearFields()
+
+        return
+    }
+
+    // Check if email exist
+    if (email) {
+        const user = await getUserByEmail(email);
+
+        if (user === null) {
+            setModalInfo({
+                image: <StopProcessError />,
+                mainMessage: "Email não encontrado",
+                message: "Não encontramos o email que você inseriu, por favor verifique-o e tente novamente",
+                firstButtonAction: () => setModalInfo(null),
+                firstButtonText: "Tentar Novamente",
+            })
+        }
+
+        setIsLoading(false)
+        clearFields()
+
+        return
+    }
+
+    // Check if email exist
+    else if (phone) {
+        const user = await getUserByPhoneNumber(phone);
+
+        if (user === null) {
+            setModalInfo({
+                image: <StopProcessError />,
+                mainMessage: "Número não encontrado",
+                message: "Não encontramos o número que você inseriu, por favor verifique-o e tente novamente",
+                firstButtonAction: () => setModalInfo(null),
+                firstButtonText: "Tentar Novamente",
+            })
+        }
+
+        setIsLoading(false)
+        clearFields()
+
         return
     }
 
