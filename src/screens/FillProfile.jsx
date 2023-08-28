@@ -6,6 +6,7 @@ import { ComeBack } from "../components/ComeBack"
 import { Loading } from "../components/Loading"
 import { WarningChangeInformation } from "../components/modals/WarningChangeInformation"
 import { DefaultModal } from "../components/modals/DefaultModal"
+import { InformativeModel } from "../components/modals/InformativeModel"
 
 import { handleNewPicture } from "../handlers/handleNewPicture"
 import { handleConfirmNewInformationFillProfile } from "../handlers/handleConfirmNewInformationFillProfile"
@@ -37,6 +38,7 @@ export const FillProfile = ({ navigation, route }) => {
         profilePicture: null,
     })
     const [modalInfo, setModalInfo] = useState(null)
+    const [modalInformative, setModalInformative] = useState(null)
 
     const [isLoading, setIsLoading] = useState(false)
     const [modalConfirmationNewInfo, setModalConfirmationNewInfo] = useState(false)
@@ -86,6 +88,9 @@ export const FillProfile = ({ navigation, route }) => {
             <DefaultModal
                 modalContent={modalInfo}
             />
+            <InformativeModel
+                modalContent={modalInformative}
+            />
 
             {
                 !isToCreateUserState &&
@@ -113,7 +118,11 @@ export const FillProfile = ({ navigation, route }) => {
                     <Image source={DefaultPicture} />
                 }
 
-                <TouchableOpacity style={styles.contentEditPicture} activeOpacity={.8} onPress={() => handleNewPicture(setInformationNewUser, informationNewUser)}>
+                <TouchableOpacity
+                    style={styles.contentEditPicture}
+                    activeOpacity={.8}
+                    onPress={() => handleNewPicture(setInformationNewUser, informationNewUser, setModalInfo, setModalInformative)}
+                >
                     <EditProfilePicture width={40} height={40} />
                 </TouchableOpacity>
             </View>
