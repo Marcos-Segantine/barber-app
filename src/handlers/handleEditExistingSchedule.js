@@ -27,12 +27,14 @@ export const handleEditExistingSchedule = async (
         // Cancel the existing schedule.
         await cancelSchedule(
             scheduleToChange.clientUid,
-            scheduleToChange
+            scheduleToChange,
+            setSomethingWrong
         )
 
         // Add a new schedule.
         await handleConfirmNewSchedule(
             newSchedule,
+            setNewSchedule,
             newSchedule.clientUid,
             setModalContent,
             setSomethingWrong,
