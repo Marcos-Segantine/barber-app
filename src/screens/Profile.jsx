@@ -17,6 +17,8 @@ import DefaultPicture from "../assets/icons/DefaultPicture.png"
 
 import { logOut } from "../services/user/logOut"
 
+import { getNameLastName } from "../utils/getNameLastName"
+
 export const Profile = ({ navigation }) => {
     const { userData } = useContext(UserContext)
     const { setSomethingWrong } = useContext(SomethingWrongContext)
@@ -35,7 +37,7 @@ export const Profile = ({ navigation }) => {
                         }
                     </View>
 
-                    <Text style={styles.userName}>{userData && userData.name.split(" ").splice(0, 2).join(" ")}</Text>
+                    <Text style={styles.userName}>{userData && getNameLastName(userData.name)}</Text>
                     <Text style={styles.userEmail}>{userData && userData.email}</Text>
                 </View>
 

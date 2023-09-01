@@ -23,6 +23,7 @@ import { getAllProfessionals } from "../services/schedules/getAllProfessionals";
 
 import { getDay } from "../utils/dateHelper";
 import { getMonthName } from "../utils/getMonthName";
+import { getNameLastName } from "../utils/getNameLastName";
 
 export const Professionals = ({ preferProfessional }) => {
   const [availableProfessional, setAvailableProfessional] = useState(null);
@@ -73,12 +74,16 @@ export const Professionals = ({ preferProfessional }) => {
 
   // Render selected professional if only one is available
   if (availableProfessional?.length === 1) {
+    const name = getNameLastName(availableProfessional[0].name).length > 20 ?
+      getNameLastName(availableProfessional[0].name).slice(0, 10) + "..." :
+      getNameLastName(availableProfessional[0].name)
+
     return (
       <TouchableOpacity
         style={[professionalSelectedStyle, { marginTop: 50 }]}
         activeOpacity={0.8}
       >
-        <Text style={styles.professionalName}>{availableProfessional[0].name}</Text>
+        <Text style={styles.professionalName}>{name}</Text>
 
         {availableProfessional[0].profilePicture ? (
           <Image
@@ -138,37 +143,42 @@ export const Professionals = ({ preferProfessional }) => {
 
       </View>
       {
-        availableProfessional.map((professional, index) => (
-          <TouchableOpacity
-            style={
-              schedule.professional === professional.name
-                ? professionalSelectedStyle
-                : styles.professional
-            }
-            activeOpacity={0.8}
-            onPress={() => handleProfessionalSelected(professional)}
-            key={index}
-          >
-            <Text style={styles.professionalName}>{professional.name}</Text>
+        availableProfessional.map((professional, index) => {
+          const name = getNameLastName(availableProfessional[0].name).length > 20 ?
+            getNameLastName(availableProfessional[0].name).slice(0, 10) + "..." :
+            getNameLastName(availableProfessional[0].name)
 
-            {professional.profilePicture ? (
-              <Image
-                source={{ uri: professional.profilePicture }}
-                style={styles.img}
-              />
-            ) : (
-              <Image
-                source={DefaultPicture}
-                style={styles.img}
-              />
-            )}
-          </TouchableOpacity>
-        ))
+          return (
+            <TouchableOpacity
+              style={
+                schedule.professional === professional.name
+                  ? professionalSelectedStyle
+                  : styles.professional
+              }
+              activeOpacity={0.8}
+              onPress={() => handleProfessionalSelected(professional)}
+              key={index}
+            >
+              <Text style={styles.professionalName}>{name}</Text>
+
+              {professional.profilePicture ? (
+                <Image
+                  source={{ uri: professional.profilePicture }}
+                  style={styles.img}
+                />
+              ) : (
+                <Image
+                  source={DefaultPicture}
+                  style={styles.img}
+                />
+              )}
+            </TouchableOpacity>
+          )
+        })
       }
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -183,8 +193,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 15,
     borderColor: "#00000010",
-    paddingHorizontal: 20,
-    paddingVertical: 5,
+    padding: 5,
     width: "100%"
   },
 
