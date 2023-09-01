@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
         color: globalStyles.orangeColor,
         fontSize: globalStyles.fontSizeMedium,
         fontFamily: globalStyles.fontFamilyBold,
+        textAlign: 'center',
     },
 
     message: {

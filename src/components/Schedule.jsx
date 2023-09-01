@@ -21,21 +21,36 @@ import { SomethingWrongContext } from "../context/SomethingWrongContext";
 
 import { globalStyles } from "../assets/globalStyles"
 import DefaultPicture from "../assets/icons/DefaultPicture.png"
+import { CancelSchedule } from "../assets/imgs/CancelSchedule";
 
 import { formatDate } from "../utils/formatDate";
 import { getDayOfWeek } from "../utils/getDayFromWeek";
 
 import { ConfirmCancelSchedule } from "../components/modals/ConfirmCancelSchedule"
+import { DefaultModal } from "./modals/DefaultModal";
 
 import { useNavigation } from "@react-navigation/native";
 
 import { getProfessionalInfoByName } from "../services/schedules/getProfessionalInfoByName";
+import { cancelSchedule } from "../services/schedules/cancelSchedule";
 
 export const Schedule = ({ schedule }) => {
-    const [confirmCancelScheduleVisible, setConfirmCancelSchedule] = useState(false)
     const [professionalPicture, setProfessionalPicture] = useState(null)
+    const [cancelScheduleState, setCancelScheduleState] = useState(null)
 
     const { setSomethingWrong } = useContext(SomethingWrongContext)
+
+    const handleCancel = () => {
+        setCancelScheduleState({
+            image: <CancelSchedule />,
+            mainMessage: "Realmente deseja cancelar seu agendamento?",
+            message: "Lembre-se de que esta ação é IRREVERSIVEL. O agendamento será cancelado imediatamente.",
+            firstButtonText: "Sim, cancelar",
+            firstButtonAction: () => cancelSchedule(schedule.clientUid, schedule, setSomethingWrong),
+            secondButtonText: "Não",
+            secondButtonAction: () => setCancelScheduleState(null),
+        })
+    }
 
     const date = schedule && formatDate(schedule.day, setSomethingWrong)
     const weekDay = schedule && getDayOfWeek(schedule.day)
@@ -52,11 +67,10 @@ export const Schedule = ({ schedule }) => {
 
     return (
         <View style={styles.container}>
-            <ConfirmCancelSchedule
-                confirmCancelScheduleVisible={confirmCancelScheduleVisible}
-                setConfirmCancelSchedule={setConfirmCancelSchedule}
-                scheduleInfo={schedule && schedule}
+            <DefaultModal
+                modalContent={cancelScheduleState}
             />
+
             <View style={{ borderBottomWidth: .2, borderColor: "#00000060" }}>
                 <Text style={styles.date}>{`${date} - ás ${scheduleHour}`}</Text>
                 <Text style={[styles.date, { color: "#00000090" }]}>{weekDay}</Text>
@@ -94,7 +108,7 @@ export const Schedule = ({ schedule }) => {
             </View>
 
             <View style={styles.contentButtons}>
-                <TouchableOpacity style={[styles.button]} activeOpacity={.8} onPress={() => setConfirmCancelSchedule(true)}>
+                <TouchableOpacity style={[styles.button]} activeOpacity={.8} onPress={handleCancel}>
                     <Text style={{ color: globalStyles.orangeColor, fontFamily: globalStyles.fontFamilyMedium }}>Cancelar horário</Text>
                 </TouchableOpacity>
 
