@@ -8,6 +8,8 @@
 
 import firestore from '@react-native-firebase/firestore';
 
+import { filterSchedulesByDate } from '../../utils/filterSchedulesByDate';
+
 export const takeLastScheduleOfUser = async (
     userInfo,
     setScheduleClientInfo,
@@ -21,8 +23,10 @@ export const takeLastScheduleOfUser = async (
         const schedulesByUserRef = firestore().collection("schedules_by_user").doc(userInfo.uid)
         const schedulesByUserData = (await schedulesByUserRef.get()).data().schedules
 
+        const schedulesFiltered = filterSchedulesByDate(schedulesByUserData)
+
         // Sort the schedules by day in ascending order
-        const dates = schedulesByUserData.sort((a, b) => a.day.localeCompare(b.day, undefined, { numeric: true }))
+        const dates = schedulesFiltered.sort((a, b) => a.day.localeCompare(b.day, undefined, { numeric: true }))
 
         // If there are no schedules, set the user schedule info to null
         if (!dates[0]) setScheduleClientInfo(null)

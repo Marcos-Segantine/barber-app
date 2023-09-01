@@ -1,5 +1,7 @@
 import firestore from "@react-native-firebase/firestore";
 
+import { filterSchedulesByDate } from "../utils/filterSchedulesByDate";
+
 export const userSchedulesCount = async (
     userUid,
     setSchedulesUserCount
@@ -7,9 +9,11 @@ export const userSchedulesCount = async (
     const schedulesByUserRef = firestore().collection("schedules_by_user").doc(userUid)
     const schedulesByUserData = (await schedulesByUserRef.get()).data()
 
+    const data = filterSchedulesByDate(schedulesByUserData.schedules)
+
     schedulesByUserRef.onSnapshot((data) => {
         setSchedulesUserCount(data.data().schedules.length)
     });
 
-    setSchedulesUserCount(schedulesByUserData.length)
+    setSchedulesUserCount(data.length)
 }

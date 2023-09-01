@@ -175,7 +175,10 @@ export const Home = ({ navigation }) => {
               preferProfessional={preferProfessional}
               setCanScrollToEnd={setCanScrollToEnd}
             /> :
-            <SchedulesLimitAnimation width={screenWidth} height={400} />
+            <>
+              <SchedulesLimitAnimation width={screenWidth} height={400} />
+              <Text style={styles.text}>Você atingiu o limite de agendamentos  </Text>
+            </>
         }
 
         {
@@ -191,10 +194,6 @@ export const Home = ({ navigation }) => {
               addStyles={{ marginTop: 40 }}
             />
           )
-        }
-
-        {
-          !(schedulesUserCount < 2) && <Text style={styles.text}>Você atingiu o limite de agendamentos  </Text>
         }
 
       </ScrollView>
