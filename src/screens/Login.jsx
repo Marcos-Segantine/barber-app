@@ -18,6 +18,8 @@ import { DefaultModal } from "../components/modals/DefaultModal"
 
 import { signInWithEmailAndPassword } from "../services/auth/signInWithEmailAndPassword"
 
+import { trim } from "../utils/trim"
+
 export const Login = ({ navigation, route }) => {
     const { emailNewUser, passwordNewUser } = route.params ? route.params : {}
 
@@ -47,7 +49,7 @@ export const Login = ({ navigation, route }) => {
     const handleLogin = () => {
         signInWithEmailAndPassword(
             navigation,
-            email,
+            trim(email),
             password,
             setModalContent,
             setUserData,
@@ -84,7 +86,7 @@ export const Login = ({ navigation, route }) => {
                         value={email}
                         placeholderTextColor={"#00000050"}
                         onFocus={() => handleFocusInput("email")}
-                        onChangeText={text => setEmail(text.trim())}
+                        onChangeText={text => setEmail(text)}
                         keyboardType="email-address"
                     />
                 </View>
@@ -99,7 +101,7 @@ export const Login = ({ navigation, route }) => {
                         placeholderTextColor={"#00000050"}
                         secureTextEntry={hiddenPassword}
                         onFocus={() => handleFocusInput("password")}
-                        onChangeText={text => setPassword(text.trim())}
+                        onChangeText={text => setPassword(text)}
 
                     />
                     <Pressable style={styles.iconPasswordVisibility} onPress={() => setHiddenPassword(!hiddenPassword)}>

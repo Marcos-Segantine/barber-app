@@ -69,6 +69,19 @@ export const verifyEmailAndPasswordToRegister = async (
 
         return false
     }
+    else if (password.split('').map(char => char === ' ').includes(true)) {
+        setModalContent({
+            image: <StopProcessError />,
+            mainMessage: "Senha inválida",
+            message: "A senha não pode conter espaços. Por favor tente novamente",
+            firstButtonText: "Tentar Novamente",
+            firstButtonAction: () => setModalContent(null),
+        })
+
+        setIsLoading(false)
+
+        return false
+    }
     else if (!isValidEmail(email)) {
         setModalContent({
             image: <StopProcessError />,

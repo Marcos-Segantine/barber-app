@@ -69,6 +69,20 @@ export const handleContinueCreateNewPassword = (
             return
         }
 
+        // Check if password contains spaces
+        else if (password.split('').map(char => char === ' ').includes(true)) {
+            setProcessMessage({
+                image: <StopProcessError />,
+                mainMessage: "Senha Inválida",
+                message: "A sua senha não pode conter espaços, por favor tente novamente",
+                firstButtonText: "Tentar Novamente",
+                firstButtonAction: () => setProcessMessage(null)
+            })
+
+            return
+
+        }
+
         // If it's a new account created by media
         if (newAccountByMedia) {
             setUserData({ ...userData, password: password })

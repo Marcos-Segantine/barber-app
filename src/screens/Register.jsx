@@ -15,6 +15,8 @@ import passwordVisionBlockIcon from "../assets/icons/passwordVisionBlockIcon.png
 
 import { verifyEmailAndPasswordToRegister } from "../validation/verifyEmailAndPasswordToRegister"
 
+import { trim } from "../utils/trim"
+
 export const Register = ({ navigation }) => {
     const [emailNewUser, setEmailNewUser] = useState("")
     const [passwordNewUser, setPasswordNewUser] = useState("")
@@ -29,14 +31,14 @@ export const Register = ({ navigation }) => {
 
     const handleContinue = async () => {
         const isEmailPasswordValid = await verifyEmailAndPasswordToRegister(
-            emailNewUser,
+            trim(emailNewUser),
             passwordNewUser,
             navigation,
             setModalContent,
             setIsLoading
         )
 
-        if (isEmailPasswordValid) navigation.navigate("FillProfile", { isToCreateUser: true, emailNewUser, passwordNewUser, })
+        if (isEmailPasswordValid) navigation.navigate("FillProfile", { isToCreateUser: true, emailNewUser: trim(emailNewUser), passwordNewUser, })
     }
 
     const styleEmail = inputSelected === 'email' ? [styles.input, { backgroundColor: '#fff8ec', borderColor: '#fc9501', borderWidth: 1 }] : styles.input
@@ -65,7 +67,7 @@ export const Register = ({ navigation }) => {
                         value={emailNewUser}
                         placeholderTextColor={"#00000050"}
                         onFocus={() => handleFocusInput("email")}
-                        onChangeText={text => setEmailNewUser(text.trim())}
+                        onChangeText={text => setEmailNewUser(text)}
                         keyboardType="email-address"
                     />
                 </View>
@@ -80,7 +82,7 @@ export const Register = ({ navigation }) => {
                         placeholderTextColor={"#00000050"}
                         secureTextEntry={hiddenPassword}
                         onFocus={() => handleFocusInput("password")}
-                        onChangeText={text => setPasswordNewUser(text.trim())}
+                        onChangeText={text => setPasswordNewUser(text)}
 
                     />
                     <Pressable style={styles.iconPasswordVisibility} onPress={() => setHiddenPassword(!hiddenPassword)}>

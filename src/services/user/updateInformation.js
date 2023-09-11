@@ -14,6 +14,9 @@
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
+import { trim } from '../../utils/trim';
+import { capitalizeName } from '../../utils/capitalizeName';
+
 export const updateInformation = async (
     informationNewUser,
     password,
@@ -49,18 +52,13 @@ export const updateInformation = async (
         // Get the download URL of the profile picture if it exists
         const pic = informationNewUser.profilePicture ? await storage().ref("clients/profilePictures/" + uid).getDownloadURL() : null
 
-
-        const name = informationNewUser?.name?.split("").map((letter, index) => {
-            if(index === 0) return informationNewUser.name[index].toUpperCase()
-            else if (informationNewUser.name[index - 1] === " ") return letter.toUpperCase()
-            return letter
-        }).join("")
+        const name = capitalizeName(informationNewUser?.name)
 
         // Create an object with the updated user data
         const userDataObj = {
-            name: name || userData.name,
+            name: trim(name || userData.name),
             nickname: informationNewUser.nickname || userData.nickname,
-            email: informationNewUser.email || userData.email,
+            email: trim(informationNewUser.email || userData.email),
             password: password || userData.password,
             phone: informationNewUser.phone || userData.phone,
             gender: informationNewUser.gender || userData.gender,

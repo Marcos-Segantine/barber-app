@@ -46,11 +46,11 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
 
     // Verify if there are fields that is already use by user
     const verifyIfFieldsAreSame = () => {
-        if (informationNewUser.name && informationNewUser.name === userData.name) return true
-        else if (informationNewUser.email && informationNewUser.email === userData.email) return true
-        else if (informationNewUser.nickname && informationNewUser.nickname === userData.nickname) return true
-        else if (informationNewUser.phone && informationNewUser.phone === userData.phone) return true
-        else if (informationNewUser.gender && informationNewUser.gender === userData.gender) return true
+        if (informationNewUser.name === userData.name) return true
+        else if (informationNewUser.email === userData.email) return true
+        else if (informationNewUser.nickname === userData.nickname) return true
+        else if (informationNewUser.phone === userData.phone) return true
+        else if (informationNewUser.gender === userData.gender) return true
 
         return false
     }

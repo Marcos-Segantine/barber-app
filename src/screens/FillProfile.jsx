@@ -132,13 +132,13 @@ export const FillProfile = ({ navigation, route }) => {
                     style={styles.input}
                     placeholder="Nome completo"
                     placeholderTextColor={"#00000050"}
-                    onChangeText={text => setInformationNewUser({ ...informationNewUser, name: text.trim() })}
+                    onChangeText={text => setInformationNewUser({ ...informationNewUser, name: text })}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Apelido (como devemos te chamar)"
                     placeholderTextColor={"#00000050"}
-                    onChangeText={text => setInformationNewUser({ ...informationNewUser, nickname: text.trim() })}
+                    onChangeText={text => setInformationNewUser({ ...informationNewUser, nickname: text })}
                 />
                 <TextInput
                     style={styles.input}
@@ -147,7 +147,7 @@ export const FillProfile = ({ navigation, route }) => {
                     placeholderTextColor={"#00000050"}
                     onChangeText={emailNewUser ?
                         null :
-                        text => setInformationNewUser({ ...informationNewUser, email: text.trim() })
+                        text => setInformationNewUser({ ...informationNewUser, email: text })
                     }
                     keyboardType="email-address"
                 />
@@ -155,7 +155,7 @@ export const FillProfile = ({ navigation, route }) => {
                     style={styles.input}
                     placeholder="Número - (DD) DDDDD - DDDD"
                     placeholderTextColor={"#00000050"}
-                    onChangeText={text => setInformationNewUser({ ...informationNewUser, phone: text.trim() })}
+                    onChangeText={text => setInformationNewUser({ ...informationNewUser, phone: text })}
                     keyboardType="numeric"
                 />
 

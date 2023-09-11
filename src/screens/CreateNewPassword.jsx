@@ -62,7 +62,7 @@ export const CreateNewPassword = ({ navigation, route }) => {
                         placeholderTextColor={"#00000050"}
                         secureTextEntry={hiddenPassword}
                         onFocus={() => handleFocusInput("password")}
-                        onChangeText={text => setPassword(text.trim())}
+                        onChangeText={text => setPassword(text)}
 
                     />
                     <Pressable
@@ -86,7 +86,7 @@ export const CreateNewPassword = ({ navigation, route }) => {
                         placeholderTextColor={"#00000050"}
                         secureTextEntry={hiddenPassword}
                         onFocus={() => handleFocusInput("confirmPassword")}
-                        onChangeText={text => setConfirmPassword(text.trim())}
+                        onChangeText={text => setConfirmPassword(text)}
 
                     />
                     <Pressable

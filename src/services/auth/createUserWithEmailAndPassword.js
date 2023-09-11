@@ -16,6 +16,7 @@ import storage from '@react-native-firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { generateNewUid } from '../../utils/generateNewUid';
+import { capitalizeName } from '../../utils/capitalizeName';
 
 import { AccountCreated } from '../../assets/imgs/AccountCreated';
 
@@ -70,7 +71,7 @@ export const createUserWithEmailAndPassword = async (
     const userDoc = firestore().collection('users').doc(uid);
 
     userDoc.set({
-      name: informationNewUser.name,
+      name: capitalizeName(informationNewUser.name),
       nickname: informationNewUser.nickname,
       email: informationNewUser.email,
       password: password,

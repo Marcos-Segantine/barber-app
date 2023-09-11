@@ -15,6 +15,8 @@ import { SomethingWrongContext } from "../context/SomethingWrongContext"
 
 import { handleContinueForgotPassword } from "../handlers/handleContinueForgotPassword"
 
+import { trim } from "../utils/trim"
+
 export const ForgotPassword = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
@@ -55,7 +57,7 @@ export const ForgotPassword = ({ navigation }) => {
                             style={styles.input}
                             placeholder={"Insira seu email"}
                             placeholderTextColor={"#00000050"}
-                            onChangeText={text => setEmail(text.trim())}
+                            onChangeText={text => setEmail(text)}
                             keyboardType={"email-address"}
                         />
                     </View>
@@ -84,7 +86,7 @@ export const ForgotPassword = ({ navigation }) => {
                             style={styles.input}
                             placeholder={"Insira seu número"}
                             placeholderTextColor={"#00000050"}
-                            onChangeText={text => setPhone(text.trim())}
+                            onChangeText={text => setPhone(text)}
                             keyboardType={"number-pad"}
                         />
                     </TouchableOpacity>
@@ -95,7 +97,7 @@ export const ForgotPassword = ({ navigation }) => {
                 text={"Confirmar"}
                 action={() => handleContinueForgotPassword(
                     setIsLoading,
-                    email,
+                    trim(email),
                     phone,
                     setModalInfo,
                     setSomethingWrong,
