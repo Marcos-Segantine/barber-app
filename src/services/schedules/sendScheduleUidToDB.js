@@ -16,19 +16,14 @@ export const sendScheduleUidToDB = async (
     const schedulesUidRef = firestore().collection('schedules_uid').doc(scheduleMonth)
     const schedulesUidData = (await schedulesUidRef.get()).data()
 
-    const scheduleUidFormatted = scheduleUid.split('-').slice(1, 6).join('-')
-
-    // Check if the schedules UID document exists
-    // If it does not exist, create a new document
     if (schedulesUidData === undefined) {
-        schedulesUidRef.set({ schedules: [scheduleUidFormatted] })
+        schedulesUidRef.set({ schedules: [scheduleUid] })
 
         return
     }
 
-    // If the schedules UID document already exists, append the schedule UID to the existing list of schedules
     const currentSchedules = schedulesUidData.schedules
-    const schedulesUiUpdated = [...currentSchedules, scheduleUidFormatted]
+    const schedulesUiUpdated = [...currentSchedules, scheduleUid]
 
     schedulesUidRef.set({ schedules: [...schedulesUiUpdated] })
 }

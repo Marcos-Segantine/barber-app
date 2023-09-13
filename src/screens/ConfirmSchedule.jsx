@@ -38,9 +38,7 @@ export const ConfirmSchedule = ({ route, navigation }) => {
 
     useEffect(() => {
         try {
-            const servicesNameForScheduleUid = schedule?.services && schedule.services.map(service => service.name).join("")
-
-            schedule.scheduleUid = `${userData.uid}-${schedule.day}-${schedule.professionalUid}-${schedule.schedule}-${servicesNameForScheduleUid}`;
+            schedule.scheduleUid = `${userData.uid}-${schedule.day}-${schedule.professionalUid}-${schedule.schedule}`;
 
         } catch (error) {
             console.log(error);
