@@ -46,7 +46,10 @@ export const Schedule = ({ schedule }) => {
             mainMessage: "Realmente deseja cancelar seu agendamento?",
             message: "Lembre-se de que esta ação é IRREVERSIVEL. O agendamento será cancelado imediatamente.",
             firstButtonText: "Sim, cancelar",
-            firstButtonAction: () => cancelSchedule(schedule.clientUid, schedule, setSomethingWrong),
+            firstButtonAction: () => {
+                cancelSchedule(schedule.clientUid, schedule, setSomethingWrong)
+                setCancelScheduleState(null)
+            },
             secondButtonText: "Não",
             secondButtonAction: () => setCancelScheduleState(null),
         })
