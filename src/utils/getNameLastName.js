@@ -1,8 +1,13 @@
 export const getNameLastName = (name) => {
+
+    if (!name || name.includes(undefined)) return null
+
     name = name.split(" ")
 
     const firstName = name[0]
-const lastName = name[1].length < 5 ? name[1] + " " + name[2] : name[1]
+    if (name.length === 1) return firstName
+
+    const lastName = name[1].length < 5 ? name[1] + " " + name[2] : name[1]
 
     return firstName + " " + lastName
 }

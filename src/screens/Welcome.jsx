@@ -6,13 +6,17 @@ import {
   View,
   Image,
 } from "react-native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { globalStyles } from "../assets/globalStyles";
 
 import { verifyIfUserHasLogged } from "../validation/verifyIfUserHasLogged";
 
+import { CannotUseApp } from "../components/CannotUseApp";
+
 export const Welcome = ({ navigation }) => {
+  const [blockAccess, setBlockAccess] = useState(false);
+
   useEffect(() => {
     ((async () => {
 
@@ -22,16 +26,18 @@ export const Welcome = ({ navigation }) => {
       }
       const data = await response.json();
 
-      if(data.response){
+      if (data.response) {
         verifyIfUserHasLogged(navigation);
       }
       else {
-        console.log('ACESSO AO APP NÃO AUTORIZADO');
+        setBlockAccess(true)
       }
 
     }))();
 
   }, []);
+
+  if (blockAccess) return <CannotUseApp />
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,10 +46,12 @@ export const Welcome = ({ navigation }) => {
         backgroundColor="transparent"
         translucent
       />
+
       <Image
         style={styles.img}
         source={require("../assets/imgs/welcome.jpg")}
       />
+
       <View style={styles.content}>
         <Text style={styles.title}>Bem-vindo à</Text>
         <Text style={styles.companyName}>WD3 Barbearia</Text>
@@ -74,6 +82,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: globalStyles.fontFamilyBold,
     fontSize: globalStyles.fontSizeLarger,
+    color: "#FFFFFF"
   },
 
   companyName: {
@@ -86,5 +95,6 @@ const styles = StyleSheet.create({
   desc: {
     fontFamily: globalStyles.fontFamilyMedium,
     fontSize: globalStyles.fontSizeSmall,
+    color: "#FFFFFF"
   },
 });

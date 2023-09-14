@@ -12,19 +12,30 @@ export const verifyIfUserHasLogged = async (navigation) => {
             const user = (await usersRef.get()).docs.length ? (await usersRef.get()).docs[0].data() : null
 
             if (!user) {
-                navigation.navigate("Login")
+                setTimeout(() => {
+                    navigation.navigate("Login")
+                }, 3000);
+
                 return
             }
 
             const userEmailVerified = auth().currentUser?.emailVerified
 
-            if (userEmailVerified) navigation.navigate("Home");
-            else if (user.empty || !userEmailVerified) navigation.navigate("Login");
+            if (userEmailVerified) {
+                setTimeout(() => {
+                    navigation.navigate("Home")
+                }, 3000);
+            }
+            else if (user.empty || !userEmailVerified) {
+                setTimeout(() => {
+                    navigation.navigate("Login")
+                }, 3000);
+            }
 
         } else {
             setTimeout(() => {
                 navigation.navigate("LoginWay");
-            }, 2500);
+            }, 3000);
         }
 
     } catch (error) {
