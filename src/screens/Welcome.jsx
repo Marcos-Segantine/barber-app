@@ -17,25 +17,25 @@ import { CannotUseApp } from "../components/CannotUseApp";
 export const Welcome = ({ navigation }) => {
   const [blockAccess, setBlockAccess] = useState(false);
 
-  useEffect(() => {
-    ((async () => {
+    useEffect(() => {
+      ((async () => {
 
-      const response = await fetch('https://southamerica-east1-barber-ddb8a.cloudfunctions.net/canUseApp');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
+        const response = await fetch('https://southamerica-east1-barber-ddb8a.cloudfunctions.net/canUseApp');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
 
-      if (data.response) {
-        verifyIfUserHasLogged(navigation);
-      }
-      else {
-        setBlockAccess(true)
-      }
+        if (data.response) {
+          verifyIfUserHasLogged(navigation);
+        }
+        else {
+          setBlockAccess(true)
+        }
 
-    }))();
+      }))();
 
-  }, []);
+    }, []);
 
   if (blockAccess) return <CannotUseApp />
 

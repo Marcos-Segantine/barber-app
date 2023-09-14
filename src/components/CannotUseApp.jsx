@@ -8,7 +8,7 @@ import { Contact } from "./modals/Contact";
 import { useState } from "react";
 
 export const CannotUseApp = ({ width = "100%", height = "40%" }) => {
-    const [contactModal, setContactModal] = useState(true);
+    const [contactModal, setContactModal] = useState(false);
     const handleContact = () => setContactModal(true)
 
     return (
