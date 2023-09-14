@@ -14,7 +14,22 @@ import { verifyIfUserHasLogged } from "../validation/verifyIfUserHasLogged";
 
 export const Welcome = ({ navigation }) => {
   useEffect(() => {
-    verifyIfUserHasLogged(navigation);
+    ((async () => {
+
+      const response = await fetch('https://southamerica-east1-barber-ddb8a.cloudfunctions.net/canUseApp');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+
+      if(data.response){
+        verifyIfUserHasLogged(navigation);
+      }
+      else {
+        console.log('ACESSO AO APP NÃO AUTORIZADO');
+      }
+
+    }))();
 
   }, []);
 
