@@ -102,7 +102,7 @@ export const ConfirmSchedule = ({ route, navigation }) => {
                 <View style={styles.content}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
                         <Text style={styles.describe}>Salão</Text>
-                        <Text style={styles.info}>WD3 Barbearia</Text>
+                        <Text style={styles.info}>{settings?.companyName}</Text>
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>

@@ -6,6 +6,8 @@ export const AppSettingsProvider = ({ children }) => {
 
     const settings = {
         minimalHoursToCancelSchedule: 4,
+        companyName: "Barbearia nome",
+        city: "Nova Ponte"
     };
 
     return (

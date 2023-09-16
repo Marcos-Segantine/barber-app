@@ -11,6 +11,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { SomethingWrongContext } from "../context/SomethingWrongContext";
 import { ScheduleContext } from "../context/ScheduleContext";
+import { AppSettingsContext } from "../context/AppSettings";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -38,6 +39,7 @@ export const Home = ({ navigation }) => {
   const { userData } = useContext(UserContext);
   const { setSomethingWrong } = useContext(SomethingWrongContext)
   const { schedule } = useContext(ScheduleContext)
+  const { settings } = useContext(AppSettingsContext)
 
   const allFieldsAreFilled = (schedule.professional && schedule.day && schedule.schedule) ? true : false
 
@@ -89,7 +91,7 @@ export const Home = ({ navigation }) => {
         contentContainerStyle={globalStyles.container}
         onContentSizeChange={() => canScrollToEnd && scrollViewRef.current.scrollToEnd({ animated: true })}
       >
-        <HeaderScreens screenName={"WD3 Barbearia"} />
+        <HeaderScreens screenName={settings?.companyName} />
 
         {scheduleClientInfo ? (
           <>
