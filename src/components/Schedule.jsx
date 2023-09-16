@@ -22,37 +22,63 @@ import { SomethingWrongContext } from "../context/SomethingWrongContext";
 import { globalStyles } from "../assets/globalStyles"
 import DefaultPicture from "../assets/icons/DefaultPicture.png"
 import { CancelSchedule } from "../assets/imgs/CancelSchedule";
+import { StopProcessError } from "../assets/imgs/StopProcessError";
 
 import { formatDate } from "../utils/formatDate";
 import { getDayOfWeek } from "../utils/getDayFromWeek";
 
-import { ConfirmCancelSchedule } from "../components/modals/ConfirmCancelSchedule"
 import { DefaultModal } from "./modals/DefaultModal";
+import { Contact } from "./modals/Contact";
 
 import { useNavigation } from "@react-navigation/native";
 
 import { getProfessionalInfoByName } from "../services/schedules/getProfessionalInfoByName";
 import { cancelSchedule } from "../services/schedules/cancelSchedule";
 
+import { verifyIfUserCanCancelSchedule } from "../validation/verifyIfUserCanCancelSchedule";
+import { AppSettingsContext } from "../context/AppSettings";
+
 export const Schedule = ({ schedule }) => {
     const [professionalPicture, setProfessionalPicture] = useState(null)
     const [cancelScheduleState, setCancelScheduleState] = useState(null)
+    const [contactVisible, setContactVisible] = useState(false)
 
     const { setSomethingWrong } = useContext(SomethingWrongContext)
+    const { settings } = useContext(AppSettingsContext)
 
     const handleCancel = () => {
-        setCancelScheduleState({
-            image: <CancelSchedule />,
-            mainMessage: "Realmente deseja cancelar seu agendamento?",
-            message: "Lembre-se de que esta ação é IRREVERSIVEL. O agendamento será cancelado imediatamente.",
-            firstButtonText: "Sim, cancelar",
-            firstButtonAction: () => {
-                cancelSchedule(schedule.clientUid, schedule, setSomethingWrong)
-                setCancelScheduleState(null)
-            },
-            secondButtonText: "Não",
-            secondButtonAction: () => setCancelScheduleState(null),
-        })
+
+        const canCancelSchedule = verifyIfUserCanCancelSchedule(4, schedule.day, schedule.schedule);
+
+        if (canCancelSchedule) {
+
+            setCancelScheduleState({
+                image: <CancelSchedule />,
+                mainMessage: "Realmente deseja cancelar seu agendamento?",
+                message: "Lembre-se de que esta ação é IRREVERSIVEL. O agendamento será cancelado imediatamente.",
+                firstButtonText: "Sim, cancelar",
+                firstButtonAction: () => {
+                    cancelSchedule(schedule.clientUid, schedule, setSomethingWrong)
+                    setCancelScheduleState(null)
+                },
+                secondButtonText: "Não",
+                secondButtonAction: () => setCancelScheduleState(null),
+            })
+        }
+        else {
+            setCancelScheduleState({
+                image: <StopProcessError />,
+                mainMessage: "Ação não permitida!",
+                message: "Você não pode mais cancelar seu horário pois está muito em cima da hora. Caso precise você pode entrar em contato conosco.",
+                firstButtonText: "Contato",
+                firstButtonAction: () => {
+                    setContactVisible(true)
+                },
+                secondButtonText: "Cancelar",
+                secondButtonAction: () => setCancelScheduleState(null),
+            })
+
+        }
     }
 
     const date = schedule && formatDate(schedule.day, setSomethingWrong)
@@ -72,6 +98,10 @@ export const Schedule = ({ schedule }) => {
         <View style={styles.container}>
             <DefaultModal
                 modalContent={cancelScheduleState}
+            />
+            <Contact 
+                modalContact={contactVisible}
+                setModalVisible={setContactVisible}
             />
 
             <View style={{ borderBottomWidth: .2, borderColor: "#00000060" }}>

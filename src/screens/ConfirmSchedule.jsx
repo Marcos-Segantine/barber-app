@@ -20,14 +20,16 @@ import { formatServicePrice } from "../utils/formatServicePrice"
 
 import { handleConfirmNewSchedule } from "../handlers/handleConfirmNewSchedule"
 import { handleEditExistingSchedule } from "../handlers/handleEditExistingSchedule"
+import { AppSettingsContext } from "../context/AppSettings"
 
 export const ConfirmSchedule = ({ route, navigation }) => {
     const [modalContent, setModalContent] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
-    const { schedule, setSchedule  } = useContext(ScheduleContext)
+    const { schedule, setSchedule } = useContext(ScheduleContext)
     const { userData } = useContext(UserContext)
     const { setSomethingWrong } = useContext(SomethingWrongContext)
+    const { settings } = useContext(AppSettingsContext)
 
     const { scheduleToUpdate, isToUpdateSchedule } = route.params
 
@@ -153,6 +155,10 @@ export const ConfirmSchedule = ({ route, navigation }) => {
                     </View>
                 </View>
             </View>
+
+            <Text style={{ color: "#00000080", fontSize: globalStyles.fontSizeVerySmall, textAlign: "center" }}>
+                Lembre-se que depois de confirmado o horario você não podera desmarcar o serviço com menos de {settings?.minimalHoursToCancelSchedule} horas de antecência.
+            </Text>
 
             <Button text={"Confirmar Horário"} action={handleConfirm} addStyles={{ marginTop: "5%" }} />
         </ScrollView>
