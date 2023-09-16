@@ -39,7 +39,7 @@ export const DefaultModal = ({ modalContent }) => {
                         <Text style={styles.message}>{modalContent.message && modalContent.message}</Text>
                     </View>
 
-                    <View style={{ width: "100%", alignItems: "center" }}>
+                    <View style={{ width: "100%", alignItems: "center", ...modalContent?.contentButtonsStyles }}>
                         <Button
                             text={modalContent.firstButtonText && modalContent.firstButtonText}
                             addStyles={modalContent.firstButtonStyles && modalContent.firstButtonStyles}

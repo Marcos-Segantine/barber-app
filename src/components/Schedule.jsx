@@ -26,6 +26,7 @@ import { StopProcessError } from "../assets/imgs/StopProcessError";
 
 import { formatDate } from "../utils/formatDate";
 import { getDayOfWeek } from "../utils/getDayFromWeek";
+import { getNameLastName } from "../utils/getNameLastName";
 
 import { DefaultModal } from "./modals/DefaultModal";
 import { Contact } from "./modals/Contact";
@@ -44,7 +45,6 @@ export const Schedule = ({ schedule }) => {
     const [contactVisible, setContactVisible] = useState(false)
 
     const { setSomethingWrong } = useContext(SomethingWrongContext)
-    const { settings } = useContext(AppSettingsContext)
 
     const handleCancel = () => {
 
@@ -124,7 +124,7 @@ export const Schedule = ({ schedule }) => {
                 }
 
                 <View style={{ justifyContent: 'space-around' }}>
-                    <Text style={styles.barbershopName}>{schedule.professional}</Text>
+                    <Text style={styles.barbershopName}>{getNameLastName(schedule.professional)}</Text>
                     <Text style={[styles.text, { color: "#00000090" }]}>ENDEREÇO</Text>
                     <View>
                         <Text style={[styles.text, { color: "#00000090", fontFamily: globalStyles.fontFamilyBold }]}>Serviços: </Text>

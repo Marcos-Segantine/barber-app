@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View, Text, TouchableOpacity, Image } from "react-native"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 
 import { UserContext } from "../context/UserContext"
 import { SomethingWrongContext } from "../context/SomethingWrongContext"
@@ -7,6 +7,7 @@ import { SomethingWrongContext } from "../context/SomethingWrongContext"
 import { HeaderScreens } from "../components/HeaderScreens"
 import { LinkProfile } from "../components/LinkProfile"
 import { Menu } from "../components/Menu"
+import { DefaultModal } from "../components/modals/DefaultModal"
 
 import { ProfileIcon } from "../assets/icons/ProfileIcon"
 import { CheckIcon } from "../assets/icons/CheckIcon"
@@ -14,19 +15,41 @@ import { PadlockIcon } from "../assets/icons/PadlockIcon"
 import { globalStyles } from "../assets/globalStyles"
 import { LogOutIcon } from "../assets/icons/LogOutIcon"
 import DefaultPicture from "../assets/icons/DefaultPicture.png"
+import { LogOut } from "../assets/imgs/LogOut"
 
 import { logOut } from "../services/user/logOut"
 
 import { getNameLastName } from "../utils/getNameLastName"
 
 export const Profile = ({ navigation }) => {
+    const [logOutModalData, setLogOutModalData] = useState(null)
+
     const { userData } = useContext(UserContext)
     const { setSomethingWrong } = useContext(SomethingWrongContext)
+
+    const handleLogOut = () => {
+        setLogOutModalData({
+            image: <LogOut />,
+            mainMessage: "Realmente deseja sair?",
+            firstButtonText: "Sim",
+            firstButtonAction: () => {
+                setLogOutModalData(null)
+                logOut(navigation, setSomethingWrong)
+            },
+            secondButtonText: "Não",
+            secondButtonAction: () => setLogOutModalData(null),
+            contentButtonsStyles: { marginTop: "-5%" }
+        })
+    }
 
     return (
         <>
             <ScrollView contentContainerStyle={globalStyles.container}>
                 <HeaderScreens screenName={"Perfil"} />
+                <DefaultModal
+                    modalContent={logOutModalData}
+                />
+
                 <View style={{ alignItems: 'center' }}>
                     <View>
                         {
@@ -47,7 +70,7 @@ export const Profile = ({ navigation }) => {
                     <LinkProfile text={"Segurança"} icon={<CheckIcon />} action={() => navigation.navigate("Security")} />
                     <LinkProfile text={"Política de Privacidade"} icon={<PadlockIcon />} action={() => navigation.navigate("PrivacyPolicies")} />
 
-                    <TouchableOpacity style={styles.logOutLink} onPress={() => logOut(navigation, setSomethingWrong)}>
+                    <TouchableOpacity style={styles.logOutLink} onPress={handleLogOut}>
                         <View style={{ flexDirection: 'row' }}>
                             <LogOutIcon />
                             <Text style={styles.logOutText}>Sair</Text>

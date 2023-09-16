@@ -1,6 +1,6 @@
 export const getNameLastName = (name) => {
 
-    if (!name || name.includes(undefined)) return null
+    if (!name) return null
 
     name = name.split(" ")
 
