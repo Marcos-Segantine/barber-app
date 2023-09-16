@@ -107,7 +107,7 @@ export const ConfirmSchedule = ({ route, navigation }) => {
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
                         <Text style={styles.describe}>Endereço</Text>
-                        <Text style={styles.info}>Alameda dos Jacarandas Parque, 123</Text>
+                        <Text style={styles.info}>{settings?.address + settings?.neighborhood}</Text>
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>

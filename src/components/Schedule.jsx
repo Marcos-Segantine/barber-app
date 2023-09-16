@@ -18,6 +18,7 @@ import { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native"
 
 import { SomethingWrongContext } from "../context/SomethingWrongContext";
+import { AppSettingsContext } from "../context/AppSettings";
 
 import { globalStyles } from "../assets/globalStyles"
 import DefaultPicture from "../assets/icons/DefaultPicture.png"
@@ -37,7 +38,6 @@ import { getProfessionalInfoByName } from "../services/schedules/getProfessional
 import { cancelSchedule } from "../services/schedules/cancelSchedule";
 
 import { verifyIfUserCanCancelSchedule } from "../validation/verifyIfUserCanCancelSchedule";
-import { AppSettingsContext } from "../context/AppSettings";
 
 export const Schedule = ({ schedule }) => {
     const [professionalPicture, setProfessionalPicture] = useState(null)
@@ -45,6 +45,7 @@ export const Schedule = ({ schedule }) => {
     const [contactVisible, setContactVisible] = useState(false)
 
     const { setSomethingWrong } = useContext(SomethingWrongContext)
+    const { settings } = useContext(AppSettingsContext)
 
     const handleCancel = () => {
 
@@ -99,7 +100,7 @@ export const Schedule = ({ schedule }) => {
             <DefaultModal
                 modalContent={cancelScheduleState}
             />
-            <Contact 
+            <Contact
                 modalContact={contactVisible}
                 setModalVisible={setContactVisible}
             />
@@ -123,9 +124,10 @@ export const Schedule = ({ schedule }) => {
                         )
                 }
 
-                <View style={{ justifyContent: 'space-around' }}>
+                <View style={{ justifyContent: 'space-around', width: "60%" }}>
                     <Text style={styles.barbershopName}>{getNameLastName(schedule.professional)}</Text>
-                    <Text style={[styles.text, { color: "#00000090" }]}>ENDEREÇO</Text>
+                    <Text style={[styles.text, { color: "#00000090" }]}>{settings?.address}</Text>
+                    <Text style={[styles.text, { color: "#00000090", marginTop: -10 }]}>{settings?.neighborhood}</Text>
                     <View>
                         <Text style={[styles.text, { color: "#00000090", fontFamily: globalStyles.fontFamilyBold }]}>Serviços: </Text>
                         <Text style={[styles.text, { color: globalStyles.orangeColor, fontFamily: globalStyles.fontFamilyBold }]}>
@@ -179,10 +181,12 @@ const styles = StyleSheet.create({
         borderBottomWidth: .2,
         borderColor: "#00000060",
         paddingVertical: 10,
+        width: "100%"
     },
 
     img: {
         width: 120,
+        maxWidth: "40%",
         height: 120,
         marginRight: 15,
         borderRadius: 150
@@ -196,7 +200,8 @@ const styles = StyleSheet.create({
 
     text: {
         fontSize: globalStyles.fontSizeVerySmall,
-        fontFamily: globalStyles.fontFamilyMedium
+        fontFamily: globalStyles.fontFamilyMedium,
+        width: "100%",
     },
 
     contentButtons: {
