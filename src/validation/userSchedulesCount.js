@@ -7,13 +7,9 @@ export const userSchedulesCount = async (
     setSchedulesUserCount
 ) => {
     const schedulesByUserRef = firestore().collection("schedules_by_user").doc(userUid)
-    const schedulesByUserData = (await schedulesByUserRef.get()).data()
-
-    const data = filterSchedulesByDate(schedulesByUserData.schedules)
 
     schedulesByUserRef.onSnapshot((data) => {
-        setSchedulesUserCount(data.data().schedules.length)
+        setSchedulesUserCount(filterSchedulesByDate(data.data().schedules).length)
     });
 
-    setSchedulesUserCount(data.length)
 }
