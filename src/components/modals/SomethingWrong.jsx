@@ -6,19 +6,33 @@
  */
 
 import { Modal, StyleSheet, View, Text } from "react-native"
+import { useState } from "react"
 
 import { globalStyles } from "../../assets/globalStyles"
 import { SomethingWrongImage } from "../../assets/imgs/SomethingWrongImage"
 
 import { Button } from "../Button"
 
-export const SomethingWrong = ({ somethingWrongVisible }) => {
+import { Contact } from "./Contact"
+
+import { useNavigation } from "@react-navigation/native"
+
+export const SomethingWrong = ({ somethingWrongVisible, setSomethingWrongVisible }) => {
+    const [contactModalVisible, setContactModalVisible] = useState(false)
+
+    const navigation = useNavigation()
+
     return (
         <Modal
-            visible={somethingWrongVisible && false}
+            visible={somethingWrongVisible}
             transparent={true}
             animationType={"fade"}
         >
+            <Contact
+                modalContact={contactModalVisible}
+                setModalVisible={setContactModalVisible}
+            />
+
             <View style={styles.container}>
                 <View style={styles.content}>
                     <SomethingWrongImage />
@@ -29,11 +43,16 @@ export const SomethingWrong = ({ somethingWrongVisible }) => {
                     <Button
                         text={"Home"}
                         addStyles={{ marginBottom: 10 }}
+                        action={() => {
+                            navigation.navigate("Home")
+                            setSomethingWrongVisible(false)
+                        }}
                     />
                     <Button
                         text={"Nossos Contatos"}
                         addStyles={{ backgroundColor: "#fff8ef" }}
                         addStylesText={{ color: globalStyles.orangeColor }}
+                        action={() => setContactModalVisible(true)}
                     />
                 </View>
             </View>
@@ -60,7 +79,7 @@ const styles = StyleSheet.create({
         fontSize: globalStyles.fontSizeSmall,
         marginVertical: 15,
         fontFamily: globalStyles.fontFamilyBold,
-        maxWidth: "80%",
+        maxWidth: "85%",
         textAlign: 'center',
     },
 
@@ -69,6 +88,6 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         alignItems: 'center',
         width: "80%",
-        height: "70%"
+        paddingVertical: 15
     }
 })

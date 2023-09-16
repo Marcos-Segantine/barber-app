@@ -23,7 +23,7 @@ import { handleNavigation } from "../handlers/handleNavigation"
 export const ComeBack = ({ text }) => {
     const navigation = useNavigation()
 
-    const { somethingWrong } = useContext(SomethingWrongContext)
+    const { somethingWrong, setSomethingWrong } = useContext(SomethingWrongContext)
     const { userData } = useContext(UserContext)
 
     // Handle the navigation when the user presses the back button.
@@ -40,7 +40,10 @@ export const ComeBack = ({ text }) => {
 
     return (
         <View style={styles.container}>
-            <SomethingWrong somethingWrongVisible={somethingWrong} />
+            <SomethingWrong
+                somethingWrongVisible={somethingWrong}
+                setSomethingWrongVisible={setSomethingWrong}
+            />
 
             <TouchableOpacity onPress={handleComeBack}>
                 <ArrowComeBack />

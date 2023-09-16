@@ -22,8 +22,8 @@ import { getPreviousScreensName } from "../utils/getPreviousScreensName";
 import { handleNavigation } from "../handlers/handleNavigation";
 
 export const HeaderScreens = ({ screenName }) => {
-  const { somethingWrong } = useContext(SomethingWrongContext)
-  const {userData} = useContext(UserContext)
+  const { somethingWrong, setSomethingWrong } = useContext(SomethingWrongContext)
+  const { userData } = useContext(UserContext)
 
   const navigation = useNavigation();
 
@@ -38,7 +38,10 @@ export const HeaderScreens = ({ screenName }) => {
 
   return (
     <View style={styles.container}>
-      <SomethingWrong somethingWrongVisible={somethingWrong} />
+      <SomethingWrong
+        somethingWrongVisible={somethingWrong}
+        setSomethingWrongVisible={setSomethingWrong}
+      />
 
       <View
         style={{
