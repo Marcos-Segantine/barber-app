@@ -9,7 +9,7 @@
 
 import firestore from '@react-native-firebase/firestore';
 
-import { getDay, getMonth, getProfessional, getYear } from '../../utils/dateHelper';
+import { getDay, getMonth, getYear } from '../../utils/dateHelper';
 import { getCurrentHour } from '../../utils/getCurrentHour';
 import { getWeekDay } from '../../utils/getWeekDay';
 
@@ -23,7 +23,6 @@ export const getAvailableTimesByProfessional = async (
         const year = getYear(scheduleInfo);
         const month = getMonth(scheduleInfo);
         const day = getDay(scheduleInfo);
-        const professional = getProfessional(scheduleInfo)
 
         const weekday = getWeekDay(scheduleInfo.day)
 
@@ -35,7 +34,15 @@ export const getAvailableTimesByProfessional = async (
 
         const currentDay = new Date().getDate();
         const currentMonth = new Date().getMonth() + 1;
-        const currentHour = getCurrentHour();
+        const currentHour = +getCurrentHour();
+        const currentMinutes = +new Date().getMinutes();
+
+        const verifyHourAndMinutes = (schedule) => {
+            const hour = +schedule.split(':')[0]
+            const minutes = +schedule.split(':')[1]
+
+            return hour >= currentHour && minutes > currentMinutes
+        }
 
         // Check if the current date matches the schedule date
         const currentDate = Number(day) === Number(currentDay) && Number(currentMonth) === Number(month)
@@ -50,30 +57,30 @@ export const getAvailableTimesByProfessional = async (
         // Return the working hours filtered by unavailable times from the professional and
         // Current hour, that is, just return the hour that doesn't passed
         else if (unavailableTimesData[day] && currentDate)
-            return workingHoursData.filter(schedule => Number(schedule.split(":")[0]) > Number(currentHour) && !unavailableTimesData[day][professional].includes(schedule))
+            return workingHoursData.filter(schedule => verifyHourAndMinutes(schedule) && !unavailableTimesData[day][professionalUid].includes(schedule))
 
         // If there's no unavailable times for the day selected, means that the professional is available 
         // So, just return the hour that doesn't passed
         else if (!unavailableTimesData[day] && currentDate)
-            return workingHoursData.filter(schedule => Number(schedule.split(":")[0]) > Number(currentHour))
+            return workingHoursData.filter(schedule => verifyHourAndMinutes(schedule))
 
         // Return the working hours filtered by unavailable times from the professional and
         // Current hour, that is, just return the hour that doesn't passed
-        else if (unavailableTimesData[day]?.[professional] && currentDate)
-            return workingHoursData.filter(schedule => Number(schedule.split(":")[0]) > Number(currentHour) && !unavailableTimesData[day][professional].includes(schedule))
+        else if (unavailableTimesData[day]?.[professionalUid] && currentDate)
+            return workingHoursData.filter(schedule => verifyHourAndMinutes(schedule) && !unavailableTimesData[day][professionalUid].includes(schedule))
 
         // If the there's no unavailable times for the professional in selected day
         // So, just return the hour that doesn't passed
-        else if (!unavailableTimesData[day]?.[professional] && currentDate)
-            return workingHoursData.filter(schedule => Number(schedule.split(":")[0]) > Number(currentHour))
+        else if (!unavailableTimesData[day]?.[professionalUid] && currentDate)
+            return workingHoursData.filter(schedule => verifyHourAndMinutes(schedule))
 
         // If there's no unavailable times in the selected day and professional, just return all working hours
         else if (!unavailableTimesData[day]) return workingHoursData
-        else if (!unavailableTimesData[day][professional]) return workingHoursData
+        else if (!unavailableTimesData[day][professionalUid]) return workingHoursData
 
         // Filter the working hours by removing the unavailable times from the professional
         const dataTemp = workingHoursData.filter(time => {
-            return !unavailableTimesData[day][professional].includes(time)
+            return !unavailableTimesData[day][professionalUid].includes(time)
         })
 
         return dataTemp
