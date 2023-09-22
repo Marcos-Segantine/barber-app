@@ -31,7 +31,6 @@ export const FillProfile = ({ navigation, route }) => {
 
     const [informationNewUser, setInformationNewUser] = useState({
         name: "",
-        nickname: "",
         email: emailNewUser || "",
         phone: "",
         gender: "",
@@ -133,12 +132,6 @@ export const FillProfile = ({ navigation, route }) => {
                     placeholder="Nome completo"
                     placeholderTextColor={"#00000050"}
                     onChangeText={text => setInformationNewUser({ ...informationNewUser, name: text })}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Apelido (como devemos te chamar)"
-                    placeholderTextColor={"#00000050"}
-                    onChangeText={text => setInformationNewUser({ ...informationNewUser, nickname: text })}
                 />
                 <TextInput
                     style={styles.input}

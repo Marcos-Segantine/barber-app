@@ -72,7 +72,6 @@ export const createUserWithEmailAndPassword = async (
 
     userDoc.set({
       name: capitalizeName(informationNewUser.name),
-      nickname: informationNewUser.nickname,
       email: informationNewUser.email,
       password: password,
       phone: informationNewUser.phone,

@@ -57,7 +57,6 @@ export const updateInformation = async (
         // Create an object with the updated user data
         const userDataObj = {
             name: trim(name || userData.name),
-            nickname: informationNewUser.nickname || userData.nickname,
             email: trim(informationNewUser.email || userData.email),
             password: password || userData.password,
             phone: informationNewUser.phone || userData.phone,

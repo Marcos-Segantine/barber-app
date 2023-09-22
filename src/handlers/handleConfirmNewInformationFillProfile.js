@@ -47,7 +47,7 @@ export const handleConfirmNewInformationFillProfile = async (
     if (isToCreateUserState) {
         const isFieldsAvailable = verifyFieldsToCreateAccount(
             { ...informationNewUser, gender, },
-            ["name", "nickname", "email", "phone", "gender"],
+            ["name", "email", "phone", "gender"],
             setModalInfo
         )
 

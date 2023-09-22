@@ -54,17 +54,5 @@ export const verifyFieldsToCreateAccount = (userInformation, fields, setError) =
         return false
     }
 
-    else if (userInformation.nickname.length >= 20) {
-        setError({
-            image: <StopProcessError />,
-            mainMessage: "Apelido muito grande",
-            message: "Por favor, insira um apelido um pouco menor",
-            firstButtonAction: () => setError(null),
-            firstButtonText: "Entendi",
-        })
-
-        return false
-    }
-
     return true
 }

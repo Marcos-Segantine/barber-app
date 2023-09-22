@@ -51,7 +51,6 @@ export const UserProvider = ({ children }) => {
           userDataCollection && setUserData(
             {
               name: userDataCollection.name,
-              nickname: userDataCollection.nickname,
               email: userDataCollection.email,
               password: userDataCollection.password,
               phone: userDataCollection.phone,
