@@ -38,10 +38,13 @@ export const updateInformation = async (
 
         const batch = firestore().batch()
 
-        // Set a document with an empty array in the schedules_by_user collection
-        batch.set(schedulesByUserRef, {
-            schedules: [],
-        })
+        if (isToCreateUser) {
+            // Set a document with an empty array in the schedules_by_user collection
+            batch.set(schedulesByUserRef, {
+                schedules: [],
+            })
+
+        }
 
         // Upload the new profile picture if provided
         if (informationNewUser.profilePicture) {

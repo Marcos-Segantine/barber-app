@@ -23,7 +23,7 @@ import { trim } from "../utils/trim"
 export const Login = ({ navigation, route }) => {
     const { emailNewUser, passwordNewUser } = route.params ? route.params : {}
 
-    const [inputSelected, setInputSelected] = useState("")
+    const [inputSelected, setInputSelected] = useState(null)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
@@ -47,6 +47,8 @@ export const Login = ({ navigation, route }) => {
     const handleFocusInput = (field) => setInputSelected(field)
 
     const handleLogin = () => {
+        setInputSelected(null)
+
         signInWithEmailAndPassword(
             navigation,
             trim(email),

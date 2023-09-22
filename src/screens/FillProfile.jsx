@@ -197,6 +197,7 @@ export const FillProfile = ({ navigation, route }) => {
                     handleConfirmNewInformation :
                     handleConfirmEmailPhoneChange
                 }
+                addStyles={{ marginBottom: 30 }}
             />
         </ScrollView>
     )

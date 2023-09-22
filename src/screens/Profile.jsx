@@ -93,12 +93,14 @@ const styles = StyleSheet.create({
         color: '#000000',
         marginTop: 20,
         marginBottom: 5,
+        textAlign: "center"
     },
-
+    
     userEmail: {
         fontSize: globalStyles.fontSizeSmall,
         fontFamily: globalStyles.fontFamilyBold,
-        color: '#000000'
+        color: '#000000',
+        textAlign: "center"
     },
 
     content: {
