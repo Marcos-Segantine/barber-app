@@ -24,15 +24,21 @@ export const Service = ({
  * @param {Object} service - The service object.
  */
   const handleSelectServices = (service) => {
-    if (servicesSelected.length >= 4) return;
+    let isServiceSelected = null;
 
-    if (servicesSelected.includes(service)) {
+    for (const currentService of servicesSelected) {
+      if (currentService.name === service.name) isServiceSelected = true;
+    }
+
+    if (servicesSelected.length >= 4 && isServiceSelected === null) return;
+
+    if (isServiceSelected) {
       removeServiceSelected(service.name);
 
       return;
     }
 
-    setServicesSelected((prev) => [...prev, service]);
+    setServicesSelected([...servicesSelected, service]);
   };
 
   // Determine the style of the container based on whether the service is selected

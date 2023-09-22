@@ -59,11 +59,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: "100%",
-        paddingRight: 10,
+        paddingRight: 15,
     },
 
     text: {
         color: '#000000',
-        fontSize: globalStyles.fontSizeLarger,
+        fontSize: globalStyles.fontSizeMedium,
+        fontFamily: globalStyles.fontFamilyBold
     }
 })

@@ -33,7 +33,7 @@ export const MySchedules = ({ navigation }) => {
 
     return (
         <>
-            <ScrollView contentContainerStyle={[globalStyles.container, { minHeight: "90%", justifyContent: "space-between" }]}>
+            <ScrollView contentContainerStyle={[globalStyles.container, { height: "100%", justifyContent: schedulesUser.length ? "flex-start" : "space-between", }]}>
                 <HeaderScreens screenName={"Meus Horários"} />
 
                 {
@@ -58,7 +58,7 @@ export const MySchedules = ({ navigation }) => {
                     <Button
                         text={"Agendar um horário"}
                         action={() => navigation.navigate("NewSchedule", { headerText: "Agendar Horário", scheduleToUpdate: null, isToUpdateSchedule: null })}
-                        addStyles={{ alignSelf: "center", marginBottom: 30, width: "75%" }}
+                        addStyles={{ alignSelf: "center", position: "absolute", bottom: "5%", width: "80%" }}
                     />
                 }
             </ScrollView>

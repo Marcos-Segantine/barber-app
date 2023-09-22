@@ -109,7 +109,7 @@ export const Home = ({ navigation }) => {
         {
           (schedulesUserCount < 2) &&
           <Text style={styles.title}>
-            Agende {schedulesUserCount < 2 ? "mais um" : "um"} horário
+            Agende {schedulesUserCount === 0 ? "um" : "mais um"} horário
           </Text>
         }
 

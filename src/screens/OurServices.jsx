@@ -50,17 +50,17 @@ export const OurServices = ({ navigation, route }) => {
     if (services === null) return <Loading flexSize={1} />
 
     return (
-        <View style={globalStyles.container}>
+        <View style={[globalStyles.container, { flex: 1 }]}>
             <ComeBack text={"Selecione Serviço(s)"} />
 
             <View style={styles.contentServicesSelected}>
-                <Text style={{ color: "#000000", fontSize: globalStyles.fontSizeSmall, fontFamily: globalStyles.fontFamilyBold }}>Serviço(s) selecionado(s):</Text>
+                <Text style={{ color: "#000000", fontSize: globalStyles.fontSizeSmall, fontFamily: globalStyles.fontFamilyBold, marginBottom: 5 }}>Serviço(s) selecionado(s):</Text>
                 {
                     servicesSelected.map((service, index) => {
                         const servicePrice = formatServicePrice(service.price)
 
                         return (
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }} key={index}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }} key={index}>
                                 <View style={{ flexDirection: 'row' }}>
                                     <Pressable onPress={() => removeServiceSelected(service.name)}>
                                         <CloseIcon />
@@ -76,12 +76,12 @@ export const OurServices = ({ navigation, route }) => {
                 <View style={styles.content}>
                     <View style={styles.fieldTotal}>
                         <Text style={[styles.describe, { color: "#000000", fontSize: globalStyles.fontSizeSmall }]}>Total</Text>
-                        <Text style={styles.info}>{totalPriceServicesSelected}</Text>
+                        <Text style={[styles.info, { fontSize: globalStyles.fontSizeSmall }]}>{totalPriceServicesSelected}</Text>
                     </View>
                 </View>
             </View>
 
-            <View style={[styles.contentScroll, { height: `${scrollServicesHeight}%` }]}>
+            <View style={[styles.contentScroll, { height: `${45}%` }]}>
                 <ScrollView>
                     {
                         services &&
@@ -99,15 +99,14 @@ export const OurServices = ({ navigation, route }) => {
                     }
                 </ScrollView>
             </View>
-            <Button
-                text={"Continuar"}
-                action={handleConfirm}
-                isToBlockButton={servicesSelected.length ? false : true}
-                addStyles={servicesSelected.length > 0 ?
-                    { marginBottom: -(servicesSelected.length * 75) } :
-                    { marginBottom: "-20%" }
-                }
-            />
+
+            <View style={{ position: "absolute", bottom: "7%", width: "100%", alignItems: "center" }}>
+                <Button
+                    text={"Continuar"}
+                    action={handleConfirm}
+                    isToBlockButton={servicesSelected.length ? false : true}
+                />
+            </View>
 
         </View >
     )
@@ -119,7 +118,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         width: "100%",
         padding: 15,
-        marginVertical: 20,
+        marginVertical: 10,
     },
 
     describe: {
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
     },
 
     info: {
-        fontSize: globalStyles.fontSizeSmall,
+        fontSize: globalStyles.fontSizeVerySmall,
         color: "#000000",
         fontFamily: globalStyles.fontFamilyBold,
         maxWidth: "75%",
@@ -139,7 +138,7 @@ const styles = StyleSheet.create({
     fieldTotal: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 20,
+        marginTop: 10,
         borderTopWidth: .8,
         borderTopColor: "#000000",
         paddingTop: 10,

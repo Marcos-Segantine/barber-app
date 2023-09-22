@@ -1,7 +1,7 @@
 import { getHour } from "./dateHelper";
 
 export const filterSchedulesByDate = (schedules) => {
-    if(!schedules) return null
+    if (!schedules) return null
 
     const currentDay = Number(new Date().getDate());
     const currentMonth = Number(new Date().getMonth() + 1);
@@ -15,7 +15,7 @@ export const filterSchedulesByDate = (schedules) => {
         if (scheduleYear < currentYear) return false;
         if (scheduleMonth < currentMonth && scheduleYear === currentYear) return false;
         if (scheduleDay < currentDay && scheduleMonth === currentMonth && scheduleYear === currentYear) return false;
-        if(scheduleHour < currentHour && scheduleDay === currentDay && scheduleMonth === currentMonth && scheduleYear === currentYear) return false
+        if (scheduleHour < currentHour && scheduleDay === currentDay && scheduleMonth === currentMonth && scheduleYear === currentYear) return false
 
         return true;
     })
