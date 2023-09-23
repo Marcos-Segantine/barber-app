@@ -5,12 +5,14 @@
  */
 
 import { StyleSheet, Text, View } from "react-native";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { ScheduleContext } from "../context/ScheduleContext";
 
 import { Calendar, LocaleConfig } from "react-native-calendars";
 
 import { globalStyles } from "../assets/globalStyles";
+
+import _ from "loadsh";
 
 LocaleConfig.locales["pt-br"] = {
   monthNames: [
@@ -96,6 +98,13 @@ export const CalendarComponent = ({ preferProfessional }) => {
     borderRadius: 20,
   };
 
+  const handleDayPress = useCallback(
+    _.debounce(day => {
+      setSchedule({ ...schedule, day: day })
+    }, 500),
+    []
+  );
+
   return (
     <>
       <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
@@ -107,7 +116,7 @@ export const CalendarComponent = ({ preferProfessional }) => {
         context={{ date: "" }}
         minDate={String(new Date())}
         markedDates={markedDatesCalendar}
-        onDayPress={(day) => setSchedule({ ...schedule, day: day.dateString })}
+        onDayPress={(day) => handleDayPress(day.dateString)}
         style={styleCalendar}
         theme={themeCalendar}
       />

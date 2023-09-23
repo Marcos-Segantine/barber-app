@@ -20,5 +20,6 @@ export const globalStyles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 40,
         paddingHorizontal: 20,
+        width: "100%"
     },
 })
