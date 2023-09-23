@@ -13,6 +13,7 @@ import { ScheduleContext } from "../context/ScheduleContext"
 import { SomethingWrongContext } from "../context/SomethingWrongContext"
 
 import { formatServicePrice } from "../utils/formatServicePrice"
+import { getTotalPriceFromServices } from "../utils/getTotalPriceFromServices"
 
 import { getServicesOfProfessional } from "../services/schedules/getServicesOfProfessional"
 
@@ -44,8 +45,7 @@ export const OurServices = ({ navigation, route }) => {
         navigation.navigate("ConfirmSchedule", { scheduleToUpdate, isToUpdateSchedule })
     }
 
-    const scrollServicesHeight = 60 - servicesSelected.length * 5
-    const totalPriceServicesSelected = formatServicePrice(servicesSelected.reduce((acc, service) => acc + Number(service.price), 0))
+    const totalPriceServicesSelected = formatServicePrice(getTotalPriceFromServices(servicesSelected))
 
     if (services === null) return <Loading flexSize={1} />
 

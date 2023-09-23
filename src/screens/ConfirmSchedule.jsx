@@ -11,16 +11,17 @@ import { DefaultModal } from "../components/modals/DefaultModal"
 import { ScheduleContext } from "../context/ScheduleContext"
 import { UserContext } from "../context/UserContext"
 import { SomethingWrongContext } from "../context/SomethingWrongContext"
+import { AppSettingsContext } from "../context/AppSettings"
 
 import { globalStyles } from "../assets/globalStyles"
 
 import { formatDate } from "../utils/formatDate"
 import { formatPhoneNumber } from "../utils/formatPhoneNumber"
 import { formatServicePrice } from "../utils/formatServicePrice"
+import { getTotalPriceFromServices } from "../utils/getTotalPriceFromServices"
 
 import { handleConfirmNewSchedule } from "../handlers/handleConfirmNewSchedule"
 import { handleEditExistingSchedule } from "../handlers/handleEditExistingSchedule"
-import { AppSettingsContext } from "../context/AppSettings"
 
 export const ConfirmSchedule = ({ route, navigation }) => {
     const [modalContent, setModalContent] = useState(null)
@@ -86,7 +87,7 @@ export const ConfirmSchedule = ({ route, navigation }) => {
         )
     }
 
-    const totalPriceServicesSelected = schedule.services && formatServicePrice(schedule.services.reduce((acc, service) => acc + Number(service.price), 0))
+    const totalPriceServicesSelected = schedule.services && formatServicePrice(getTotalPriceFromServices(schedule.services))
 
     if (isLoading) return <Loading flexSize={1} />
 

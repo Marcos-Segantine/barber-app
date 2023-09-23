@@ -28,6 +28,8 @@ import { StopProcessError } from "../assets/imgs/StopProcessError";
 import { formatDate } from "../utils/formatDate";
 import { getDayOfWeek } from "../utils/getDayFromWeek";
 import { getNameLastName } from "../utils/getNameLastName";
+import { formatServicePrice } from "../utils/formatServicePrice";
+import { getTotalPriceFromServices } from "../utils/getTotalPriceFromServices";
 
 import { DefaultModal } from "./modals/DefaultModal";
 import { Contact } from "./modals/Contact";
@@ -95,6 +97,8 @@ export const Schedule = ({ schedule }) => {
 
     }, [])
 
+    const totalPriceServicesSelected = schedule.services && formatServicePrice(getTotalPriceFromServices(schedule.services))
+
     return (
         <View style={styles.container}>
             <DefaultModal
@@ -138,6 +142,7 @@ export const Schedule = ({ schedule }) => {
                                 })
                             }
                         </Text>
+                        <Text style={styles.totalPrice}>{totalPriceServicesSelected}</Text>
                     </View>
                 </View>
             </View>
@@ -217,5 +222,12 @@ const styles = StyleSheet.create({
         width: "45%",
         paddingVertical: 5,
         alignItems: 'center',
+    },
+
+    totalPrice: {
+        fontSize: globalStyles.fontSizeVerySmall,
+        color: "#000000",
+        fontFamily: globalStyles.fontFamilyBold,
+        marginTop: 5
     }
 })
