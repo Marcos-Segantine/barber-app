@@ -5,7 +5,7 @@
  * @returns {JSX.Element} The schedules component.
  */
 
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 
 import { ScheduleContext } from "../context/ScheduleContext";
@@ -19,6 +19,8 @@ import { getDay } from "../utils/dateHelper";
 
 import { Loading } from "./Loading";
 import { NoProfessionals } from "./NoProfessionals";
+
+import _ from "loadsh"
 
 export const Schedules = ({ preferProfessional }) => {
   const [availableTimes, setAvailableTimes] = useState(null);
@@ -41,6 +43,13 @@ export const Schedules = ({ preferProfessional }) => {
     )
 
   }, [schedule.professional, schedule.day]);
+
+  const handleDayPress = useCallback(
+    _.debounce(schedule => {
+      setSchedule({ ...schedule, schedule: schedule })
+    }, 500),
+    []
+  );
 
   // Render loading screen if times is still being fetched
   if (availableTimes === null && allTimes === null) return <Loading />;
@@ -96,7 +105,7 @@ export const Schedules = ({ preferProfessional }) => {
               styles.schedule,
               schedule.schedule === time && { backgroundColor: globalStyles.orangeColor },
             ]}
-            onPress={() => setSchedule({ ...schedule, schedule: time })}
+            onPress={() => handleDayPress(time)}
             key={index}
           >
             <Text
