@@ -64,6 +64,8 @@ exports.clearDatabase = onSchedule("every day 00:00", async (event) => {
     batch.set(schedulesMonthRef, schedulesMonthData);
     batch.set(unavailableTimesRef, unavailableTimesData);
     batch.set(schedulesUidRef, schedulesUidData);
+
+    batch.commit();
   }
 
   const removePastMonths = async () => {
@@ -78,6 +80,8 @@ exports.clearDatabase = onSchedule("every day 00:00", async (event) => {
       batch.delete(schedulesMonthRef)
       batch.delete(unavailableTimesRef)
       batch.delete(schedulesUidRef)
+      
+      batch.commit();
     }
     else {
       const docName = currentMonth < 10 ? `0${+currentMonth - 1}_${currentYear}` : `${+currentMonth - 1}_${currentYear}`
@@ -89,6 +93,8 @@ exports.clearDatabase = onSchedule("every day 00:00", async (event) => {
       batch.delete(schedulesMonthRef)
       batch.delete(unavailableTimesRef)
       batch.delete(schedulesUidRef)
+
+      batch.commit();
     }
   }
 
@@ -99,8 +105,6 @@ exports.clearDatabase = onSchedule("every day 00:00", async (event) => {
   else {
     await removePastDays();
   }
-
-  await batch.commit();
 
   logger.log("Database cleanup finished");
 });
