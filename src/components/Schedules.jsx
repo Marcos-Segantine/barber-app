@@ -45,8 +45,8 @@ export const Schedules = ({ preferProfessional }) => {
   }, [schedule.professional, schedule.day]);
 
   const handleDayPress = useCallback(
-    _.debounce(schedule => {
-      setSchedule({ ...schedule, schedule: schedule })
+    _.debounce(time => {
+      setSchedule({ ...schedule, schedule: time })
     }, 500),
     []
   );
