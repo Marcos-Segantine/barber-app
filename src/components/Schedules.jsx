@@ -48,7 +48,7 @@ export const Schedules = ({ preferProfessional }) => {
     _.debounce(time => {
       setSchedule({ ...schedule, schedule: time })
     }, 500),
-    []
+    [schedule.day, schedule.professionalUid]
   );
 
   // Render loading screen if times is still being fetched

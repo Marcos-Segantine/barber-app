@@ -102,7 +102,7 @@ export const CalendarComponent = ({ preferProfessional }) => {
     _.debounce(day => {
       setSchedule({ ...schedule, day: day })
     }, 500),
-    []
+    [schedule.schedule, schedule.professionalUid]
   );
 
   return (
