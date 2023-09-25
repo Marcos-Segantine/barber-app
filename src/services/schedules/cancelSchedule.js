@@ -56,12 +56,9 @@ export const cancelSchedule = async (
 
     unavailableData[scheduleDay][professional] = newData;
 
-    // Format the schedule UID
-    const scheduleUidFormatted = scheduleInfo.scheduleUid.split('-').slice(1, 6).join('-')
-    
     // Get and update the schedules_uid
     const schedulesUidData = (await schedulesUidRef.get()).data().schedules
-    const schedulesUidUpdated = schedulesUidData.filter(scheduleUid => scheduleUid !== scheduleUidFormatted);
+    const schedulesUidUpdated = schedulesUidData.filter(scheduleUid => scheduleUid !== scheduleInfo.scheduleUid);
 
     batch.update(schedulesByUserRef, { schedules: newSchedules });
     batch.update(schedulesMonthRef, schedulesMonthData);
