@@ -7,6 +7,8 @@
 
 import firestore from '@react-native-firebase/firestore';
 
+import { sortByHour } from '../../utils/sortByHour';
+
 export const getAllTimes = async (setSomethingWrong) => {
     try {
 
@@ -16,7 +18,7 @@ export const getAllTimes = async (setSomethingWrong) => {
         // If there is no working hours, return `undefined` to frontend show a message explaining that
         if (workingHoursData === undefined) return undefined
 
-        return workingHoursData
+        return sortByHour(workingHoursData)
 
     } catch (error) {
         console.log(error);

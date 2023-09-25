@@ -14,7 +14,7 @@ export const verifyIfUserHasLogged = async (navigation) => {
             if (!user) {
                 setTimeout(() => {
                     navigation.navigate("Login")
-                }, 3000);
+                }, 500);
 
                 return
             }
@@ -24,18 +24,18 @@ export const verifyIfUserHasLogged = async (navigation) => {
             if (userEmailVerified) {
                 setTimeout(() => {
                     navigation.navigate("Home")
-                }, 3000);
+                }, 500);
             }
             else if (user.empty || !userEmailVerified) {
                 setTimeout(() => {
                     navigation.navigate("Login")
-                }, 3000);
+                }, 500);
             }
 
         } else {
             setTimeout(() => {
                 navigation.navigate("LoginWay");
-            }, 3000);
+            }, 500);
         }
 
     } catch (error) {

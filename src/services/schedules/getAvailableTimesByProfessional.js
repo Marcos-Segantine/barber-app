@@ -12,6 +12,7 @@ import firestore from '@react-native-firebase/firestore';
 import { getDay, getMonth, getYear } from '../../utils/dateHelper';
 import { getCurrentHour } from '../../utils/getCurrentHour';
 import { getWeekDay } from '../../utils/getWeekDay';
+import { sortByHour } from '../../utils/sortByHour';
 
 export const getAvailableTimesByProfessional = async (
     scheduleInfo,
@@ -41,7 +42,7 @@ export const getAvailableTimesByProfessional = async (
             const hour = +schedule.split(':')[0]
             const minutes = +schedule.split(':')[1]
 
-            return hour >= currentHour && minutes > currentMinutes
+            return hour >= currentHour && (hour === currentHour ? !!(minutes > currentMinutes) : true)
         }
 
         // Check if the current date matches the schedule date
@@ -83,7 +84,7 @@ export const getAvailableTimesByProfessional = async (
             return !unavailableTimesData[day][professionalUid].includes(time)
         })
 
-        return dataTemp
+        return sortByHour(dataTemp)
 
     } catch (error) {
         console.error(error);
