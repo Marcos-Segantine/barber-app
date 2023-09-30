@@ -23,7 +23,7 @@ exports.canUseApp = functions.region("southamerica-east1").https.onRequest((requ
   response.json(responseData);
 });
 
-exports.clearDatabase = onSchedule("every day 04:00", async () => {
+exports.clearDatabase = onSchedule("every day 04:10", async () => {
   const date = new Date();
   const currentYear = +date.getFullYear();
   const currentMonth = +date.getMonth() + 1;

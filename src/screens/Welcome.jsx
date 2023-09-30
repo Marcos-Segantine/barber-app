@@ -30,7 +30,7 @@ export const Welcome = ({ navigation }) => {
       }
       const data = await response.json();
 
-      if (data.response && false) {
+      if (data.response) {
         verifyIfUserHasLogged(navigation);
       }
       else {

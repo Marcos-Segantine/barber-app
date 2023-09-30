@@ -4,8 +4,8 @@
  * @returns {JSX.Element} - The rendered calendar component.
  */
 
-import { StyleSheet, Text, View } from "react-native";
-import { useCallback, useContext } from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ScheduleContext } from "../context/ScheduleContext";
 
 import { Calendar, LocaleConfig } from "react-native-calendars";
@@ -13,6 +13,7 @@ import { Calendar, LocaleConfig } from "react-native-calendars";
 import { globalStyles } from "../assets/globalStyles";
 
 import _ from "loadsh";
+import { getDaysBlocked } from "../services/schedules/getDaysBlocked";
 
 LocaleConfig.locales["pt-br"] = {
   monthNames: [
@@ -56,7 +57,7 @@ LocaleConfig.locales["pt-br"] = {
 };
 
 export const CalendarComponent = ({ preferProfessional }) => {
-  LocaleConfig.defaultLocale = "pt-br";
+  const [daysBlocked, setDaysBlocked] = useState(null);
 
   const { schedule, setSchedule } = useContext(ScheduleContext);
 
@@ -64,12 +65,25 @@ export const CalendarComponent = ({ preferProfessional }) => {
   const month = new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth() + 1}`;
   const day = new Date().getDate() < 10 ? `0${new Date().getDate()}` : `${new Date().getDate()}`;
 
-  // Determine the denied days for the calendar
-  const deniedDays = preferProfessional || { [`${year}-${month}-${day}`]: { disabled: true, disableTouchEvent: true } };
+  LocaleConfig.defaultLocale = "pt-br";
+
+  useEffect(() => {
+
+    (async () => {
+
+      if (preferProfessional === false) return
+      setDaysBlocked(await getDaysBlocked(schedule.professionalUid));
+
+    })();
+
+  }, [preferProfessional])
+
+  const deniedDay = preferProfessional || { [`${year}-${month}-${day}`]: { disabled: true, disableTouchEvent: true } };
 
   // Set the marked dates for the calendar
   const markedDatesCalendar = {
-    ...deniedDays,
+    ...deniedDay,
+    ...daysBlocked,
     [schedule.day]: {
       selected: true,
       marked: true,
@@ -78,10 +92,10 @@ export const CalendarComponent = ({ preferProfessional }) => {
   };
 
   const themeCalendar = {
-    calendarBackground: "#fff8ef",
+    calendarBackground: globalStyles.champagneColor,
     todayTextColor: globalStyles.orangeColor,
     dayTextColor: "#000000",
-    selectedDayTextColor: "#fff8ef",
+    selectedDayTextColor: globalStyles.champagneColor,
     selectedDayBackgroundColor: "#000000",
     textDisabledColor: "#00000040",
     textSectionTitleColor: "#000000",
@@ -92,8 +106,10 @@ export const CalendarComponent = ({ preferProfessional }) => {
     textDayHeaderFontFamily: globalStyles.fontFamilyBold,
   };
 
+  const { width } = Dimensions.get('screen')
+
   const styleCalendar = {
-    width: 350,
+    width: width - 20,
     padding: 5,
     borderRadius: 20,
   };
