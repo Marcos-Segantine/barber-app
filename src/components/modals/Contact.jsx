@@ -5,7 +5,34 @@ import { Button } from "../Button"
 import { ContactImage } from "../../assets/imgs/ContactImage"
 import { globalStyles } from "../../assets/globalStyles"
 
+import { useEffect, useState } from "react"
+import { Loading } from "../Loading"
+
+import firestore from '@react-native-firebase/firestore';
+
+import { formatPhoneNumber } from "../../utils/formatPhoneNumber"
+
 export const Contact = ({ modalContact, setModalVisible }) => {
+    // const [isLoading, setIsLoading] = useState(true)
+    const [contacts, setContacts] = useState(null)
+
+    useEffect(() => {
+        (async () => {
+
+            const barbersRef = await firestore().collection('barbers').get()
+            const barbersData = barbersRef.docs.splice(0, 3).map(barber => {
+                return {
+                    name: barber.data().name,
+                    phone: barber.data().phone
+                }
+            })
+
+            setContacts(barbersData)
+
+        })();
+
+    }, [])
+
     return (
         <Modal
             visible={modalContact}
@@ -18,42 +45,29 @@ export const Contact = ({ modalContact, setModalVisible }) => {
 
                 <View style={styles.content}>
 
-                    <View style={styles.contact}>
-                        <Text style={styles.info}>
-                            <Text style={{ fontFamily: globalStyles.fontFamilyBold }}>Nome: </Text>
-                            Contato 1
-                        </Text>
-                        <Text style={styles.info}>
-                            <Text style={{ fontFamily: globalStyles.fontFamilyBold }}>Número: </Text>
-                            Contato 1
-                        </Text>
-                    </View>
+                    {
+                        !!contacts ?
+                            contacts.map((barber, index) => {
+                                return (
+                                    <View style={styles.contact} key={index}>
+                                        <Text style={styles.info}>
+                                            <Text style={{ fontFamily: globalStyles.fontFamilyBold }}>Nome: </Text>
+                                            {barber.name}
+                                        </Text>
+                                        <Text style={styles.info}>
+                                            <Text style={{ fontFamily: globalStyles.fontFamilyBold }}>Número: </Text>
+                                            {formatPhoneNumber(barber.phone)}
+                                        </Text>
+                                    </View>
+                                )
+                            }) :
+                            <Loading height={"100%"} />
+                    }
 
-                    <View style={styles.contact}>
-                        <Text style={styles.info}>
-                            <Text style={{ fontFamily: globalStyles.fontFamilyBold }}>Nome: </Text>
-                            Contato 1
-                        </Text>
-                        <Text style={styles.info}>
-                            <Text style={{ fontFamily: globalStyles.fontFamilyBold }}>Número: </Text>
-                            Contato 1
-                        </Text>
-                    </View>
-
-                    <View style={styles.contact}>
-                        <Text style={styles.info}>
-                            <Text style={{ fontFamily: globalStyles.fontFamilyBold }}>Nome: </Text>
-                            Contato 1
-                        </Text>
-                        <Text style={styles.info}>
-                            <Text style={{ fontFamily: globalStyles.fontFamilyBold }}>Número: </Text>
-                            Contato 1
-                        </Text>
-                    </View>
                 </View>
 
                 <Button
-                    text={"Confirmar"}
+                    text={"Voltar"}
                     action={() => setModalVisible(false)}
                     addStyles={{ width: "100%" }}
                 />

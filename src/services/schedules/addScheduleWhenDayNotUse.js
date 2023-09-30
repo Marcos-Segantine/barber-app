@@ -97,7 +97,7 @@ export const addScheduleWhenDayNotUse = async (
         image: <NewScheduleConfirmation />,
         mainMessage: "Agendamento Confirmado!",
         message: "Agora é só esperar o dia e comparecer no horário marcado",
-        firstButtonText: "Confirmar",
+        firstButtonText: "Página Inicial",
         firstButtonAction: () => {
           navigation.navigate("Home");
         }
