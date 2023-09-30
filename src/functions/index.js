@@ -23,88 +23,84 @@ exports.canUseApp = functions.region("southamerica-east1").https.onRequest((requ
   response.json(responseData);
 });
 
-exports.clearDatabase = onSchedule("every day 00:00", async (event) => {
+exports.clearDatabase = onSchedule("every day 04:00", async () => {
   const date = new Date();
-  const currentDate = date.getDate();
-  const currentMonth = date.getMonth() + 1;
-  const currentYear = date.getFullYear();
+  const currentYear = +date.getFullYear();
+  const currentMonth = +date.getMonth() + 1;
+  const currentDay = +date.getDate();
 
-  const batch = admin.firestore().batch()
-
-  const docsName = `${currentMonth}_${currentYear}`;
+  const batch = admin.firestore().batch();
 
   const removePastDays = async () => {
-
-    const filterSchedulesUid = async () => {
-      const dataTemp = (await schedulesUidRef.get()).data();
-      const schedules = dataTemp.schedules;
-
-      return schedules.filter(schedule => {
-        +schedule.split("-")[3] >= +currentDate;
-      })
-    }
-
-    const schedulesMonthRef = admin.firestore().collection("schedules_month").doc(docsName);
-    const unavailableTimesRef = admin.firestore().collection("unavailable_times").doc(docsName);
-    const schedulesUidRef = admin.firestore().collection("schedules_uid").doc(docsName);
+    const schedulesMonthRef = admin.firestore().collection('schedules_month').doc(`${currentMonth}_${currentYear}`);
+    const unavailableTimesRef = admin.firestore().collection('unavailable_times').doc(`${currentMonth}_${currentYear}`);
+    const schedulesUidRef = admin.firestore().collection('schedules_uid').doc(`${currentMonth}_${currentYear}`);
 
     const schedulesMonthData = (await schedulesMonthRef.get()).data();
     const unavailableTimesData = (await unavailableTimesRef.get()).data();
-    const schedulesUidData = filterSchedulesUid()
+    const schedulesUidData = (await schedulesUidRef.get()).data();
 
-    const daysInCurrentMonth = Object.keys(schedulesMonthData);
+    if (schedulesMonthData) {
+      const days = Object.keys(schedulesMonthData);
 
-    for (const day of daysInCurrentMonth) {
-      if (+day < +currentDate) {
-        delete schedulesMonthData[day]
-        delete unavailableTimesData[day]
+      for (const day of days) {
+        if (+day < +currentDay) {
+          delete schedulesMonthData[day];
+        }
       }
+    }
+
+    if (unavailableTimesData) {
+      const days = Object.keys(unavailableTimesData)
+
+      for (const day of days) {
+        if (+day < +currentDay) {
+          delete unavailableTimesData[day];
+        }
+      }
+    }
+
+    if (schedulesUidData) {
+      const elementsToRemove = [];
+
+      for (const scheduleUid of schedulesUidData.schedules) {
+        const [year, month, day] = scheduleUid.split("-").splice(1, 3)
+
+        if (+day < currentDay) {
+          elementsToRemove.push(scheduleUid);
+        }
+      }
+
+      schedulesUidData.schedules = schedulesUidData.schedules.filter(
+        (item, index) => !elementsToRemove.includes(item)
+      )
     }
 
     batch.set(schedulesMonthRef, schedulesMonthData);
     batch.set(unavailableTimesRef, unavailableTimesData);
     batch.set(schedulesUidRef, schedulesUidData);
-
-    batch.commit();
   }
 
   const removePastMonths = async () => {
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const lastYear = currentMonth === 1 ? currentYear - 1 : currentYear;
 
-    if (+currentMonth === 1) {
-      const docName = `12_${+currentYear - 1}`;
+    const schedulesMonthRef = admin.firestore().collection('schedules_month').doc(`${lastMonth}_${lastYear}`);
+    const unavailableTimesRef = admin.firestore().collection('unavailable_times').doc(`${lastMonth}_${lastYear}`);
+    const schedulesUidRef = admin.firestore().collection('schedules_uid').doc(`${lastMonth}_${lastYear}`);
 
-      const schedulesMonthRef = admin.firestore().collection("schedules_month").doc(docName);
-      const unavailableTimesRef = admin.firestore().collection("unavailable_times").doc(docName);
-      const schedulesUidRef = admin.firestore().collection("schedules_uid").doc(docsName);
+    const schedulesMonthData = (await schedulesMonthRef.get()).data();
+    const unavailableTimesData = (await unavailableTimesRef.get()).data();
+    const schedulesUidData = (await schedulesUidRef.get()).data();
 
-      batch.delete(schedulesMonthRef)
-      batch.delete(unavailableTimesRef)
-      batch.delete(schedulesUidRef)
-      
-      batch.commit();
-    }
-    else {
-      const docName = currentMonth < 10 ? `0${+currentMonth - 1}_${currentYear}` : `${+currentMonth - 1}_${currentYear}`
 
-      const schedulesMonthRef = admin.firestore().collection("schedules_month").doc(docName);
-      const unavailableTimesRef = admin.firestore().collection("unavailable_times").doc(docName);
-      const schedulesUidRef = admin.firestore().collection("schedules_uid").doc(docName);
-
-      batch.delete(schedulesMonthRef)
-      batch.delete(unavailableTimesRef)
-      batch.delete(schedulesUidRef)
-
-      batch.commit();
-    }
+    if (schedulesMonthData) batch.delete(schedulesMonthRef);
+    if (unavailableTimesData) batch.delete(unavailableTimesRef);
+    if (schedulesUidData) batch.delete(schedulesUidRef);
   }
 
-  if (+currentDate === 1) {
-    await removePastMonths();
-    await removePastDays();
-  }
-  else {
-    await removePastDays();
-  }
+  await removePastDays();
+  if (currentDay === 1) await removePastMonths();
 
-  logger.log("Database cleanup finished");
+  await batch.commit();
 });
