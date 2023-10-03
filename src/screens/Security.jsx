@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { StyleSheet, View, Text, Pressable } from "react-native"
 
 import { globalStyles } from "../assets/globalStyles"
@@ -7,14 +7,42 @@ import { ComeBack } from "../components/ComeBack"
 
 import { UserContext } from "../context/UserContext"
 
-import { handleAutomaticLogin } from "../handlers/handleAutomaticLogin"
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { handleAccessAutomatically } from "../handlers/handleAccessAutomatically"
+
 export const Security = ({ navigation }) => {
-    const [isToRememberEmailAndPassword, setIsToRememberEmailAndPassword] = useState(async () => !!await AsyncStorage.getItem('@barber_app__email'))
+    const [accessAutomatically, setAccessAutomatically] = useState(null)
 
     const { userData } = useContext(UserContext)
+
+    useEffect(() => {
+
+        if (!userData) return
+
+        const getAsyncValue = async (string, setter, method = null) => {
+            const result = await AsyncStorage.getItem(string)
+
+            if (method !== null) {
+                method(result)
+
+                return
+            }
+
+            setter(result === "true" ? true : result)
+        }
+
+        getAsyncValue("@barber_app__access_automatically", setAccessAutomatically, async (result) => {
+            if (result === null) {
+                await AsyncStorage.setItem("@barber_app__access_automatically", "true")
+                setAccessAutomatically(true)
+            } else {
+                await AsyncStorage.setItem("@barber_app__access_automatically", result)
+                setAccessAutomatically(result === "true" ? true : false)
+            }
+        })
+
+    }, [userData])
 
     return (
         <View style={globalStyles.container}>
@@ -23,21 +51,17 @@ export const Security = ({ navigation }) => {
             <View style={styles.content}>
                 <View style={styles.contentField}>
                     <Text style={styles.text}>
-                        próximo acesso automático?
+                        Acesso automático
                     </Text>
                     <Pressable
-                        style={styles.button}
-                        onPress={async () => setIsToRememberEmailAndPassword(await handleAutomaticLogin(
-                            userData.email,
-                            isToRememberEmailAndPassword
-                        ))}
+                        onPress={() => handleAccessAutomatically(!accessAutomatically, setAccessAutomatically, userData?.email)}
+                        style={{ width: 75, height: 30, borderRadius: 100, backgroundColor: accessAutomatically ? globalStyles.orangeColor : "#B8B8B8", padding: 2 }}
                     >
-                        <Text style={[styles.text, { marginLeft: 0, fontSize: globalStyles.fontSizeSmall }]}>
-                            {isToRememberEmailAndPassword ? "Sim" : "Não"}
-                        </Text>
+                        <View style={accessAutomatically ? styles.buttonCheck : [styles.buttonCheck, { backgroundColor: "#F2F2F2", left: 2 }]}></View>
                     </Pressable>
 
                 </View>
+
                 <Pressable style={styles.changePasswordButton} onPress={() => navigation.navigate("CreateNewPassword", { newAccountByMedia: false, mediaEmail: null })}>
                     <Text style={[styles.text, { textAlign: "center", color: globalStyles.orangeColor }]}>
                         Atualizar senha
@@ -59,7 +83,9 @@ const styles = StyleSheet.create({
         width: "100%",
         flexDirection: "row",
         justifyContent: "space-between",
+        alignContent: "center",
         alignItems: "center",
+        marginTop: 15
     },
 
     text: {
@@ -85,5 +111,15 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         paddingVertical: 15,
         marginTop: 30,
+    },
+
+    buttonCheck: {
+        backgroundColor: "#FFFFFF",
+        width: 35,
+        height: "100%",
+        borderRadius: 300,
+        position: "absolute",
+        right: 2,
+        top: 2
     }
 })
