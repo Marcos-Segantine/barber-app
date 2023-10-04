@@ -1,4 +1,11 @@
 export const formatServicePrice = (priceService) => {
-    priceService = Number(priceService)
-    return `R$ ${priceService.toFixed(2).replace(".", ",")}`
+    const numericPrice = Number(priceService);
+
+    const formattedPrice = numericPrice.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+    });
+
+    return formattedPrice;
 }

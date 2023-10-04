@@ -24,14 +24,15 @@ export const getAvailableTimesByProfessional = async (
         const unavailableTimesData = (await unavailableTimesRef.get({ source: "server" })).data()
         const blockedTimesData = (await blockedTimesRef.get({ source: "server" })).data()
 
+
         const date = new Date()
         const currentMonth = +date.getMonth() + 1;
         const currentDay = +date.getDate();
         const currentHour = +date.getHours()
         const currentDate = +currentDay === +day && +currentMonth === +month
 
-        const daysWithTimesBlocked = Object.keys(blockedTimesData)
-        const currentDayHasBlockedTime = daysWithTimesBlocked.includes(scheduleInfo.day)
+        const daysWithTimesBlocked = blockedTimesData ? Object.keys(blockedTimesData) : null
+        const currentDayHasBlockedTime = daysWithTimesBlocked === null ? null : daysWithTimesBlocked.includes(scheduleInfo.day)
 
         const unavailableTimes = (time) => {
             // Returns `true` if the time is available

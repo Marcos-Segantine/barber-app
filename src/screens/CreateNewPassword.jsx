@@ -28,6 +28,7 @@ export const CreateNewPassword = ({ navigation, route }) => {
 
     const [processMessage, setProcessMessage] = useState(null)
     const [hiddenPassword, setHiddenPassword] = useState(true)
+    const [hiddenConfirmPassword, setHiddenConfirmPassword] = useState(true)
 
     const handleFocusInput = (field) => setInputSelected(field)
 
@@ -84,17 +85,17 @@ export const CreateNewPassword = ({ navigation, route }) => {
                         placeholder={"Senha"}
                         value={confirmPassword}
                         placeholderTextColor={"#00000050"}
-                        secureTextEntry={hiddenPassword}
+                        secureTextEntry={hiddenConfirmPassword}
                         onFocus={() => handleFocusInput("confirmPassword")}
                         onChangeText={text => setConfirmPassword(text)}
 
                     />
                     <Pressable
                         style={styles.iconPasswordVisibility}
-                        onPress={() => setHiddenPassword(!hiddenPassword)}
+                        onPress={() => setHiddenConfirmPassword(!hiddenConfirmPassword)}
                     >
                         <Image
-                            source={hiddenPassword ? passwordVisionBlockIcon : passwordVisionIcon}
+                            source={hiddenConfirmPassword ? passwordVisionBlockIcon : passwordVisionIcon}
                             style={{ width: 25, height: 25 }}
                         />
                     </Pressable>
