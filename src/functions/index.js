@@ -41,10 +41,12 @@ exports.clearDatabase = onSchedule("every day 04:00", async () => {
     const schedulesMonthRef = firestore.collection("schedules_month").doc(docToRemove);
     const unavailableTimesRef = firestore.collection("unavailable_times").doc(docToRemove);
     const schedulesUidRef = firestore.collection("schedules_uid").doc(docToRemove);
+    const schedulesByUserRef = firestore.collection("schedules_by_user");
 
     const schedulesMonthData = (await schedulesMonthRef.get()).data()
     const unavailableTimesData = (await unavailableTimesRef.get()).data()
     const schedulesUidData = (await schedulesUidRef.get()).data().schedules
+    const schedulesByUserData = (await schedulesByUserRef.get()).docs.map(doc => doc.data().schedules)
 
     for (const day in schedulesMonthData) {
       if (+day < currentDay) delete schedulesMonthData[day]
@@ -80,10 +82,23 @@ exports.clearDatabase = onSchedule("every day 04:00", async () => {
       batch.set(daysBlockedRef, { ...daysBlockedData })
     }
 
+    const schedulesByUserDataUpdated = schedulesByUserData.filter(schedule => {
+      const [year, month, day] = schedule.day.split("-")
+
+      if (+year < currentYear) return false;
+      if (+month < currentMonth && +year === currentYear) return false;
+      if (+day < currentDay && +month === currentMonth && +year === currentYear) return false;
+
+      return true
+    })
+
     batch.set(schedulesMonthRef, schedulesMonthData)
     batch.set(unavailableTimesRef, unavailableTimesData)
     batch.set(schedulesUidRef, {
       schedules: schedulesUidData
+    })
+    batch.set(schedulesByUserRef, {
+      schedules: schedulesByUserDataUpdated
     })
 
     await batch.commit();
