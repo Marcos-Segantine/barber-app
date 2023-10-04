@@ -74,29 +74,34 @@ export const Professionals = ({ preferProfessional }) => {
 
   // Render selected professional if only one is available
   if (availableProfessional?.length === 1) {
-    const name = getNameLastName(availableProfessional[0].name).length > 20 ?
-      getNameLastName(availableProfessional[0].name).slice(0, 10) + "..." :
-      getNameLastName(availableProfessional[0].name)
+    const name = getNameLastName(availableProfessional[0].name)
+    const nameFormatted = name.length > 20 ? name.slice(0, 10) + "..." : name
 
     return (
-      <TouchableOpacity
-        style={[professionalSelectedStyle, { marginTop: 50 }]}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.professionalName}>{name}</Text>
+      <View style={{ width: "100%" }}>
+        <Text style={[styles.text, { color: globalStyles.orangeColor, fontWeight: 'bold', marginTop: 10, marginBottom: -20, textAlign: "right" }]}>
+          {preferProfessional ? "1 / 3" : "3 / 3"}
+        </Text>
 
-        {availableProfessional[0].profilePicture ? (
-          <Image
-            source={{ uri: availableProfessional[0].profilePicture }}
-            style={styles.img}
-          />
-        ) : (
-          <Image
-            source={DefaultPicture}
-            style={styles.img}
-          />
-        )}
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={[professionalSelectedStyle, { marginTop: 50 }]}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.professionalName}>{nameFormatted}</Text>
+
+          {availableProfessional[0].profilePicture ? (
+            <Image
+              source={{ uri: availableProfessional[0].profilePicture }}
+              style={styles.img}
+            />
+          ) : (
+            <Image
+              source={DefaultPicture}
+              style={styles.img}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
     )
   }
 
