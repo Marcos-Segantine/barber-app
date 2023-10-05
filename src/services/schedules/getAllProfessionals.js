@@ -9,6 +9,8 @@
 
 import firestore from '@react-native-firebase/firestore';
 
+import { handleError } from '../../handlers/handleError';
+
 export const getAllProfessionals = async (
     handleProfessionalSelected,
     setAvailableProfessional,
@@ -35,8 +37,8 @@ export const getAllProfessionals = async (
         // Set the professional(s), to show on the screen
         setAvailableProfessional(barbers)
 
-    } catch (error) {
-        console.log(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("getAllProfessionals", message)
     }
 }

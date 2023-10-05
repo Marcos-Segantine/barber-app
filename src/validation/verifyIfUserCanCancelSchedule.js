@@ -1,18 +1,25 @@
+import { handleError } from "../handlers/handleError";
+
 export const verifyIfUserCanCancelSchedule = (minimalHoursToCancelSchedule, ScheduleDay, scheduleHour) => {
-    const [year, month, day] = ScheduleDay.split('-').map(Number);
-    const [hours, minutes] = scheduleHour.split(':').map(Number);
+    try {
 
-    const userScheduledDateTime = new Date(year, month - 1, day, hours, minutes);
+        const [year, month, day] = ScheduleDay.split('-').map(Number);
+        const [hours, minutes] = scheduleHour.split(':').map(Number);
 
-    const currentDateTime = new Date();
+        const userScheduledDateTime = new Date(year, month - 1, day, hours, minutes);
 
-    const timeDifference = userScheduledDateTime - currentDateTime;
+        const currentDateTime = new Date();
 
-    const minutesDifference = timeDifference / (1000 * 60);
+        const timeDifference = userScheduledDateTime - currentDateTime;
 
-    if (minutesDifference > 0 && minutesDifference >= minimalHoursToCancelSchedule * 60) {
-        return true;
-    } else {
-        return false;
+        const minutesDifference = timeDifference / (1000 * 60);
+
+        if (minutesDifference > 0 && minutesDifference >= minimalHoursToCancelSchedule * 60) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch ({ message }) {
+        handleError("verifyIfUserCanCancelSchedule", message)
     }
 }

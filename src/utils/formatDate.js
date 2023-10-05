@@ -1,3 +1,5 @@
+import { handleError } from "../handlers/handleError"
+
 const monthsName = [
     "Janeiro",
     "Fevereiro",
@@ -26,8 +28,8 @@ export const formatDate = (date, setSomethingWrong) => {
 
         return dateFormatted
 
-    } catch (error) {
-        console.error(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("formatDate", message)
     }
 }

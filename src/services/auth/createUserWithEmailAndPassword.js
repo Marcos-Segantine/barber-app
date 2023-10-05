@@ -20,6 +20,8 @@ import { capitalizeName } from '../../utils/capitalizeName';
 
 import { AccountCreated } from '../../assets/imgs/AccountCreated';
 
+import { handleError } from '../../handlers/handleError';
+
 export const createUserWithEmailAndPassword = async (
   informationNewUser,
   password,
@@ -39,7 +41,7 @@ export const createUserWithEmailAndPassword = async (
         res.user.sendEmailVerification()
       })
 
-    } catch (error) {
+    } catch ({ message }) {
       console.log(error.message);
 
       // If this error ocurred means that the user create your account using media(Google, Facebook or Apple)
@@ -95,10 +97,9 @@ export const createUserWithEmailAndPassword = async (
       },
     })
 
-  } catch (error) {
-
-    console.error(error);
+  } catch ({ message }) {
     setIsLoading(false)
     setSomethingWrong(true)
+    handleError("createUserWithEmailAndPassword", message)
   }
 }

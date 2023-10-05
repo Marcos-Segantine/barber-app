@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import auth from '@react-native-firebase/auth';
 
+import { handleError } from '../../handlers/handleError';
+
 export const logOut = async (
     navigation,
     setSomethingWrong
@@ -23,8 +25,8 @@ export const logOut = async (
         // Sign out the user
         await auth().signOut();
 
-    } catch (error) {
-        console.error('Error logging out:', error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("logOut", message)
     }
 }

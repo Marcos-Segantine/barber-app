@@ -8,7 +8,9 @@
 
 import firestore from '@react-native-firebase/firestore';
 
-import { getYear, getDay, getMonth, getProfessional } from '../../utils/dateHelper';
+import { getYear, getDay, getMonth } from '../../utils/dateHelper';
+
+import { handleError } from '../../handlers/handleError';
 
 export const cancelSchedule = async (
   userUid,
@@ -67,8 +69,8 @@ export const cancelSchedule = async (
 
     await batch.commit();
 
-  } catch (error) {
-    console.error('Error cancelling schedule: ', error);
+  } catch ({ message }) {
     setSomethingWrong(true);
+    handleError("cancelSchedule", message);
   }
 };

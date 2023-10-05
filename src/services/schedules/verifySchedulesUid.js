@@ -10,20 +10,27 @@
 
 import firestore from '@react-native-firebase/firestore';
 
+import { handleError } from '../../handlers/handleError';
+
 export const verifySchedulesUid = async (scheduleMonth, scheduleUid) => {
-    const schedulesUidRef = firestore().collection('schedules_uid').doc(scheduleMonth)
-    const schedulesUidData = (await schedulesUidRef.get()).data()
+    try {
 
-    // If the schedules UID document does not exist
-    // Just return `true` because the schedule is available
-    if (schedulesUidData === undefined) return true
+        const schedulesUidRef = firestore().collection('schedules_uid').doc(scheduleMonth)
+        const schedulesUidData = (await schedulesUidRef.get()).data()
 
-    const scheduleUidFormatted = scheduleUid.split('-').slice(1, 6).join('-')
+        // If the schedules UID document does not exist
+        // Just return `true` because the schedule is available
+        if (schedulesUidData === undefined) return true
 
-    // Check if the schedule UID is included in the 'schedules' from `schedulesUidData`
-    // If it exist means that the schedule is not available more
-    if (schedulesUidData.schedules.includes(scheduleUidFormatted)) return false
+        const scheduleUidFormatted = scheduleUid.split('-').slice(1, 6).join('-')
 
-    // If the given schedule UID is not included in the 'schedules' from `schedulesUidData`, the schedule is available
-    return true
+        // Check if the schedule UID is included in the 'schedules' from `schedulesUidData`
+        // If it exist means that the schedule is not available more
+        if (schedulesUidData.schedules.includes(scheduleUidFormatted)) return false
+
+        // If the given schedule UID is not included in the 'schedules' from `schedulesUidData`, the schedule is available
+        return true
+    } catch ({ message }) {
+        handleError("verifySchedulesUid", message)
+    }
 }

@@ -10,16 +10,18 @@
 import { getUserSchedules } from "../schedules/getUserSchedules";
 import firestore from '@react-native-firebase/firestore';
 
+import { handleError } from "../../handlers/handleError";
+
 export const listenerUserSchedules = (
     userData,
     setSchedulesUser,
     setSomethingWrong
 ) => {
 
-    // If there is no user data, return early
-    if (!userData) return
-
     try {
+
+        // If there is no user data, return early
+        if (!userData) return
 
         // Create a listener on the 'schedules_by_user' collection
         const unsubscribe = firestore()
@@ -33,8 +35,8 @@ export const listenerUserSchedules = (
         // Return the function to unsubscribe from the listener
         return () => unsubscribe();
 
-    } catch (error) {
-        console.log(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("listenerUserSchedules", message)
     }
 }

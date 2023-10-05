@@ -1,9 +1,16 @@
 import firestore from '@react-native-firebase/firestore';
 
-export const getDaysBlocked = async (professionalUid) => {
-    const daysBlockedRef = firestore().collection('days_blocked').doc(professionalUid);
-    const daysBlockedData = (await daysBlockedRef.get()).data();
+import { handleError } from '../../handlers/handleError';
 
-    if (daysBlockedData === undefined) return {};
-    return daysBlockedData;
+export const getDaysBlocked = async (professionalUid) => {
+    try {
+
+        const daysBlockedRef = firestore().collection('days_blocked').doc(professionalUid);
+        const daysBlockedData = (await daysBlockedRef.get()).data();
+
+        if (daysBlockedData === undefined) return {};
+        return daysBlockedData;
+    } catch ({ message }) {
+        handleError("getDaysBlocked", message);
+    }
 }

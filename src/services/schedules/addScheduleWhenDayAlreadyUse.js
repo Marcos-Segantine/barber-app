@@ -25,6 +25,8 @@ import { verifySchedulesUid } from './verifySchedulesUid';
 import { NewScheduleConfirmation } from '../../assets/imgs/NewScheduleConfirmation';
 import { ScheduleUnavailableNow } from '../../assets/imgs/ScheduleUnavailableNow';
 
+import { handleError } from '../../handlers/handleError';
+
 export const addScheduleWhenDayAlreadyUse = async (
   userUid,
   scheduleInfo,
@@ -142,8 +144,8 @@ export const addScheduleWhenDayAlreadyUse = async (
     })
     setIsLoading(false)
 
-  } catch (error) {
-    console.error(error);
+  } catch ({ message }) {
     setSomethingWrong(true)
+    handleError("addScheduleWhenDayAlreadyUse", message)
   }
 };

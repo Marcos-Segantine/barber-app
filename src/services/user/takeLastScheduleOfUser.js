@@ -10,6 +10,8 @@ import firestore from '@react-native-firebase/firestore';
 
 import { filterSchedulesByDate } from '../../utils/filterSchedulesByDate';
 
+import { handleError } from '../../handlers/handleError';
+
 export const takeLastScheduleOfUser = async (
     userInfo,
     setScheduleClientInfo,
@@ -33,8 +35,8 @@ export const takeLastScheduleOfUser = async (
         // Otherwise, set the latest schedule from user
         else setScheduleClientInfo(dates[0])
 
-    } catch (error) {
-        console.log(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("takeLastScheduleOfUser", message)
     }
 }

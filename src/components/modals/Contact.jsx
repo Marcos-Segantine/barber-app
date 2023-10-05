@@ -12,23 +12,29 @@ import firestore from '@react-native-firebase/firestore';
 
 import { formatPhoneNumber } from "../../utils/formatPhoneNumber"
 
+import { handleError } from "../../handlers/handleError"
+
 export const Contact = ({ modalContact, setModalVisible }) => {
     // const [isLoading, setIsLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
 
     useEffect(() => {
         (async () => {
+            try {
 
-            const barbersRef = await firestore().collection('barbers').get()
-            const barbersData = barbersRef.docs.splice(0, 3).map(barber => {
-                return {
-                    name: barber.data().name,
-                    phone: barber.data().phone
-                }
-            })
+                const barbersRef = await firestore().collection('barbers').get()
+                const barbersData = barbersRef.docs.splice(0, 3).map(barber => {
+                    return {
+                        name: barber.data().name,
+                        phone: barber.data().phone
+                    }
+                })
 
-            setContacts(barbersData)
+                setContacts(barbersData)
 
+            } catch ({ message }) {
+                handleError("Contact", message)
+            }
         })();
 
     }, [])

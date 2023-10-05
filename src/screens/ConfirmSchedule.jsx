@@ -22,6 +22,7 @@ import { getTotalPriceFromServices } from "../utils/getTotalPriceFromServices"
 
 import { handleConfirmNewSchedule } from "../handlers/handleConfirmNewSchedule"
 import { handleEditExistingSchedule } from "../handlers/handleEditExistingSchedule"
+import { handleError } from "../handlers/handleError"
 
 export const ConfirmSchedule = ({ route, navigation }) => {
     const [modalContent, setModalContent] = useState(null)
@@ -43,8 +44,8 @@ export const ConfirmSchedule = ({ route, navigation }) => {
         try {
             schedule.scheduleUid = `${userData.uid}-${schedule.day}-${schedule.professionalUid}-${schedule.schedule}`;
 
-        } catch (error) {
-            console.log(error);
+        } catch ({ message }) {
+            handleError("ConfirmSchedule", message)
             setSomethingWrong(true)
         }
 

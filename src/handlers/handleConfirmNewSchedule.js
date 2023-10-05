@@ -18,6 +18,8 @@ import { addScheduleWhenMonthIsNotUse } from "../services/schedules/addScheduleW
 
 import firestore from "@react-native-firebase/firestore";
 
+import { handleError } from "./handleError";
+
 export const handleConfirmNewSchedule = async (
     scheduleInfo,
     setScheduleInfo,
@@ -73,8 +75,8 @@ export const handleConfirmNewSchedule = async (
 
         setScheduleInfo({})
 
-    } catch (error) {
-        console.error(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("handleConfirmNewSchedule", message)
     }
 };

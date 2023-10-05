@@ -12,6 +12,8 @@ import { createContext, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
+import { handleError } from '../handlers/handleError';
+
 export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
@@ -61,8 +63,8 @@ export const UserProvider = ({ children }) => {
           );
         } else setUserData(null);
 
-      } catch (error) {
-        console.log(error);
+      } catch ({ message }) {
+        handleError("UserProvider", message)
       }
 
     })();

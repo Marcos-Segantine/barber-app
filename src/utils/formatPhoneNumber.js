@@ -1,3 +1,5 @@
+import { handleError } from "../handlers/handleError"
+
 export const formatPhoneNumber = (phone, setSomethingWrong) => {
     try {
         let phoneWithoutCountryCode = ""
@@ -14,8 +16,8 @@ export const formatPhoneNumber = (phone, setSomethingWrong) => {
 
         return phoneFormatted.join("")
 
-    } catch (error) {
+    } catch ({ message }) {
         setSomethingWrong(true)
-        console.log(error);
+        handleError("formatPhoneNumber", message)
     }
 }

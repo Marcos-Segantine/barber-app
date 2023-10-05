@@ -1,11 +1,18 @@
+import { handleError } from "../handlers/handleError"
+
 export const trim = (data) => {
-    if (typeof data === 'string') {
-        return data.trim()
-    }
+    try {
 
-    for (const string of data) {
-        data[string] = data[string].trim()
-    }
+        if (typeof data === 'string') {
+            return data.trim()
+        }
 
-    return data
+        for (const string of data) {
+            data[string] = data[string].trim()
+        }
+
+        return data
+    } catch ({ message }) {
+        handleError("trim", message)
+    }
 }

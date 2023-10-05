@@ -9,6 +9,8 @@ import firestore from '@react-native-firebase/firestore';
 
 import { sortByHour } from '../../utils/sortByHour';
 
+import { handleError } from '../../handlers/handleError';
+
 export const getAllTimes = async (setSomethingWrong) => {
     try {
 
@@ -20,8 +22,8 @@ export const getAllTimes = async (setSomethingWrong) => {
 
         return sortByHour(workingHoursData)
 
-    } catch (error) {
-        console.log(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("getAllTimes", message)
     }
 }

@@ -18,6 +18,8 @@ import { getUserByPhoneNumber } from '../user/getUserByPhoneNumber';
 
 import { EmailSendImage } from '../../assets/imgs/EmailSendImage';
 
+import { handleError } from '../../handlers/handleError';
+
 export const sendEmailForgotPassword = async (
     email,
     phone,
@@ -59,8 +61,8 @@ export const sendEmailForgotPassword = async (
                 }
             })
         }
-    } catch (error) {
-        console.log(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("sendEmailForgotPassword", message)       
     }
 }

@@ -16,6 +16,8 @@ import { updatePassword } from "../services/user/updatePassword"
 
 import { StopProcessError } from "../assets/imgs/StopProcessError"
 
+import { handleError } from "./handleError"
+
 export const handleContinueCreateNewPassword = (
     password,
     confirmPassword,
@@ -111,8 +113,8 @@ export const handleContinueCreateNewPassword = (
             )
         }
 
-    } catch (error) {
-        console.log(error)
+    } catch ({ message }) {
         setSomethingWrong(true);
+        handleError("handleContinueCreateNewPassword", message)    
     }
 }

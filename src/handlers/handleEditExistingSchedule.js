@@ -11,7 +11,9 @@
  */
 
 import { cancelSchedule } from '../services/schedules/cancelSchedule';
+
 import { handleConfirmNewSchedule } from './handleConfirmNewSchedule';
+import { handleError } from './handleError';
 
 export const handleEditExistingSchedule = async (
     scheduleToChange,
@@ -47,8 +49,8 @@ export const handleEditExistingSchedule = async (
         
         setIsLoading(false)
 
-    } catch (error) {
-        console.error(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("handleEditExistingSchedule", message)
     }
 }

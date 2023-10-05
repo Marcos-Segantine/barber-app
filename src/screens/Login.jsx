@@ -36,7 +36,7 @@ export const Login = ({ navigation, route }) => {
     const { setSomethingWrong } = useContext(SomethingWrongContext)
 
     useEffect(() => {
-        if (emailNewUser, passwordNewUser) {
+        if (emailNewUser && passwordNewUser) {
             setEmail(emailNewUser)
             setPassword(passwordNewUser)
 

@@ -17,6 +17,8 @@ import storage from '@react-native-firebase/storage';
 import { trim } from '../../utils/trim';
 import { capitalizeName } from '../../utils/capitalizeName';
 
+import { handleError } from '../../handlers/handleError';
+
 export const updateInformation = async (
     informationNewUser,
     password,
@@ -80,8 +82,8 @@ export const updateInformation = async (
         if (isToCreateUser) navigation.navigate("Home")
         else navigation.navigate("Profile")
 
-    } catch (error) {
-        console.log(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("updateInformation", message)
     }
 }

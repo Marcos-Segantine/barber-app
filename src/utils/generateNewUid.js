@@ -1,3 +1,10 @@
+import { handleError } from "../handlers/handleError";
+
 export const generateNewUid = () => {
-    return Math.random().toString(36).substring(2) + Date.now();
+    try {
+
+        return Math.random().toString(36).substring(2) + Date.now();
+    } catch ({ message }) {
+        handleError("generateNewUid", message)
+    }
 }

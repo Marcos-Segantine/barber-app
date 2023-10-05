@@ -11,6 +11,8 @@
 import { getAvailableTimesByProfessional } from "../services/schedules/getAvailableTimesByProfessional";
 import { getAllTimes } from "../services/schedules/getAllTimes";
 
+import { handleError } from "./handleError";
+
 export const handleAvailableTimesSchedules = async (
     schedule,
     preferProfessional,
@@ -29,8 +31,8 @@ export const handleAvailableTimesSchedules = async (
             // Get all times from all professionals
         } else if (!preferProfessional) setAllTimes(await getAllTimes(setSomethingWrong));
 
-    } catch (error) {
-        console.error(error);
+    } catch ({ message }) {
         setSomethingWrong(true);
+        handleError("handleAvailableTimesSchedules", message);
     }
 }

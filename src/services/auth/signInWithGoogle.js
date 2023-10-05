@@ -13,6 +13,8 @@ import firestore from '@react-native-firebase/firestore';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { handleError } from '../../handlers/handleError';
+
 export const signInWithGoogle = async (
   navigation,
   setSomethingWrong,
@@ -47,15 +49,14 @@ export const signInWithGoogle = async (
       // Navigate to Home screen if it's an existing user
     } else navigation.navigate('Home');
 
-  } catch (error) {
+  } catch ({ message }) {
 
     if (error.message === "Sign in action cancelled") {
       setIsLoading(false)
       return
 
     } else {
-
-      console.error(error);
+      handleError("signInWithGoogle", message)
       setSomethingWrong(true)
     }
   }

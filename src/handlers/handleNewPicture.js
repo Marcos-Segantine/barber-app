@@ -16,6 +16,8 @@ import { PermissionsAndroid } from 'react-native';
 import { StopProcessError } from '../assets/imgs/StopProcessError';
 import { globalStyles } from '../assets/globalStyles';
 
+import { handleError } from './handleError';
+
 export const handleNewPicture = (
     setInformationNewUser,
     informationNewUser,
@@ -23,27 +25,32 @@ export const handleNewPicture = (
     setModalInformative
 
 ) => {
-    // Open the image picker to select a photo
-    ImagePicker.openPicker({
-        mediaType: "photo",
-        width: 300,
-        height: 400,
-        cropping: true,
-        includeBase64: true
+    try {
 
-    }).then(image => {
-        setInformationNewUser({ ...informationNewUser, profilePicture: image.data })
-    }).catch((error) => {
+        // Open the image picker to select a photo
+        ImagePicker.openPicker({
+            mediaType: "photo",
+            width: 300,
+            height: 400,
+            cropping: true,
+            includeBase64: true
 
-        if (error.message === "Required permission missing") {
+        }).then(image => {
+            setInformationNewUser({ ...informationNewUser, profilePicture: image.data })
+        }).catch((error) => {
 
-            // Request necessary camera permissions
-            requestPermissionsCameraStorage(setModalInfo, setModalInformative)
-        }
-        else {
-            console.log(error.message);
-        }
-    })
+            if (error.message === "Required permission missing") {
+
+                // Request necessary camera permissions
+                requestPermissionsCameraStorage(setModalInfo, setModalInformative)
+            }
+            else {
+                console.log(error.message);
+            }
+        })
+    } catch ({ message }) {
+        handleError("handleNewPicture", message)
+    }
 }
 
 const requestPermissionsCameraStorage = async (setModalInfo, setModalInformative) => {
@@ -105,7 +112,7 @@ const requestPermissionsCameraStorage = async (setModalInfo, setModalInformative
                 }
             })
         }
-    } catch (err) {
-        console.warn(err);
+    } catch ({ message }) {
+        handleError("requestPermissionsCameraStorage", message)
     }
 };

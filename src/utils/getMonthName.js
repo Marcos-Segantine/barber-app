@@ -1,8 +1,15 @@
-export const getMonthName = (dateString) => {
-    const date = new Date(dateString);
-    const options = { month: "long" };
-    const locale = "pt-BR";
-    const month = date.toLocaleString(locale, options);
+import { handleError } from "../handlers/handleError";
 
-    return month;
+export const getMonthName = (dateString) => {
+    try {
+
+        const date = new Date(dateString);
+        const options = { month: "long" };
+        const locale = "pt-BR";
+        const month = date.toLocaleString(locale, options);
+
+        return month;
+    } catch ({ message }) {
+        handleError("getMonthName", message)
+    }
 }

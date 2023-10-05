@@ -10,8 +10,9 @@
 import firestore from '@react-native-firebase/firestore';
 
 import { getDay, getHour, getMonth, getYear } from '../../utils/dateHelper';
-
 import { getWeekDay } from '../../utils/getWeekDay';
+
+import { handleError } from '../../handlers/handleError';
 
 export const getAvailableProfessional = async (
     schedule,
@@ -93,8 +94,8 @@ export const getAvailableProfessional = async (
         // Set the available professional
         setAvailableProfessional(dataTemp);
 
-    } catch (error) {
-        console.error(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("getAvailableProfessional", message)
     }
 }

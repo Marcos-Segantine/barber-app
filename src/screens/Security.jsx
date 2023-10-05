@@ -10,6 +10,7 @@ import { UserContext } from "../context/UserContext"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { handleAccessAutomatically } from "../handlers/handleAccessAutomatically"
+import { handleError } from "../handlers/handleError"
 
 export const Security = ({ navigation }) => {
     const [accessAutomatically, setAccessAutomatically] = useState(null)
@@ -17,30 +18,34 @@ export const Security = ({ navigation }) => {
     const { userData } = useContext(UserContext)
 
     useEffect(() => {
+        try {
 
-        if (!userData) return
+            if (!userData) return
 
-        const getAsyncValue = async (string, setter, method = null) => {
-            const result = await AsyncStorage.getItem(string)
+            const getAsyncValue = async (string, setter, method = null) => {
+                const result = await AsyncStorage.getItem(string)
 
-            if (method !== null) {
-                method(result)
+                if (method !== null) {
+                    method(result)
 
-                return
+                    return
+                }
+
+                setter(result === "true" ? true : result)
             }
 
-            setter(result === "true" ? true : result)
+            getAsyncValue("@barber_app__access_automatically", setAccessAutomatically, async (result) => {
+                if (result === null) {
+                    await AsyncStorage.setItem("@barber_app__access_automatically", "true")
+                    setAccessAutomatically(true)
+                } else {
+                    await AsyncStorage.setItem("@barber_app__access_automatically", result)
+                    setAccessAutomatically(result === "true" ? true : false)
+                }
+            })
+        } catch ({ message }) {
+            handleError("Security", message)
         }
-
-        getAsyncValue("@barber_app__access_automatically", setAccessAutomatically, async (result) => {
-            if (result === null) {
-                await AsyncStorage.setItem("@barber_app__access_automatically", "true")
-                setAccessAutomatically(true)
-            } else {
-                await AsyncStorage.setItem("@barber_app__access_automatically", result)
-                setAccessAutomatically(result === "true" ? true : false)
-            }
-        })
 
     }, [userData])
 

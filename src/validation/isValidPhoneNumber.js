@@ -1,9 +1,17 @@
+import { handleError } from "../handlers/handleError";
+
 export const isValidPhoneNumber = (phoneNumber) => {
-    if (phoneNumber === undefined) return false
 
-    const cleanedNumber = phoneNumber.replace(/\D/g, '');
+    try {
+        if (phoneNumber === undefined) return false
 
-    if (cleanedNumber.length !== 10 && cleanedNumber.length !== 11) return false;
+        const cleanedNumber = phoneNumber.replace(/\D/g, '');
 
-    return true;
+        if (cleanedNumber.length !== 10 && cleanedNumber.length !== 11) return false;
+
+        return true;
+
+    } catch ({ message }) {
+        handleError("isValidPhoneNumber", message)
+    }
 }

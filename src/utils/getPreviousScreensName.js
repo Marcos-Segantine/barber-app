@@ -1,14 +1,21 @@
+import { handleError } from "../handlers/handleError"
+
 export const getPreviousScreensName = (navigation) => {
-    const screensState = navigation.getState()
+    try {
 
-    const screensNames = []
+        const screensState = navigation.getState()
 
-    screensState.routes.forEach(route => {
-        screensNames.push(route.name)
-    })
+        const screensNames = []
 
-    const previousScreen = screensNames[screensNames.length - 2]
-    const lastScreen = screensNames[screensNames.length - 1]
+        screensState.routes.forEach(route => {
+            screensNames.push(route.name)
+        })
 
-    return [previousScreen, lastScreen]
+        const previousScreen = screensNames[screensNames.length - 2]
+        const lastScreen = screensNames[screensNames.length - 1]
+
+        return [previousScreen, lastScreen]
+    } catch ({ message }) {
+        handleError("getPreviousScreensName", message)
+    }
 }

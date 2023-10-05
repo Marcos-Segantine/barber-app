@@ -10,6 +10,8 @@ import firestore from '@react-native-firebase/firestore';
 
 import { filterSchedulesByDate } from '../../utils/filterSchedulesByDate';
 
+import { handleError } from '../../handlers/handleError';
+
 export const getUserSchedules = async (setSchedules, userUid, setSomethingWrong) => {
     try {
 
@@ -19,8 +21,8 @@ export const getUserSchedules = async (setSchedules, userUid, setSomethingWrong)
         // Update the state with the retrieved schedules
         setSchedules(filterSchedulesByDate(schedulesByUserData))
 
-    } catch (error) {
-        console.log(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("getUserSchedules", message)
     }
 }

@@ -16,6 +16,9 @@ import { isValidEmail } from '../../validation/isValidEmail';
 
 import { StopProcessError } from '../../assets/imgs/StopProcessError';
 
+import { handleError } from '../../handlers/handleError';
+import { Keyboard } from 'react-native';
+
 export const findErrorAuth = async (
     email,
     password,
@@ -132,8 +135,8 @@ export const findErrorAuth = async (
 
         return true
 
-    } catch (error) {
-        console.error(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("findErrorAuth", message)
     }
 }

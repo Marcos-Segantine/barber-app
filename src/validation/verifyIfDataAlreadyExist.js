@@ -1,14 +1,21 @@
 import firestore from '@react-native-firebase/firestore';
 
+import { handleError } from '../handlers/handleError';
+
 export const verifyIfDataAlreadyExist = async (field, fieldData) => {
-    const usersRef = firestore().collection("users").where(field, "==", fieldData);
-    const barbersRef = firestore().collection("barbers").where(field, "==", fieldData);
+    try {
 
-    const usersData = (await usersRef.get()).docs
-    const barbersData = (await barbersRef.get()).docs
+        const usersRef = firestore().collection("users").where(field, "==", fieldData);
+        const barbersRef = firestore().collection("barbers").where(field, "==", fieldData);
 
-    if (usersData.length !== 0) return true;
-    if (barbersData.length !== 0) return true;
+        const usersData = (await usersRef.get()).docs
+        const barbersData = (await barbersRef.get()).docs
 
-    return false;
+        if (usersData.length !== 0) return true;
+        if (barbersData.length !== 0) return true;
+
+        return false;
+    } catch ({ message }) {
+        handleError("verifyIfDataAlreadyExist", message)
+    }
 }

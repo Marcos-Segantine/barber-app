@@ -11,6 +11,8 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
+import { handleError } from '../../handlers/handleError';
+
 export const updatePassword = async (
     password,
     userData,
@@ -51,8 +53,8 @@ export const updatePassword = async (
 
         navigation.navigate("Profile")
 
-    } catch (error) {
-        console.log(error);
+    } catch ({ message }) {
         setSomethingWrong(true)
+        handleError("updatePassword", message)
     }
 }

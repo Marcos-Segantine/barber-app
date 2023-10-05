@@ -1,24 +1,31 @@
+import { handleError } from "../handlers/handleError";
+
 import { getHour } from "./dateHelper";
 
 export const filterSchedulesByDate = (schedules) => {
-    if (!schedules) return null
+    try {
 
-    const currentDay = Number(new Date().getDate());
-    const currentMonth = Number(new Date().getMonth() + 1);
-    const currentYear = Number(new Date().getFullYear());
-    const currentHour = Number(new Date().getHours());
+        if (!schedules) return null
 
-    const data = schedules.filter(schedule => {
-        const [scheduleYear, scheduleMonth, scheduleDay] = schedule.day.split("-").map(Number);
-        const scheduleHour = +getHour(schedule).split(":")[0]
+        const currentDay = Number(new Date().getDate());
+        const currentMonth = Number(new Date().getMonth() + 1);
+        const currentYear = Number(new Date().getFullYear());
+        const currentHour = Number(new Date().getHours());
 
-        if (scheduleYear < currentYear) return false;
-        if (scheduleMonth < currentMonth && scheduleYear === currentYear) return false;
-        if (scheduleDay < currentDay && scheduleMonth === currentMonth && scheduleYear === currentYear) return false;
-        if (scheduleHour < currentHour && scheduleDay === currentDay && scheduleMonth === currentMonth && scheduleYear === currentYear) return false
+        const data = schedules.filter(schedule => {
+            const [scheduleYear, scheduleMonth, scheduleDay] = schedule.day.split("-").map(Number);
+            const scheduleHour = +getHour(schedule).split(":")[0]
 
-        return true;
-    })
+            if (scheduleYear < currentYear) return false;
+            if (scheduleMonth < currentMonth && scheduleYear === currentYear) return false;
+            if (scheduleDay < currentDay && scheduleMonth === currentMonth && scheduleYear === currentYear) return false;
+            if (scheduleHour < currentHour && scheduleDay === currentDay && scheduleMonth === currentMonth && scheduleYear === currentYear) return false
 
-    return data
+            return true;
+        })
+
+        return data
+    } catch ({ message }) {
+        handleError("filterSchedulesByDate", message)
+    }
 }

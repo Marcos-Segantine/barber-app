@@ -21,6 +21,8 @@ import { verifyFieldsToUpdateInformation } from "../validation/verifyFieldsToUpd
 import { createUserWithEmailAndPassword } from "../services/auth/createUserWithEmailAndPassword"
 import { updateInformation } from "../services/user/updateInformation"
 
+import { handleError } from "./handleError"
+
 export const handleConfirmNewInformationFillProfile = async (
     informationNewUser,
     male,
@@ -35,54 +37,60 @@ export const handleConfirmNewInformationFillProfile = async (
     isToCreateUserState,
     setIsToCreateUserState
 ) => {
-    const returnGender = async () => {
-        if (male) return "Masculino"
-        else if (fame) return "Feminino"
-        else return "Outro"
-    }
 
-    const gender = await returnGender()
+    try {
 
-    // If is to create a new user, verify the fields and create a new user
-    if (isToCreateUserState) {
-        const isFieldsAvailable = verifyFieldsToCreateAccount(
-            { ...informationNewUser, gender, },
-            ["name", "email", "phone", "gender"],
-            setModalInfo
-        )
+        const returnGender = async () => {
+            if (male) return "Masculino"
+            else if (fame) return "Feminino"
+            else return "Outro"
+        }
 
-        if (!isFieldsAvailable) return
+        const gender = await returnGender()
 
-        setIsToCreateUserState(false)
+        // If is to create a new user, verify the fields and create a new user
+        if (isToCreateUserState) {
+            const isFieldsAvailable = verifyFieldsToCreateAccount(
+                { ...informationNewUser, gender, },
+                ["name", "email", "phone", "gender"],
+                setModalInfo
+            )
 
-        await createUserWithEmailAndPassword(
-            { ...informationNewUser, gender, },
-            passwordNewUser,
-            navigation,
-            setIsLoading,
-            setModalInfo,
-            setSomethingWrong,
-        )
-    }
+            if (!isFieldsAvailable) return
 
-    // If is not to create a new user, verify the fields and update the user information
-    else {
-        const isFieldsValidToUpdateInfo = verifyFieldsToUpdateInformation(
-            { ...informationNewUser, gender, },
-            setModalInfo
-        )
+            setIsToCreateUserState(false)
 
-        if (!isFieldsValidToUpdateInfo) return
+            await createUserWithEmailAndPassword(
+                { ...informationNewUser, gender, },
+                passwordNewUser,
+                navigation,
+                setIsLoading,
+                setModalInfo,
+                setSomethingWrong,
+            )
+        }
 
-        updateInformation(
-            { ...informationNewUser, gender },
-            userData ? userData.password : null,
-            userData.uid,
-            navigation,
-            setUserData,
-            setSomethingWrong,
-            isToCreateUserState,
-            setIsLoading
-        )
+        // If is not to create a new user, verify the fields and update the user information
+        else {
+            const isFieldsValidToUpdateInfo = verifyFieldsToUpdateInformation(
+                { ...informationNewUser, gender, },
+                setModalInfo
+            )
+
+            if (!isFieldsValidToUpdateInfo) return
+
+            updateInformation(
+                { ...informationNewUser, gender },
+                userData ? userData.password : null,
+                userData.uid,
+                navigation,
+                setUserData,
+                setSomethingWrong,
+                isToCreateUserState,
+                setIsLoading
+            )
+        }
+    } catch ({ message }) {
+        handleError("handleConfirmNewInformationFillProfile", message)
     }
 }

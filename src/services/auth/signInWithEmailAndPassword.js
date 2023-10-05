@@ -21,6 +21,8 @@ import { findErrorAuth } from './findErrorAuth';
 
 import { StopProcessError } from '../../assets/imgs/StopProcessError';
 
+import { handleError } from '../../handlers/handleError';
+
 export const signInWithEmailAndPassword = async (
   navigation,
   email,
@@ -119,8 +121,8 @@ export const signInWithEmailAndPassword = async (
       throw Error("User not found")
     }
 
-  } catch (err) {
-    console.error(err);
+  } catch ({ message }) {
     setSomethingWrong(true)
+    handleError("signInWithEmailAndPassword", message)
   }
 }

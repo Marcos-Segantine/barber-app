@@ -3,13 +3,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
+import { handleError } from "../handlers/handleError";
+
 export const verifyIfUserHasLogged = async (navigation) => {
     try {
         const email = await AsyncStorage.getItem("@barber_app__email");
 
         if (email) {
             const usersRef = firestore().collection("users").where("email", "==", email)
-            const user = (await usersRef.get()).docs.length ? (await usersRef.get()).docs[0].data() : null
+            const userData = await usersRef.get()
+            const user = userData.docs.length ? userData.docs[0].data() : null
 
             if (!user) {
                 setTimeout(() => {
@@ -38,7 +41,8 @@ export const verifyIfUserHasLogged = async (navigation) => {
             }, 500);
         }
 
-    } catch (error) {
-        console.log("verifyIfUserHasLogged", error);
+    } catch ({ message }) {
+        handleError("verifyIfUserHasLogged", message)
+        
     }
 }

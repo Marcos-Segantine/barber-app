@@ -25,6 +25,8 @@ import { verifySchedulesUid } from './verifySchedulesUid';
 import { NewScheduleConfirmation } from '../../assets/imgs/NewScheduleConfirmation';
 import { ScheduleUnavailableNow } from '../../assets/imgs/ScheduleUnavailableNow';
 
+import { handleError } from '../../handlers/handleError';
+
 export const addScheduleWhenDayNotUse = async (
   userUid,
   scheduleInfo,
@@ -118,8 +120,8 @@ export const addScheduleWhenDayNotUse = async (
     })
     setIsLoading(false)
 
-  } catch (error) {
-    console.error('Error adding schedule:', error);
+  } catch ({ message }) {
     setSomethingWrong(true)
+    handleError("addScheduleWhenDayNotUse", message)
   }
 };

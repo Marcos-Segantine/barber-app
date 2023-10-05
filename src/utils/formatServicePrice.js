@@ -1,11 +1,18 @@
+import { handleError } from "../handlers/handleError";
+
 export const formatServicePrice = (priceService) => {
-    const numericPrice = Number(priceService);
+    try {
 
-    const formattedPrice = numericPrice.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        minimumFractionDigits: 2,
-    });
+        const numericPrice = Number(priceService);
 
-    return formattedPrice;
+        const formattedPrice = numericPrice.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits: 2,
+        });
+
+        return formattedPrice;
+    } catch ({ message }) {
+        handleError("formatServicePrice", message)
+    }
 }
