@@ -12,7 +12,10 @@ export const verifyEmailAndPasswordToRegister = async (
     setIsLoading
 ) => {
     const usersRef = firestore().collection('users').where("email", "==", email);
+    const barbersRef = firestore().collection("barbers").where("email", "==", email);
+
     const usersData = await usersRef.get();
+    const barbersData = await barbersRef.get();
 
     if (!email || !password) {
         setModalContent({
@@ -32,7 +35,7 @@ export const verifyEmailAndPasswordToRegister = async (
 
         return false
     }
-    else if (usersData.docs.length > 0) {
+    else if (usersData.docs.length > 0 || barbersData.docs.length > 0) {
         setModalContent({
             image: <StopProcessError />,
             mainMessage: "Email em uso",
