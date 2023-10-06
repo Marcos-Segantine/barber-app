@@ -17,7 +17,6 @@ import { isValidEmail } from '../../validation/isValidEmail';
 import { StopProcessError } from '../../assets/imgs/StopProcessError';
 
 import { handleError } from '../../handlers/handleError';
-import { Keyboard } from 'react-native';
 
 export const findErrorAuth = async (
     email,
@@ -54,7 +53,7 @@ export const findErrorAuth = async (
         }
 
         // Validation of email
-        else if (!isValidEmail(email)) {
+        else if (!isValidEmail(email, setSomethingWrong)) {
             setModalContent({
                 image: <StopProcessError />,
                 mainMessage: "Email inválido",

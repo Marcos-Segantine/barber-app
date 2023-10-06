@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError";
 
-export const isValidPhoneNumber = (phoneNumber) => {
+export const isValidPhoneNumber = (phoneNumber, setSomethingWrong) => {
 
     try {
         if (phoneNumber === undefined) return false
@@ -12,6 +12,7 @@ export const isValidPhoneNumber = (phoneNumber) => {
         return true;
 
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("isValidPhoneNumber", message)
     }
 }

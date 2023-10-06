@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from "react-native"
 
 import { ComeBack } from "../components/ComeBack"
@@ -17,6 +17,8 @@ import { verifyEmailAndPasswordToRegister } from "../validation/verifyEmailAndPa
 
 import { trim } from "../utils/trim"
 
+import { SomethingWrongContext } from "../context/SomethingWrongContext"
+
 export const Register = ({ navigation }) => {
     const [emailNewUser, setEmailNewUser] = useState("")
     const [passwordNewUser, setPasswordNewUser] = useState("")
@@ -27,15 +29,18 @@ export const Register = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [modalContent, setModalContent] = useState(null)
 
+    const { setSomethingWrong } = useContext(SomethingWrongContext)
+
     const handleFocusInput = (field) => setInputSelected(field)
 
     const handleContinue = async () => {
         const isEmailPasswordValid = await verifyEmailAndPasswordToRegister(
-            trim(emailNewUser),
+            trim(emailNewUser, setSomethingWrong),
             passwordNewUser,
             navigation,
             setModalContent,
-            setIsLoading
+            setIsLoading,
+            setSomethingWrong
         )
 
         if (isEmailPasswordValid) navigation.navigate("FillProfile", { isToCreateUser: true, emailNewUser: trim(emailNewUser), passwordNewUser, })

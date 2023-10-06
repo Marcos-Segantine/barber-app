@@ -6,17 +6,19 @@ import { handleError } from "../handlers/handleError";
 
 export const userSchedulesCount = async (
     userUid,
-    setSchedulesUserCount
+    setSchedulesUserCount,
+    setSomethingWrong
 ) => {
 
     try {
         const schedulesByUserRef = firestore().collection("schedules_by_user").doc(userUid)
 
         schedulesByUserRef.onSnapshot((data) => {
-            setSchedulesUserCount(filterSchedulesByDate(data.data().schedules).length)
+            setSchedulesUserCount(filterSchedulesByDate(data.data().schedules, setSomethingWrong).length)
         });
 
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("userSchedulesCount", message)
     }
 }

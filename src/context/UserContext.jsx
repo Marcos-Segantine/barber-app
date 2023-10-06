@@ -7,18 +7,22 @@
  * @returns {ReactNode} - The rendered component.
  */
 
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 import { handleError } from '../handlers/handleError';
 
+import { SomethingWrongContext } from './SomethingWrongContext';
+
 export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
+
+  const { setSomethingWrong } = useContext(SomethingWrongContext)
 
   const handleAuthStateChanged = res => {
     setUser(res);
@@ -64,6 +68,7 @@ export const UserProvider = ({ children }) => {
         } else setUserData(null);
 
       } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("UserProvider", message)
       }
 

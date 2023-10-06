@@ -97,7 +97,7 @@ export const ForgotPassword = ({ navigation }) => {
                 text={"Confirmar"}
                 action={() => handleContinueForgotPassword(
                     setIsLoading,
-                    trim(email),
+                    trim(email, setSomethingWrong),
                     phone,
                     setModalInfo,
                     setSomethingWrong,

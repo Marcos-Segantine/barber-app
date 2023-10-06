@@ -6,7 +6,9 @@
 
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
+
 import { ScheduleContext } from "../context/ScheduleContext";
+import { SomethingWrongContext } from "../context/SomethingWrongContext";
 
 import { Calendar, LocaleConfig } from "react-native-calendars";
 
@@ -60,6 +62,7 @@ export const CalendarComponent = ({ preferProfessional }) => {
   const [daysBlocked, setDaysBlocked] = useState(null);
 
   const { schedule, setSchedule } = useContext(ScheduleContext);
+  const {setSomethingWrong} = useContext(SomethingWrongContext);
 
   const year = new Date().getFullYear();
   const month = new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth() + 1}`;
@@ -72,7 +75,7 @@ export const CalendarComponent = ({ preferProfessional }) => {
     (async () => {
 
       if (preferProfessional === false) return
-      setDaysBlocked(await getDaysBlocked(schedule.professionalUid));
+      setDaysBlocked(await getDaysBlocked(schedule.professionalUid, setSomethingWrong));
 
     })();
 

@@ -28,13 +28,14 @@ export const ComeBack = ({ text }) => {
 
     // Handle the navigation when the user presses the back button.
     const handleComeBack = () => {
-        const [previousScreen, lastScreen] = getPreviousScreensName(navigation)
+        const [previousScreen, lastScreen] = getPreviousScreensName(navigation, setSomethingWrong)
 
         handleNavigation(
             previousScreen,
             lastScreen,
             navigation,
-            userData
+            userData,
+            setSomethingWrong
         )
     }
 

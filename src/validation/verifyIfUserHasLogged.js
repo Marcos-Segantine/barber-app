@@ -5,7 +5,7 @@ import auth from '@react-native-firebase/auth';
 
 import { handleError } from "../handlers/handleError";
 
-export const verifyIfUserHasLogged = async (navigation) => {
+export const verifyIfUserHasLogged = async (navigation, setSomethingWrong) => {
     try {
         const email = await AsyncStorage.getItem("@barber_app__email");
 
@@ -42,6 +42,7 @@ export const verifyIfUserHasLogged = async (navigation) => {
         }
 
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("verifyIfUserHasLogged", message)
         
     }

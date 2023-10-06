@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError";
 
-export const getWeekDay = (dateString) => {
+export const getWeekDay = (dateString, setSomethingWrong) => {
     try {
 
         const [year, month, day] = dateString.split('-').map(Number);
@@ -11,6 +11,7 @@ export const getWeekDay = (dateString) => {
         else if (dayOfWeek === 6) return "saturday"
         else return "weekday"
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("getWeekDay", message)
     }
 }

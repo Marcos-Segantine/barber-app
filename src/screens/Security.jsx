@@ -6,6 +6,7 @@ import { globalStyles } from "../assets/globalStyles"
 import { ComeBack } from "../components/ComeBack"
 
 import { UserContext } from "../context/UserContext"
+import { SomethingWrongContext } from "../context/SomethingWrongContext"
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -16,6 +17,7 @@ export const Security = ({ navigation }) => {
     const [accessAutomatically, setAccessAutomatically] = useState(null)
 
     const { userData } = useContext(UserContext)
+    const { setSomethingWrong } = useContext(SomethingWrongContext)
 
     useEffect(() => {
         try {
@@ -23,15 +25,21 @@ export const Security = ({ navigation }) => {
             if (!userData) return
 
             const getAsyncValue = async (string, setter, method = null) => {
-                const result = await AsyncStorage.getItem(string)
+                try {
 
-                if (method !== null) {
-                    method(result)
+                    const result = await AsyncStorage.getItem(string)
 
-                    return
+                    if (method !== null) {
+                        method(result)
+
+                        return
+                    }
+
+                    setter(result === "true" ? true : result)
+                } catch ({ message }) {
+                    setSomethingWrong(true)
+                    handleError("Security", message)
                 }
-
-                setter(result === "true" ? true : result)
             }
 
             getAsyncValue("@barber_app__access_automatically", setAccessAutomatically, async (result) => {
@@ -44,6 +52,7 @@ export const Security = ({ navigation }) => {
                 }
             })
         } catch ({ message }) {
+            setSomethingWrong(true)
             handleError("Security", message)
         }
 
@@ -59,7 +68,7 @@ export const Security = ({ navigation }) => {
                         Acesso automático
                     </Text>
                     <Pressable
-                        onPress={() => handleAccessAutomatically(!accessAutomatically, setAccessAutomatically, userData?.email)}
+                        onPress={() => handleAccessAutomatically(!accessAutomatically, setAccessAutomatically, userData?.email, setSomethingWrong)}
                         style={{ width: 75, height: 30, borderRadius: 100, backgroundColor: accessAutomatically ? globalStyles.orangeColor : "#B8B8B8", padding: 2 }}
                     >
                         <View style={accessAutomatically ? styles.buttonCheck : [styles.buttonCheck, { backgroundColor: "#F2F2F2", left: 2 }]}></View>

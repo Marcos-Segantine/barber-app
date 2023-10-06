@@ -51,7 +51,7 @@ export const Schedule = ({ schedule }) => {
 
     const handleCancel = () => {
 
-        const canCancelSchedule = verifyIfUserCanCancelSchedule(4, schedule.day, schedule.schedule);
+        const canCancelSchedule = verifyIfUserCanCancelSchedule(4, schedule.day, schedule.schedule, setSomethingWrong);
 
         if (canCancelSchedule) {
 
@@ -62,7 +62,8 @@ export const Schedule = ({ schedule }) => {
                 firstButtonText: "Sim, cancelar",
                 firstButtonAction: () => {
                     cancelSchedule(schedule.clientUid, schedule, setSomethingWrong)
-                    setCancelScheduleState(null)
+                    setCancelScheduleState(null),
+                    setSomethingWrong
                 },
                 secondButtonText: "Não",
                 secondButtonAction: () => setCancelScheduleState(null),
@@ -85,7 +86,7 @@ export const Schedule = ({ schedule }) => {
     }
 
     const date = schedule && formatDate(schedule.day, setSomethingWrong)
-    const weekDay = schedule && getDayOfWeek(schedule.day)
+    const weekDay = schedule && getDayOfWeek(schedule.day, setSomethingWrong)
     const scheduleHour = schedule && schedule.schedule
 
     const services = schedule && schedule.services.map(service => service.name)
@@ -93,11 +94,11 @@ export const Schedule = ({ schedule }) => {
     const navigation = useNavigation()
 
     useEffect(() => {
-        getProfessionalInfoByName(schedule.professional, setProfessionalPicture)
+        getProfessionalInfoByName(schedule.professional, setProfessionalPicture, setSomethingWrong)
 
     }, [])
 
-    const totalPriceServicesSelected = schedule.services && formatServicePrice(getTotalPriceFromServices(schedule.services))
+    const totalPriceServicesSelected = schedule.services && formatServicePrice(getTotalPriceFromServices(schedule.services, setSomethingWrong))
 
     return (
         <View style={styles.container}>
@@ -129,7 +130,7 @@ export const Schedule = ({ schedule }) => {
                 }
 
                 <View style={{ justifyContent: 'space-around', width: "60%" }}>
-                    <Text style={styles.barbershopName}>{getNameLastName(schedule.professional)}</Text>
+                    <Text style={styles.barbershopName}>{getNameLastName(schedule.professional, setSomethingWrong)}</Text>
                     <Text style={[styles.text, { color: "#00000090" }]}>{settings?.address}</Text>
                     <Text style={[styles.text, { color: "#00000090", marginTop: -10 }]}>{settings?.neighborhood}</Text>
                     <View>

@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError"
 
-export const trim = (data) => {
+export const trim = (data, setSomethingWrong) => {
     try {
 
         if (typeof data === 'string') {
@@ -13,6 +13,7 @@ export const trim = (data) => {
 
         return data
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("trim", message)
     }
 }

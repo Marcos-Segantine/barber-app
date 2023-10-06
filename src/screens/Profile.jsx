@@ -60,7 +60,7 @@ export const Profile = ({ navigation }) => {
                         }
                     </View>
 
-                    <Text style={styles.userName}>{userData && getNameLastName(userData.name)}</Text>
+                    <Text style={styles.userName}>{userData && getNameLastName(userData.name, setSomethingWrong)}</Text>
                     <Text style={styles.userEmail}>{userData && userData.email}</Text>
                 </View>
 

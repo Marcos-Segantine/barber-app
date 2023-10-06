@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError";
 
-export const getMonthName = (dateString) => {
+export const getMonthName = (dateString, setSomethingWrong) => {
     try {
 
         const date = new Date(dateString);
@@ -10,6 +10,7 @@ export const getMonthName = (dateString) => {
 
         return month;
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("getMonthName", message)
     }
 }

@@ -23,7 +23,8 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
     setModalInfo,
     setInformationNewUser,
     setModalConfirmationNewInfo,
-    handleNewInformation
+    handleNewInformation,
+    setSomethingWrong
 ) => {
 
     try {
@@ -32,8 +33,8 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
             informationNewUser.phone
         ) {
             // Verify if email and phone number is valid
-            const isValidPhone = isValidPhoneNumber(informationNewUser.phone)
-            const emailValidated = isValidEmail(informationNewUser.email)
+            const isValidPhone = isValidPhoneNumber(informationNewUser.phone, setSomethingWrong)
+            const emailValidated = isValidEmail(informationNewUser.email, setSomethingWrong)
 
             if (!isValidPhone && !emailValidated) {
 
@@ -74,8 +75,8 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
         }
 
         // Verify if email and phone number is already use by other user
-        const emailAlreadyExist = await verifyIfDataAlreadyExist("email", informationNewUser.email)
-        const phoneAlreadyExist = await verifyIfDataAlreadyExist("phone", informationNewUser.phone)
+        const emailAlreadyExist = await verifyIfDataAlreadyExist("email", informationNewUser.email, setSomethingWrong)
+        const phoneAlreadyExist = await verifyIfDataAlreadyExist("phone", informationNewUser.phone, setSomethingWrong)
 
         if (emailAlreadyExist) {
             setModalInfo({
@@ -116,6 +117,7 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
         // Updates the user information
         else handleNewInformation()
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("handleConfirmEmailPhoneChangeFillProfile", message)
     }
 }

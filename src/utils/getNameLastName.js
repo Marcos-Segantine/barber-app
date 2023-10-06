@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError"
 
-export const getNameLastName = (name) => {
+export const getNameLastName = (name, setSomethingWrong) => {
     try {
 
         if (!name) return null
@@ -14,6 +14,7 @@ export const getNameLastName = (name) => {
 
         return firstName + " " + lastName
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("getNameLastName", message)
     }
 }

@@ -35,7 +35,7 @@ export const handleConfirmNewInformationFillProfile = async (
     userData,
     setUserData,
     isToCreateUserState,
-    setIsToCreateUserState
+    setIsToCreateUserState,
 ) => {
 
     try {
@@ -53,7 +53,8 @@ export const handleConfirmNewInformationFillProfile = async (
             const isFieldsAvailable = verifyFieldsToCreateAccount(
                 { ...informationNewUser, gender, },
                 ["name", "email", "phone", "gender"],
-                setModalInfo
+                setModalInfo,
+                setSomethingWrong
             )
 
             if (!isFieldsAvailable) return
@@ -74,7 +75,8 @@ export const handleConfirmNewInformationFillProfile = async (
         else {
             const isFieldsValidToUpdateInfo = verifyFieldsToUpdateInformation(
                 { ...informationNewUser, gender, },
-                setModalInfo
+                setModalInfo,
+                setSomethingWrong
             )
 
             if (!isFieldsValidToUpdateInfo) return
@@ -91,6 +93,7 @@ export const handleConfirmNewInformationFillProfile = async (
             )
         }
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("handleConfirmNewInformationFillProfile", message)
     }
 }

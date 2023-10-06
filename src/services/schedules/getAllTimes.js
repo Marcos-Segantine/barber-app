@@ -20,7 +20,7 @@ export const getAllTimes = async (setSomethingWrong) => {
         // If there is no working hours, return `undefined` to frontend show a message explaining that
         if (workingHoursData === undefined) return undefined
 
-        return sortByHour(workingHoursData)
+        return sortByHour(workingHoursData, setSomethingWrong)
 
     } catch ({ message }) {
         setSomethingWrong(true)

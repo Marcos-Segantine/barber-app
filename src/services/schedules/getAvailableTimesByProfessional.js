@@ -7,15 +7,16 @@ import { handleError } from '../../handlers/handleError';
 export const getAvailableTimesByProfessional = async (
     professionalUid,
     scheduleInfo,
+    setSomethingWrong
 ) => {
 
     try {
 
-        const year = getYear(scheduleInfo);
-        const month = getMonth(scheduleInfo);
-        const day = getDay(scheduleInfo);
+        const year = getYear(scheduleInfo, setSomethingWrong);
+        const month = getMonth(scheduleInfo, setSomethingWrong);
+        const day = getDay(scheduleInfo, setSomethingWrong);
 
-        const CurrentDayWeek = new Date(scheduleInfo.day).getDay() + 1
+        const CurrentDayWeek = new Date(scheduleInfo.day).getDay(setSomethingWrong) + 1
         const weekday = CurrentDayWeek <= 5 ? "weekday" : CurrentDayWeek === 6 ? "saturday" : "sunday"
 
         const unavailableTimesRef = firestore().collection("unavailable_times").doc(`${month}_${year}`)
@@ -111,6 +112,7 @@ export const getAvailableTimesByProfessional = async (
             })
 
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("getAvailableTimesByProfessional", message)
     }
 };

@@ -57,7 +57,7 @@ export const Home = ({ navigation }) => {
 
   useEffect(() => {
     listenerGetLastedScheduleOfClient(userData, setScheduleClientInfo, setSomethingWrong)
-    userData && userSchedulesCount(userData.uid, setSchedulesUserCount)
+    userData && userSchedulesCount(userData.uid, setSchedulesUserCount, setSomethingWrong)
 
   }, [userData]);
 

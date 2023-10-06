@@ -13,7 +13,8 @@ import { handleError } from '../../handlers/handleError';
 
 export const sendScheduleUidToDB = async (
     scheduleMonth,
-    scheduleUid
+    scheduleUid,
+    setSomethingWrong
 ) => {
     try {
 
@@ -31,6 +32,7 @@ export const sendScheduleUidToDB = async (
 
         schedulesUidRef.set({ schedules: [...schedulesUiUpdated] })
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("sendScheduleUidToDB", message)
     }
 }

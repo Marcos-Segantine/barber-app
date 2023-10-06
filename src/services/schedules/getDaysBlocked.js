@@ -2,7 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 
 import { handleError } from '../../handlers/handleError';
 
-export const getDaysBlocked = async (professionalUid) => {
+export const getDaysBlocked = async (professionalUid, setSomethingWrong) => {
     try {
 
         const daysBlockedRef = firestore().collection('days_blocked').doc(professionalUid);
@@ -11,6 +11,7 @@ export const getDaysBlocked = async (professionalUid) => {
         if (daysBlockedData === undefined) return {};
         return daysBlockedData;
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("getDaysBlocked", message);
     }
 }

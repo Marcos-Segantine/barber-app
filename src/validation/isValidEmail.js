@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError";
 
-export const isValidEmail = (email) => {
+export const isValidEmail = (email, setSomethingWrong) => {
     try {
         if (email === undefined) return false
 
@@ -8,6 +8,7 @@ export const isValidEmail = (email) => {
         return emailPattern.test(email);
 
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("isValidEmail", message)
     }
 }

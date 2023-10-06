@@ -32,9 +32,9 @@ export const handleConfirmNewSchedule = async (
 
     try {
 
-        const scheduleMouth = getMonth(scheduleInfo);
-        const scheduleDay = getDay(scheduleInfo);
-        const scheduleYear = getYear(scheduleInfo)
+        const scheduleMouth = getMonth(scheduleInfo, setSomethingWrong);
+        const scheduleDay = getDay(scheduleInfo, setSomethingWrong);
+        const scheduleYear = getYear(scheduleInfo, setSomethingWrong)
 
         const dateForDoc = `${scheduleMouth}_${scheduleYear}`
 

@@ -15,6 +15,7 @@ import { verifyIfUserHasLogged } from "../validation/verifyIfUserHasLogged";
 import { CannotUseApp } from "../components/CannotUseApp";
 
 import { AppSettingsContext } from "../context/AppSettings";
+import { SomethingWrongContext } from "../context/SomethingWrongContext";
 
 import { handleError } from "../handlers/handleError";
 
@@ -22,6 +23,7 @@ export const Welcome = ({ navigation }) => {
   const [blockAccess, setBlockAccess] = useState(false);
 
   const { settings } = useContext(AppSettingsContext)
+  const { setSomethingWrong } = useContext(SomethingWrongContext)
 
   useEffect(() => {
     ((async () => {
@@ -35,12 +37,13 @@ export const Welcome = ({ navigation }) => {
         const data = await response.json();
 
         if (data.response) {
-          verifyIfUserHasLogged(navigation);
+          verifyIfUserHasLogged(navigation, setSomethingWrong);
         }
         else {
           setBlockAccess(true)
         }
       } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("Welcome", message)
       }
 

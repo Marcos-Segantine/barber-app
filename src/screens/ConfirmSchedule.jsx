@@ -45,8 +45,8 @@ export const ConfirmSchedule = ({ route, navigation }) => {
             schedule.scheduleUid = `${userData.uid}-${schedule.day}-${schedule.professionalUid}-${schedule.schedule}`;
 
         } catch ({ message }) {
-            handleError("ConfirmSchedule", message)
             setSomethingWrong(true)
+            handleError("ConfirmSchedule", message)
         }
 
     }, [isFocused]);
@@ -88,7 +88,7 @@ export const ConfirmSchedule = ({ route, navigation }) => {
         )
     }
 
-    const totalPriceServicesSelected = schedule.services && formatServicePrice(getTotalPriceFromServices(schedule.services))
+    const totalPriceServicesSelected = schedule.services && formatServicePrice(getTotalPriceFromServices(schedule.services, setSomethingWrong), setSomethingWrong)
 
     if (isLoading) return <Loading flexSize={1} />
 
@@ -141,7 +141,7 @@ export const ConfirmSchedule = ({ route, navigation }) => {
                 <View style={styles.content}>
                     {
                         !!schedule.services && schedule.services.map((service, index) => {
-                            const servicePrice = formatServicePrice(service.price)
+                            const servicePrice = formatServicePrice(service.price, setSomethingWrong)
                             return (
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }} key={index}>
                                     <Text style={styles.describe}>{service.name}</Text>

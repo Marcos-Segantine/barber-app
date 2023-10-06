@@ -14,19 +14,19 @@ import { NetInformation } from "../components/modals/NetInformation";
 export const IndexApp = () => {
   return (
     <NavigationContainer>
-      <UserProvider>
-        <MenuItemProvider>
-          <ScheduleProvider>
-            <SomethingWrongProvider>
+      <SomethingWrongProvider>
+        <UserProvider>
+          <MenuItemProvider>
+            <ScheduleProvider>
               <NetInformation />
               <AppSettingsProvider>
                 <Routes />
 
               </AppSettingsProvider>
-            </SomethingWrongProvider>
-          </ScheduleProvider>
-        </MenuItemProvider>
-      </UserProvider>
+            </ScheduleProvider>
+          </MenuItemProvider>
+        </UserProvider>
+      </SomethingWrongProvider>
     </NavigationContainer>
   );
 };

@@ -25,7 +25,7 @@ export const takeLastScheduleOfUser = async (
         const schedulesByUserRef = firestore().collection("schedules_by_user").doc(userInfo.uid)
         const schedulesByUserData = (await schedulesByUserRef.get()).data().schedules
 
-        const schedulesFiltered = filterSchedulesByDate(schedulesByUserData)
+        const schedulesFiltered = filterSchedulesByDate(schedulesByUserData, setSomethingWrong)
 
         // Sort the schedules by day in ascending order
         const dates = schedulesFiltered.sort((a, b) => a.day.localeCompare(b.day, undefined, { numeric: true }))

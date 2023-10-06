@@ -19,7 +19,7 @@ export const getUserSchedules = async (setSchedules, userUid, setSomethingWrong)
         const schedulesByUserData = (await schedulesByUserRef.get()).data().schedules
 
         // Update the state with the retrieved schedules
-        setSchedules(filterSchedulesByDate(schedulesByUserData))
+        setSchedules(filterSchedulesByDate(schedulesByUserData, setSomethingWrong))
 
     } catch ({ message }) {
         setSomethingWrong(true)

@@ -46,7 +46,7 @@ export const sendEmailForgotPassword = async (
 
         // Send password reset email if phone number is provided
         else if (phone) {
-            const userByPhoneNumber = await getUserByPhoneNumber(phone)
+            const userByPhoneNumber = await getUserByPhoneNumber(phone, setSomethingWrong)
 
             if (phone) await auth().sendPasswordResetEmail(userByPhoneNumber.email)
 

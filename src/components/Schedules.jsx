@@ -30,7 +30,7 @@ export const Schedules = ({ preferProfessional }) => {
   const { setSomethingWrong } = useContext(SomethingWrongContext);
 
   // Get the day based on the selected schedule
-  const day = schedule.day && getDay(schedule);
+  const day = schedule.day && getDay(schedule, setSomethingWrong);
 
   // Fetch available times when professional or day changes
   useEffect(() => {

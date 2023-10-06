@@ -22,7 +22,8 @@ export const handleNewPicture = (
     setInformationNewUser,
     informationNewUser,
     setModalInfo,
-    setModalInformative
+    setModalInformative,
+    setSomethingWrong
 
 ) => {
     try {
@@ -42,18 +43,19 @@ export const handleNewPicture = (
             if (error.message === "Required permission missing") {
 
                 // Request necessary camera permissions
-                requestPermissionsCameraStorage(setModalInfo, setModalInformative)
+                requestPermissionsCameraStorage(setModalInfo, setModalInformative, setSomethingWrong)
             }
             else {
                 console.log(error.message);
             }
         })
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("handleNewPicture", message)
     }
 }
 
-const requestPermissionsCameraStorage = async (setModalInfo, setModalInformative) => {
+const requestPermissionsCameraStorage = async (setModalInfo, setModalInformative, setSomethingWrong) => {
     try {
 
         // Request camera permission
@@ -113,6 +115,7 @@ const requestPermissionsCameraStorage = async (setModalInfo, setModalInformative
             })
         }
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("requestPermissionsCameraStorage", message)
     }
 };

@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError"
 
-export const capitalizeName = (name) => {
+export const capitalizeName = (name, setSomethingWrong) => {
     try {
 
         name = name.split("").map((letter, index) => {
@@ -11,6 +11,7 @@ export const capitalizeName = (name) => {
 
         return name
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("capitalizeName", message)
     }
 }

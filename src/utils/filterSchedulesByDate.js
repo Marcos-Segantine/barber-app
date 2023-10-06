@@ -2,7 +2,7 @@ import { handleError } from "../handlers/handleError";
 
 import { getHour } from "./dateHelper";
 
-export const filterSchedulesByDate = (schedules) => {
+export const filterSchedulesByDate = (schedules, setSomethingWrong) => {
     try {
 
         if (!schedules) return null
@@ -26,6 +26,7 @@ export const filterSchedulesByDate = (schedules) => {
 
         return data
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("filterSchedulesByDate", message)
     }
 }

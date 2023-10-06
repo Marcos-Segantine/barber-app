@@ -45,7 +45,7 @@ export const OurServices = ({ navigation, route }) => {
         navigation.navigate("ConfirmSchedule", { scheduleToUpdate, isToUpdateSchedule })
     }
 
-    const totalPriceServicesSelected = formatServicePrice(getTotalPriceFromServices(servicesSelected))
+    const totalPriceServicesSelected = formatServicePrice(getTotalPriceFromServices(servicesSelected, setSomethingWrong), setSomethingWrong)
 
     if (services === null) return <Loading flexSize={1} />
 
@@ -57,7 +57,7 @@ export const OurServices = ({ navigation, route }) => {
                 <Text style={{ color: "#000000", fontSize: globalStyles.fontSizeSmall, fontFamily: globalStyles.fontFamilyBold, marginBottom: 5 }}>Serviço(s) selecionado(s):</Text>
                 {
                     servicesSelected.map((service, index) => {
-                        const servicePrice = formatServicePrice(service.price)
+                        const servicePrice = formatServicePrice(service.price, setSomethingWrong)
 
                         return (
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }} key={index}>

@@ -16,7 +16,8 @@ export const handleNavigation = (
     previousScreen,
     lastScreen,
     navigation,
-    userData
+    userData,
+    setSomethingWrong
 ) => {
 
     try {
@@ -58,6 +59,7 @@ export const handleNavigation = (
             return true
         }
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("handleNavigation", message)
     }
 }

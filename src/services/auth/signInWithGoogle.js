@@ -56,8 +56,8 @@ export const signInWithGoogle = async (
       return
 
     } else {
-      handleError("signInWithGoogle", message)
       setSomethingWrong(true)
+      handleError("signInWithGoogle", message)
     }
   }
 };

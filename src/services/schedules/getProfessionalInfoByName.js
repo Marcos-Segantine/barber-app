@@ -11,11 +11,11 @@ import { handleError } from '../../handlers/handleError';
 
 export const getProfessionalInfoByName = async (
     professionalName,
-    setProfessionalPicture
+    setProfessionalPicture,
+    setSomethingWrong
 ) => {
 
     try {
-
 
         const barbersRef = firestore().collection('barbers').where('name', '==', professionalName)
         const barbersData = (await barbersRef.get({ source: "server" })).docs
@@ -29,6 +29,7 @@ export const getProfessionalInfoByName = async (
         if (!barber) setProfessionalPicture(null)
         else setProfessionalPicture(barber.profilePicture);
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("getProfessionalInfoByName", message)
     }
 }

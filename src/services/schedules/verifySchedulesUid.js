@@ -12,7 +12,7 @@ import firestore from '@react-native-firebase/firestore';
 
 import { handleError } from '../../handlers/handleError';
 
-export const verifySchedulesUid = async (scheduleMonth, scheduleUid) => {
+export const verifySchedulesUid = async (scheduleMonth, scheduleUid, setSomethingWrong) => {
     try {
 
         const schedulesUidRef = firestore().collection('schedules_uid').doc(scheduleMonth)
@@ -31,6 +31,7 @@ export const verifySchedulesUid = async (scheduleMonth, scheduleUid) => {
         // If the given schedule UID is not included in the 'schedules' from `schedulesUidData`, the schedule is available
         return true
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("verifySchedulesUid", message)
     }
 }

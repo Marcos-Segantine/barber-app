@@ -30,8 +30,8 @@ export const HeaderScreens = ({ screenName }) => {
   useEffect(() => {
     // Add a hardware back press event listener
     BackHandler.addEventListener('hardwareBackPress', () => {
-      const [previousScreen, lastScreen] = getPreviousScreensName(navigation)
-      return handleNavigation(previousScreen, lastScreen, navigation, userData)
+      const [previousScreen, lastScreen] = getPreviousScreensName(navigation, setSomethingWrong)
+      return handleNavigation(previousScreen, lastScreen, navigation, userData, setSomethingWrong)
     })
 
   }, [])

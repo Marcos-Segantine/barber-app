@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError";
 
-export const sortByHour = (array) => {
+export const sortByHour = (array, setSomethingWrong) => {
     try {
 
         if (!!array[0]?.hour) {
@@ -57,6 +57,7 @@ export const sortByHour = (array) => {
             return array;
         }
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("sortByHour", message)
     }
 }

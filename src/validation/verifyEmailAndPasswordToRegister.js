@@ -11,7 +11,8 @@ export const verifyEmailAndPasswordToRegister = async (
     password,
     navigation,
     setModalContent,
-    setIsLoading
+    setIsLoading,
+    setSomethingWrong
 ) => {
 
     try {
@@ -90,7 +91,7 @@ export const verifyEmailAndPasswordToRegister = async (
 
             return false
         }
-        else if (!isValidEmail(email)) {
+        else if (!isValidEmail(email, setSomethingWrong)) {
             setModalContent({
                 image: <StopProcessError />,
                 mainMessage: "Seu email é inválido",
@@ -111,6 +112,7 @@ export const verifyEmailAndPasswordToRegister = async (
 
         return true
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("verifyEmailAndPasswordToRegister", message)       
     }
 }

@@ -5,7 +5,7 @@ import { Button } from "../Button"
 import { ContactImage } from "../../assets/imgs/ContactImage"
 import { globalStyles } from "../../assets/globalStyles"
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Loading } from "../Loading"
 
 import firestore from '@react-native-firebase/firestore';
@@ -14,9 +14,13 @@ import { formatPhoneNumber } from "../../utils/formatPhoneNumber"
 
 import { handleError } from "../../handlers/handleError"
 
+import { SomethingWrongContext } from "../../context/SomethingWrongContext"
+
 export const Contact = ({ modalContact, setModalVisible }) => {
     // const [isLoading, setIsLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
+
+    const { setSomethingWrong } = useContext(SomethingWrongContext)
 
     useEffect(() => {
         (async () => {
@@ -33,6 +37,7 @@ export const Contact = ({ modalContact, setModalVisible }) => {
                 setContacts(barbersData)
 
             } catch ({ message }) {
+                setSomethingWrong(true)
                 handleError("Contact", message)
             }
         })();

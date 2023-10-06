@@ -10,7 +10,12 @@
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 import { globalStyles } from "../assets/globalStyles";
+
 import { formatServicePrice } from "../utils/formatServicePrice";
+
+import { useContext } from "react";
+
+import { SomethingWrongContext } from "../context/SomethingWrongContext";
 
 export const Service = ({
   service,
@@ -18,6 +23,8 @@ export const Service = ({
   setServicesSelected,
   removeServiceSelected,
 }) => {
+
+  const { setSomethingWrong } = useContext(SomethingWrongContext);
 
   /**
  * Handles the selection or removal of a service.
@@ -46,7 +53,7 @@ export const Service = ({
     ? [styles.container, { borderColor: globalStyles.orangeColor }]
     : styles.container;
 
-  const servicePrice = formatServicePrice(service.price)
+  const servicePrice = formatServicePrice(service.price, setSomethingWrong)
 
   return (
     <TouchableOpacity

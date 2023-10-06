@@ -25,7 +25,7 @@ export const handleAvailableTimesSchedules = async (
         if (schedule.professional && schedule.day && preferProfessional) {
             // Get available times from a professional 
             setAvailableTimes(
-                await getAvailableTimesByProfessional(schedule.professionalUid, schedule)
+                await getAvailableTimesByProfessional(schedule.professionalUid, schedule, setSomethingWrong)
             );
 
             // Get all times from all professionals

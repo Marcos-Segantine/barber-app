@@ -55,7 +55,7 @@ export const createUserWithEmailAndPassword = async (
       }
     }
 
-    const uid = generateNewUid()
+    const uid = generateNewUid(setSomethingWrong)
 
     // Upload profile picture if provided
     if (informationNewUser.profilePicture) {

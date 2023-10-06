@@ -20,9 +20,9 @@ export const cancelSchedule = async (
 
   try {
 
-    const scheduleMonth = getMonth(scheduleInfo);
-    const scheduleYear = getYear(scheduleInfo)
-    const scheduleDay = getDay(scheduleInfo);
+    const scheduleMonth = getMonth(scheduleInfo, setSomethingWrong);
+    const scheduleYear = getYear(scheduleInfo, setSomethingWrong)
+    const scheduleDay = getDay(scheduleInfo, setSomethingWrong);
     const professional = scheduleInfo.professionalUid;
 
     const nameDocMonth_Year = `${scheduleMonth}_${scheduleYear}`

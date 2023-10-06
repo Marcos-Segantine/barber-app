@@ -29,6 +29,7 @@ export const listenerGetLastedScheduleOfClient = (
             });
         }
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("listenerGetLastedScheduleOfClient", message);
     }
 }

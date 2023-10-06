@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError";
 
-export const formatServicePrice = (priceService) => {
+export const formatServicePrice = (priceService, setSomethingWrong) => {
     try {
 
         const numericPrice = Number(priceService);
@@ -13,6 +13,7 @@ export const formatServicePrice = (priceService) => {
 
         return formattedPrice;
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("formatServicePrice", message)
     }
 }

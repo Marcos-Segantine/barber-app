@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError";
 
-export const getDayOfWeek = (dateString) => {
+export const getDayOfWeek = (dateString, setSomethingWrong) => {
     try {
 
         const daysOfWeek = [
@@ -13,6 +13,7 @@ export const getDayOfWeek = (dateString) => {
 
         return dayOfWeek;
     } catch ({ message }) {
+        setSomethingWrong((true))
         handleError("getDayOfWeek", message)
     }
 }

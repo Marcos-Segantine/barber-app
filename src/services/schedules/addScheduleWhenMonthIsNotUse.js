@@ -37,10 +37,10 @@ export const addScheduleWhenMonthIsNotUse = async (
 ) => {
 
   try {
-    const scheduleMonth = getMonth(scheduleInfo);
-    const scheduleHour = getHour(scheduleInfo);
-    const scheduleDay = getDay(scheduleInfo);
-    const scheduleYear = getYear(scheduleInfo);
+    const scheduleMonth = getMonth(scheduleInfo, setSomethingWrong);
+    const scheduleHour = getHour(scheduleInfo, setSomethingWrong);
+    const scheduleDay = getDay(scheduleInfo, setSomethingWrong);
+    const scheduleYear = getYear(scheduleInfo, setSomethingWrong);
 
     const nameDocMonth_Year = `${scheduleMonth}_${scheduleYear}`
 
@@ -75,10 +75,10 @@ export const addScheduleWhenMonthIsNotUse = async (
 
     // Check for the last time if the day, time and professional selected by the user is still available
     // If the time is available, add the schedule, if not, show a modal explaining that
-    const canConfirmSchedule = await verifySchedulesUid(nameDocMonth_Year, scheduleInfo.scheduleUid);
+    const canConfirmSchedule = await verifySchedulesUid(nameDocMonth_Year, scheduleInfo.scheduleUid, setSomethingWrong);
 
     if (canConfirmSchedule) {
-      sendScheduleUidToDB(nameDocMonth_Year, scheduleInfo.scheduleUid)
+      sendScheduleUidToDB(nameDocMonth_Year, scheduleInfo.scheduleUid, setSomethingWrong)
       await batch.commit()
 
       setModalContent({

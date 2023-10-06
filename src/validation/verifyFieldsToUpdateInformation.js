@@ -5,11 +5,11 @@ import { StopProcessError } from "../assets/imgs/StopProcessError"
 
 import { handleError } from "../handlers/handleError"
 
-export const verifyFieldsToUpdateInformation = (userInformation, setError) => {
+export const verifyFieldsToUpdateInformation = (userInformation, setError, setSomethingWrong) => {
 
     try {
 
-        const isPhoneValid = isValidPhoneNumber(userInformation.phone)
+        const isPhoneValid = isValidPhoneNumber(userInformation.phone, setSomethingWrong)
         if (!isPhoneValid && userInformation.phone) {
             setError({
                 image: <StopProcessError />,
@@ -22,7 +22,7 @@ export const verifyFieldsToUpdateInformation = (userInformation, setError) => {
             return false
         }
 
-        const isEmailValid = isValidEmail(userInformation.email)
+        const isEmailValid = isValidEmail(userInformation.email, setSomethingWrong)
         if (!isEmailValid && userInformation.email) {
             setError({
                 image: <StopProcessError />,
@@ -47,6 +47,7 @@ export const verifyFieldsToUpdateInformation = (userInformation, setError) => {
 
         return true
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("verifyFieldsToUpdateInformation", message)
     }
 }

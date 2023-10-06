@@ -51,7 +51,7 @@ export const Login = ({ navigation, route }) => {
 
         signInWithEmailAndPassword(
             navigation,
-            trim(email),
+            trim(email, setSomethingWrong),
             password,
             setModalContent,
             setUserData,

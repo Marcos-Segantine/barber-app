@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError"
 
-export const getPreviousScreensName = (navigation) => {
+export const getPreviousScreensName = (navigation, setSomethingWrong) => {
     try {
 
         const screensState = navigation.getState()
@@ -16,6 +16,7 @@ export const getPreviousScreensName = (navigation) => {
 
         return [previousScreen, lastScreen]
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("getPreviousScreensName", message)
     }
 }

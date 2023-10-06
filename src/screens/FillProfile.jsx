@@ -69,7 +69,8 @@ export const FillProfile = ({ navigation, route }) => {
             setModalInfo,
             setInformationNewUser,
             setModalConfirmationNewInfo,
-            handleConfirmNewInformation
+            handleConfirmNewInformation,
+            setSomethingWrong
         )
     }
 
@@ -120,7 +121,7 @@ export const FillProfile = ({ navigation, route }) => {
                 <TouchableOpacity
                     style={styles.contentEditPicture}
                     activeOpacity={.8}
-                    onPress={() => handleNewPicture(setInformationNewUser, informationNewUser, setModalInfo, setModalInformative)}
+                    onPress={() => handleNewPicture(setInformationNewUser, informationNewUser, setModalInfo, setModalInformative, setSomethingWrong)}
                 >
                     <EditProfilePicture width={40} height={40} />
                 </TouchableOpacity>

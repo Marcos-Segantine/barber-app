@@ -1,6 +1,6 @@
 import { handleError } from "../handlers/handleError";
 
-export const verifyIfUserCanCancelSchedule = (minimalHoursToCancelSchedule, ScheduleDay, scheduleHour) => {
+export const verifyIfUserCanCancelSchedule = (minimalHoursToCancelSchedule, ScheduleDay, scheduleHour, setSomethingWrong) => {
     try {
 
         const [year, month, day] = ScheduleDay.split('-').map(Number);
@@ -20,6 +20,7 @@ export const verifyIfUserCanCancelSchedule = (minimalHoursToCancelSchedule, Sche
             return false;
         }
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("verifyIfUserCanCancelSchedule", message)
     }
 }

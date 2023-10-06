@@ -52,8 +52,8 @@ export const handleContinueForgotPassword = async (
         }
 
         // Validate phone and email inputs
-        const phoneValidated = isValidPhoneNumber(phone)
-        const emailValidated = isValidEmail(email)
+        const phoneValidated = isValidPhoneNumber(phone, setSomethingWrong)
+        const emailValidated = isValidEmail(email, setSomethingWrong)
 
         // Check if phone and email inputs are invalid
         if (!phoneValidated && !emailValidated) {
@@ -93,7 +93,7 @@ export const handleContinueForgotPassword = async (
 
         // Check if email exist
         else if (phone) {
-            const user = await getUserByPhoneNumber(phone);
+            const user = await getUserByPhoneNumber(phone, setSomethingWrong);
 
             if (user === null) {
                 setModalInfo({
@@ -122,6 +122,7 @@ export const handleContinueForgotPassword = async (
 
         setIsLoading(false)
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("handleContinueForgotPassword", message)
     }
 }

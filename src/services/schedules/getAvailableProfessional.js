@@ -23,10 +23,10 @@ export const getAvailableProfessional = async (
 
     try {
 
-        const month = getMonth(schedule)
-        const year = getYear(schedule)
-        const day = getDay(schedule)
-        const hour = getHour(schedule)
+        const month = getMonth(schedule, setSomethingWrong)
+        const year = getYear(schedule, setSomethingWrong)
+        const day = getDay(schedule, setSomethingWrong)
+        const hour = getHour(schedule, setSomethingWrong)
 
         const unavailableTimesRef = firestore().collection("unavailable_times").doc(`${month}_${year}`)
         const barbersRef = firestore().collection("barbers")
@@ -42,7 +42,7 @@ export const getAvailableProfessional = async (
             professionalUid: docBarber._data.uid
         }))
 
-        const dayWeek = getWeekDay(schedule.day)
+        const dayWeek = getWeekDay(schedule.day, setSomethingWrong)
 
         // Array to store the available professionals
         const dataTemp = []

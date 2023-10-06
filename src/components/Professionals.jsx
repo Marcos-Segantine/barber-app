@@ -74,7 +74,7 @@ export const Professionals = ({ preferProfessional }) => {
 
   // Render selected professional if only one is available
   if (availableProfessional?.length === 1) {
-    const name = getNameLastName(availableProfessional[0].name)
+    const name = getNameLastName(availableProfessional[0].name, setSomethingWrong)
     const nameFormatted = name.length > 20 ? name.slice(0, 10) + "..." : name
 
     return (
@@ -128,7 +128,7 @@ export const Professionals = ({ preferProfessional }) => {
   // Render message if no professionals are available for the selected schedule
   if (availableProfessional?.length === 0 && preferProfessional === false) {
     return (
-      <Text style={styles.text}>Infelizmente o horario das {schedule.schedule} do dia {getDay(schedule)} de {getMonthName(schedule.day)} não está disponível</Text>
+      <Text style={styles.text}>Infelizmente o horario das {schedule.schedule} do dia {getDay(schedule, setSomethingWrong)} de {getMonthName(schedule.day, setSomethingWrong)} não está disponível</Text>
     )
   }
 
@@ -149,9 +149,9 @@ export const Professionals = ({ preferProfessional }) => {
       </View>
       {
         availableProfessional.map((professional, index) => {
-          const name = getNameLastName(availableProfessional[0].name).length > 20 ?
-            getNameLastName(availableProfessional[0].name).slice(0, 10) + "..." :
-            getNameLastName(availableProfessional[0].name)
+          const name = getNameLastName(availableProfessional[0].name, setSomethingWrong).length > 20 ?
+            getNameLastName(availableProfessional[0].name, setSomethingWrong).slice(0, 10) + "..." :
+            getNameLastName(availableProfessional[0].name, setSomethingWrong)
 
           return (
             <TouchableOpacity

@@ -5,7 +5,7 @@ import { StopProcessError } from "../assets/imgs/StopProcessError"
 
 import { handleError } from "../handlers/handleError"
 
-export const verifyFieldsToCreateAccount = (userInformation, fields, setError) => {
+export const verifyFieldsToCreateAccount = (userInformation, fields, setError, setSomethingWrong) => {
     try {
 
         for (const field of fields) {
@@ -22,7 +22,7 @@ export const verifyFieldsToCreateAccount = (userInformation, fields, setError) =
             }
         }
 
-        const isPhoneValid = isValidPhoneNumber(userInformation.phone)
+        const isPhoneValid = isValidPhoneNumber(userInformation.phone, setSomethingWrong)
         if (!isPhoneValid) {
             setError({
                 image: <StopProcessError />,
@@ -35,7 +35,7 @@ export const verifyFieldsToCreateAccount = (userInformation, fields, setError) =
             return false
         }
 
-        const isEmailValid = isValidEmail(userInformation.email)
+        const isEmailValid = isValidEmail(userInformation.email, setSomethingWrong)
         if (!isEmailValid) {
             setError({
                 image: <StopProcessError />,
@@ -60,6 +60,7 @@ export const verifyFieldsToCreateAccount = (userInformation, fields, setError) =
 
         return true
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("verifyFieldsToCreateAccount", message)
     }
 }
