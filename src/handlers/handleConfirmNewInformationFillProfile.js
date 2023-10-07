@@ -25,8 +25,6 @@ import { handleError } from "./handleError"
 
 export const handleConfirmNewInformationFillProfile = async (
     informationNewUser,
-    male,
-    fame,
     setModalInfo,
     passwordNewUser,
     navigation,
@@ -40,18 +38,11 @@ export const handleConfirmNewInformationFillProfile = async (
 
     try {
 
-        const returnGender = async () => {
-            if (male) return "Masculino"
-            else if (fame) return "Feminino"
-            else return "Outro"
-        }
-
-        const gender = await returnGender()
 
         // If is to create a new user, verify the fields and create a new user
         if (isToCreateUserState) {
             const isFieldsAvailable = verifyFieldsToCreateAccount(
-                { ...informationNewUser, gender, },
+                informationNewUser,
                 ["name", "email", "phone", "gender"],
                 setModalInfo,
                 setSomethingWrong
@@ -62,7 +53,7 @@ export const handleConfirmNewInformationFillProfile = async (
             setIsToCreateUserState(false)
 
             await createUserWithEmailAndPassword(
-                { ...informationNewUser, gender, },
+                informationNewUser,
                 passwordNewUser,
                 navigation,
                 setIsLoading,
@@ -74,7 +65,7 @@ export const handleConfirmNewInformationFillProfile = async (
         // If is not to create a new user, verify the fields and update the user information
         else {
             const isFieldsValidToUpdateInfo = verifyFieldsToUpdateInformation(
-                { ...informationNewUser, gender, },
+                informationNewUser,
                 setModalInfo,
                 setSomethingWrong
             )
@@ -82,7 +73,7 @@ export const handleConfirmNewInformationFillProfile = async (
             if (!isFieldsValidToUpdateInfo) return
 
             updateInformation(
-                { ...informationNewUser, gender },
+                informationNewUser,
                 userData ? userData.password : null,
                 userData.uid,
                 navigation,

@@ -6,6 +6,8 @@ export const handleError = async (functionWithError, errorMessage) => {
     const currentMonth = date.getMonth() + 1
     const currentYear = date.getFullYear()
     const currentDate = date.getDate()
+    const currentHour = date.getHours()
+    const currentMinute = date.getMinutes()
 
     const errorRef = firestore().collection("errors").doc(`${currentMonth}_${currentYear}`)
 
@@ -14,7 +16,8 @@ export const handleError = async (functionWithError, errorMessage) => {
         await errorRef.update({
             [functionWithError]: {
                 date: `${currentYear}/${currentMonth}/${currentDate}`,
-                errorMessage: errorMessage
+                errorMessage: errorMessage,
+                hour: `${currentHour}:${currentMinute}`,
             }
         })
 
@@ -22,7 +25,8 @@ export const handleError = async (functionWithError, errorMessage) => {
         errorRef.set({
             [functionWithError]: {
                 date: `${currentYear}/${currentMonth}/${currentDate}`,
-                errorMessage: errorMessage
+                errorMessage: errorMessage,
+                hour: `${currentHour}:${currentMinute}`,
             }
         })
     }

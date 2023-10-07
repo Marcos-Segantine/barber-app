@@ -25,10 +25,6 @@ export const FillProfile = ({ navigation, route }) => {
     const { isToCreateUser, emailNewUser, passwordNewUser } = route.params ? route.params : {}
     const [isToCreateUserState, setIsToCreateUserState] = useState(isToCreateUser || false)
 
-    const [male, setMale] = useState(false)
-    const [fame, setFame] = useState(false)
-    const [otherGender, setOtherGender] = useState(false)
-
     const [informationNewUser, setInformationNewUser] = useState({
         name: "",
         email: emailNewUser || "",
@@ -48,8 +44,6 @@ export const FillProfile = ({ navigation, route }) => {
     const handleConfirmNewInformation = () => {
         handleConfirmNewInformationFillProfile(
             informationNewUser,
-            male,
-            fame,
             setModalInfo,
             passwordNewUser,
             navigation,
@@ -83,7 +77,18 @@ export const FillProfile = ({ navigation, route }) => {
             <WarningChangeInformation
                 modalConfirmationNewInfo={modalConfirmationNewInfo}
                 setModalConfirmationNewInfo={setModalConfirmationNewInfo}
-                handleNewInformation={handleConfirmNewInformationFillProfile}
+                handleNewInformation={() => handleConfirmNewInformationFillProfile(
+                    informationNewUser,
+                    setModalInfo,
+                    passwordNewUser,
+                    navigation,
+                    setIsLoading,
+                    setSomethingWrong,
+                    userData,
+                    setUserData,
+                    isToCreateUserState,
+                    setIsToCreateUserState,
+                )}
             />
             <DefaultModal
                 modalContent={modalInfo}
@@ -160,8 +165,8 @@ export const FillProfile = ({ navigation, route }) => {
                         <CheckBox
                             tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
                             disabled={false}
-                            value={male}
-                            onValueChange={(newValue) => { setMale(newValue), setFame(false), setOtherGender(false) }}
+                            value={informationNewUser.gender === "male"}
+                            onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "male", })}
                         />
 
                         <Text style={styles.text}>Masculino</Text>
@@ -171,8 +176,8 @@ export const FillProfile = ({ navigation, route }) => {
                         <CheckBox
                             tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
                             disabled={false}
-                            value={fame}
-                            onValueChange={(newValue) => { setFame(newValue), setMale(false), setOtherGender(false) }}
+                            value={informationNewUser.gender === "fame"}
+                            onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "fame" })}
                         />
 
                         <Text style={styles.text}>Feminino</Text>
@@ -182,8 +187,8 @@ export const FillProfile = ({ navigation, route }) => {
                         <CheckBox
                             tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
                             disabled={false}
-                            value={otherGender}
-                            onValueChange={(newValue) => { setOtherGender(newValue), setFame(false), setMale(false) }}
+                            value={informationNewUser.gender === "other"}
+                            onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "other" })}
                         />
 
                         <Text style={styles.text}>Outro</Text>
