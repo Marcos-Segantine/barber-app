@@ -7,7 +7,10 @@ import { ComeBack } from "../components/ComeBack"
 
 export const PrivacyPolicies = ({ navigation }) => {
     return (
-        <ScrollView contentContainerStyle={globalStyles.container}>
+        <ScrollView
+            contentContainerStyle={globalStyles.container}
+            overScrollMode="never"
+            bounces={false}>
             <ComeBack />
 
             <Text style={styles.title}>Política de Privacidade</Text>
@@ -66,7 +69,7 @@ const styles = StyleSheet.create({
         color: "#000000",
         textAlign: "left",
         width: "100%",
-        marginVertical: 8,  
+        marginVertical: 8,
         fontFamily: globalStyles.fontFamilyMedium
     }
 })

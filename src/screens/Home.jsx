@@ -90,6 +90,8 @@ export const Home = ({ navigation }) => {
         ref={scrollViewRef}
         contentContainerStyle={globalStyles.container}
         onContentSizeChange={() => canScrollToEnd && scrollViewRef.current.scrollToEnd({ animated: true })}
+        overScrollMode="never"
+        bounces={false}
       >
         <HeaderScreens screenName={settings?.companyName} />
 

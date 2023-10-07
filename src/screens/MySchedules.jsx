@@ -33,7 +33,11 @@ export const MySchedules = ({ navigation }) => {
 
     return (
         <>
-            <ScrollView contentContainerStyle={[globalStyles.container, { justifyContent: schedulesUser.length ? "flex-start" : "space-between" }, { height: schedulesUser.length <= 1 && "100%" }]}>
+            <ScrollView
+                contentContainerStyle={[globalStyles.container, { justifyContent: schedulesUser.length ? "flex-start" : "space-between" }, { height: schedulesUser.length <= 1 && "100%" }]}
+                overScrollMode="never"
+                bounces={false}
+            >
                 <HeaderScreens screenName={"Meus Horários"} />
 
                 {

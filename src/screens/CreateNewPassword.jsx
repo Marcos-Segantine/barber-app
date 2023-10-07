@@ -36,7 +36,11 @@ export const CreateNewPassword = ({ navigation, route }) => {
     const styleConfirmPassword = inputSelected === 'confirmPassword' ? [styles.input, { backgroundColor: '#fff8ec', borderColor: '#fc9501', borderWidth: 1 }] : styles.input
 
     return (
-        <ScrollView contentContainerStyle={globalStyles.container}>
+        <ScrollView
+            contentContainerStyle={globalStyles.container}
+            overScrollMode="never"
+            bounces={false}
+        >
             <ComeBack text={"Crie uma nova senha"} />
 
             <DefaultModal
@@ -159,7 +163,7 @@ const styles = StyleSheet.create({
         color: "#000000",
         fontSize: globalStyles.fontSizeSmall,
         width: "85%",
-        marginTop: 20, 
+        marginTop: 20,
         fontFamily: globalStyles.fontFamilyMedium
     },
 })

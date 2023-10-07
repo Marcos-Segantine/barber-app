@@ -42,6 +42,8 @@ export const NewSchedule = ({ navigation, route }) => {
             ref={scrollViewRef}
             contentContainerStyle={globalStyles.container}
             onContentSizeChange={() => canScrollToEnd && scrollViewRef.current.scrollToEnd({ animated: true })}
+            overScrollMode="never"
+            bounces={false}
         >
             <ComeBack text={headerText || "Meus horários"} />
 

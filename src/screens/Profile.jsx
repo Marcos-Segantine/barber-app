@@ -44,7 +44,10 @@ export const Profile = ({ navigation }) => {
 
     return (
         <>
-            <ScrollView contentContainerStyle={globalStyles.container}>
+            <ScrollView
+                contentContainerStyle={globalStyles.container}
+                overScrollMode="never"
+                bounces={false}>
                 <HeaderScreens screenName={"Perfil"} />
                 <DefaultModal
                     modalContent={logOutModalData}
@@ -60,7 +63,7 @@ export const Profile = ({ navigation }) => {
                         }
                     </View>
 
-                    <Text style={styles.userName}>{userData && getNameLastName(userData.name, setSomethingWrong)}</Text>
+                    <Text style={styles.userName}>{userData && getNameLastName(userData.name, setSomethingWrong, false)}</Text>
                     <Text style={styles.userEmail}>{userData && userData.email}</Text>
                 </View>
 
@@ -95,7 +98,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         textAlign: "center"
     },
-    
+
     userEmail: {
         fontSize: globalStyles.fontSizeSmall,
         fontFamily: globalStyles.fontFamilyBold,
