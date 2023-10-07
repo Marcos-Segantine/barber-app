@@ -12,14 +12,16 @@ import { filterSchedulesByDate } from '../../utils/filterSchedulesByDate';
 
 import { handleError } from '../../handlers/handleError';
 
-export const getUserSchedules = async (setSchedules, userUid, setSomethingWrong) => {
+export const getUserSchedules = async (userUid, setSomethingWrong, setSchedules = null) => {
     try {
 
         const schedulesByUserRef = firestore().collection("schedules_by_user").doc(userUid)
         const schedulesByUserData = (await schedulesByUserRef.get()).data().schedules
 
-        // Update the state with the retrieved schedules
-        setSchedules(filterSchedulesByDate(schedulesByUserData, setSomethingWrong))
+        const data = filterSchedulesByDate(schedulesByUserData, setSomethingWrong)
+
+        if (setSchedules) setSchedules(data)
+        return data
 
     } catch ({ message }) {
         setSomethingWrong(true)

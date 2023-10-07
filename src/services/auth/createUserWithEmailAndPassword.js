@@ -42,11 +42,10 @@ export const createUserWithEmailAndPassword = async (
       })
 
     } catch ({ message }) {
-      console.log(error.message);
 
       // If this error ocurred means that the user create your account using media(Google, Facebook or Apple)
       // So just update the password, to link the Media provider with the EmailAndPassword provider in the Firebase Auth
-      if (error.message === "[auth/email-already-in-use] The email address is already in use by another account.") {
+      if (message === "[auth/email-already-in-use] The email address is already in use by another account.") {
         auth().currentUser.updatePassword(password)
 
       } else {

@@ -29,7 +29,7 @@ export const listenerUserSchedules = (
             .doc(userData.uid)
             .onSnapshot(() => {
                 // Call the function to get user schedules
-                getUserSchedules(setSchedulesUser, userData.uid, setSomethingWrong)
+                getUserSchedules(userData.uid, setSomethingWrong, setSchedulesUser)
             });
 
         // Return the function to unsubscribe from the listener

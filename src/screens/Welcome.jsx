@@ -16,12 +16,14 @@ import { CannotUseApp } from "../components/CannotUseApp";
 
 import { AppSettingsContext } from "../context/AppSettings";
 import { SomethingWrongContext } from "../context/SomethingWrongContext";
+import { UserContext } from "../context/UserContext";
 
 import { handleError } from "../handlers/handleError";
 
 export const Welcome = ({ navigation }) => {
   const [blockAccess, setBlockAccess] = useState(false);
 
+  const { setUserData } = useContext(UserContext)
   const { settings } = useContext(AppSettingsContext)
   const { setSomethingWrong } = useContext(SomethingWrongContext)
 
@@ -37,7 +39,7 @@ export const Welcome = ({ navigation }) => {
         const data = await response.json();
 
         if (data.response) {
-          verifyIfUserHasLogged(navigation, setSomethingWrong);
+          verifyIfUserHasLogged(navigation, setUserData, setSomethingWrong);
         }
         else {
           setBlockAccess(true)
