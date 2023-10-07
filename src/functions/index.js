@@ -9,6 +9,7 @@ const functions = require('firebase-functions');
 const { setGlobalOptions } = require("firebase-functions/v2")
 const admin = require('firebase-admin');
 const { onSchedule } = require("firebase-functions/v2/scheduler");
+const { onDocumentWritten } = require("firebase-functions/v2/firestore");
 
 admin.initializeApp();
 
@@ -125,3 +126,42 @@ exports.clearDatabase = onSchedule("every day 04:00", async () => {
   await removePastDays()
   if (currentDay === 1) await removePastMonths();
 });
+
+exports.updateDefaultWorkTimes = onDocumentWritten("working_hours/{professionalUid}", async () => {
+
+  const firestore = admin.firestore();
+
+  const barbersRef = await firestore.collection("barbers").listDocuments()
+  const barbersDocumentsRef = await firestore.getAll(...barbersRef)
+  const workingHoursRef = firestore.collection("working_hours").doc("default")
+
+  const barbersUid = barbersDocumentsRef.map(doc => doc.data().uid)
+
+  functions.logger.log(barbersUid)
+
+  const allTimesRegistered = []
+  const weekday = ["sunday", "weekday", "saturday"]
+
+  for (const barberUid of barbersUid) {
+
+    const workingHoursRef = firestore.collection("working_hours").doc(barberUid)
+    const workingHoursData = (await workingHoursRef.get()).data()
+
+    const allTimesFromCurrentBarber = []
+
+    for (const day of weekday) {
+      for (const time of workingHoursData[day]) {
+        if (!allTimesFromCurrentBarber.includes(time)) allTimesFromCurrentBarber.push(time)
+      }
+    }
+
+    for (const time of allTimesFromCurrentBarber) {
+      if (!allTimesRegistered.includes(time)) allTimesRegistered.push(time)
+
+    }
+  }
+
+  await workingHoursRef.set({
+    times: allTimesRegistered
+  })
+})
