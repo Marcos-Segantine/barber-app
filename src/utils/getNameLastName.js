@@ -2,17 +2,12 @@ import { handleError } from "../handlers/handleError"
 
 export const getNameLastName = (name, setSomethingWrong) => {
     try {
-
         if (!name) return null
 
-        name = name.split(" ")
+        name = name.split("")
 
-        const firstName = name[0]
-        if (name.length === 1) return firstName
+        return name.length > 12 ? name.splice(0, 12).join("") + "..." : name.join("")
 
-        const lastName = name[1].length < 5 ? name[1] + " " + name[2] : name[1]
-
-        return firstName + " " + lastName
     } catch ({ message }) {
         setSomethingWrong(true)
         handleError("getNameLastName", message)
