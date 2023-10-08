@@ -62,7 +62,7 @@ export const CalendarComponent = ({ preferProfessional }) => {
   const [daysBlocked, setDaysBlocked] = useState(null);
 
   const { schedule, setSchedule } = useContext(ScheduleContext);
-  const {setSomethingWrong} = useContext(SomethingWrongContext);
+  const { setSomethingWrong } = useContext(SomethingWrongContext);
 
   const year = new Date().getFullYear();
   const month = new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth() + 1}`;
@@ -80,6 +80,11 @@ export const CalendarComponent = ({ preferProfessional }) => {
     })();
 
   }, [preferProfessional])
+
+  useEffect(() => {
+    setSchedule({ ...schedule, schedule: null })
+
+  }, [schedule.day])
 
   const deniedDay = preferProfessional || { [`${year}-${month}-${day}`]: { disabled: true, disableTouchEvent: true } };
 
