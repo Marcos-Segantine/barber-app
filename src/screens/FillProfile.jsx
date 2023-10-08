@@ -21,6 +21,8 @@ import { SomethingWrongContext } from "../context/SomethingWrongContext"
 
 import CheckBox from '@react-native-community/checkbox';
 
+import { formatInputPhoneNumber } from "../utils/formatInputPhoneNumber"
+
 export const FillProfile = ({ navigation, route }) => {
     const { isToCreateUser, emailNewUser, passwordNewUser } = route.params ? route.params : {}
     const [isToCreateUserState, setIsToCreateUserState] = useState(isToCreateUser || false)
@@ -40,6 +42,17 @@ export const FillProfile = ({ navigation, route }) => {
 
     const { userData, setUserData } = useContext(UserContext)
     const { setSomethingWrong } = useContext(SomethingWrongContext)
+
+    const handlePhoneNumber = (phone) => {
+        if (phone.length > 15) {
+            phone = phone.split("").slice(0, 15).join("")
+            setInformationNewUser({ ...informationNewUser, phone: formatInputPhoneNumber(phone) })
+
+            return
+        }
+
+        setInformationNewUser({ ...informationNewUser, phone: formatInputPhoneNumber(phone) })
+    }
 
     const handleConfirmNewInformation = () => {
         handleConfirmNewInformationFillProfile(
@@ -158,7 +171,8 @@ export const FillProfile = ({ navigation, route }) => {
                     style={styles.input}
                     placeholder="Número - (DD) DDDDD - DDDD"
                     placeholderTextColor={"#00000050"}
-                    onChangeText={text => setInformationNewUser({ ...informationNewUser, phone: text })}
+                    value={informationNewUser.phone}
+                    onChangeText={text => handlePhoneNumber(text)}
                     keyboardType="numeric"
                 />
 

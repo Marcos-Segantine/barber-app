@@ -16,6 +16,7 @@ import { SomethingWrongContext } from "../context/SomethingWrongContext"
 import { handleContinueForgotPassword } from "../handlers/handleContinueForgotPassword"
 
 import { trim } from "../utils/trim"
+import { formatInputPhoneNumber } from "../utils/formatInputPhoneNumber"
 
 export const ForgotPassword = ({ navigation }) => {
     const [email, setEmail] = useState("")
@@ -25,6 +26,17 @@ export const ForgotPassword = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false)
 
     const { setSomethingWrong } = useContext(SomethingWrongContext)
+
+    const handlePhoneNumber = (phone) => {
+        if (phone.length > 15) {
+            phone = phone.split("").slice(0, 15).join("")
+            setPhone(formatInputPhoneNumber(phone))
+
+            return
+        }
+
+        setPhone(formatInputPhoneNumber(phone))
+    }
 
     const clearFields = () => {
         setEmail("")
@@ -86,7 +98,8 @@ export const ForgotPassword = ({ navigation }) => {
                             style={styles.input}
                             placeholder={"Insira seu número"}
                             placeholderTextColor={"#00000050"}
-                            onChangeText={text => setPhone(text)}
+                            value={phone}
+                            onChangeText={text => handlePhoneNumber(text)}
                             keyboardType={"number-pad"}
                         />
                     </TouchableOpacity>
