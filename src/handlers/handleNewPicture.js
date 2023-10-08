@@ -38,15 +38,16 @@ export const handleNewPicture = (
 
         }).then(image => {
             setInformationNewUser({ ...informationNewUser, profilePicture: image.data })
-        }).catch((error) => {
+        }).catch(({ message }) => {
 
-            if (error.message === "Required permission missing") {
+            if (message === "Required permission missing") {
 
                 // Request necessary camera permissions
                 requestPermissionsCameraStorage(setModalInfo, setModalInformative, setSomethingWrong)
             }
             else {
-                console.log(error.message);
+                setSomethingWrong(true)
+                handleError("handleNewPicture", message)
             }
         })
     } catch ({ message }) {

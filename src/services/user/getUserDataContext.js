@@ -26,6 +26,7 @@ export const getUserDataContext = async (setUserData, userEmail, setSomethingWro
                     profilePicture: userDataCollection.profilePicture,
                     gender: userDataCollection.gender,
                     uid: userDataCollection.uid,
+                    informationEditedCount: userDataCollection.informationEditedCount
                 }
 
                 setUserData(data)

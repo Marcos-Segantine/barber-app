@@ -130,7 +130,7 @@ export const Schedule = ({ schedule }) => {
                 }
 
                 <View style={{ justifyContent: 'space-around', width: "60%" }}>
-                    <Text style={styles.barbershopName}>{getNameLastName(schedule.professional, setSomethingWrong)}</Text>
+                    <Text style={styles.barbershopName}>{getNameLastName(schedule.professional, setSomethingWrong, false)}</Text>
                     <Text style={[styles.text, { color: "#00000090" }]}>{settings?.address}</Text>
                     <Text style={[styles.text, { color: "#00000090", marginTop: -10 }]}>{settings?.neighborhood}</Text>
                     <View>

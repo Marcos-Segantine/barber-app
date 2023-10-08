@@ -78,6 +78,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
+    content: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 15,
+        alignItems: 'center',
+        width: "80%",
+        paddingVertical: 10,
+    },
+
     mainMessage: {
         color: globalStyles.orangeColor,
         fontSize: globalStyles.fontSizeMedium,
@@ -92,12 +100,4 @@ const styles = StyleSheet.create({
         maxWidth: "80%",
         textAlign: 'center',
     },
-
-    content: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 15,
-        alignItems: 'center',
-        width: "80%",
-        height: "70%"
-    }
 })

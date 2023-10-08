@@ -79,6 +79,7 @@ export const createUserWithEmailAndPassword = async (
       gender: informationNewUser.gender,
       profilePicture: url,
       uid: uid,
+      informationEditedCount: 0
     })
 
     AsyncStorage.setItem('@barber_app__email', informationNewUser.email)

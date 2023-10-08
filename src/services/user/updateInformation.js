@@ -59,6 +59,9 @@ export const updateInformation = async (
 
         const name = capitalizeName(informationNewUser?.name)
 
+        const date = new Date()
+        const currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+
         // Create an object with the updated user data
         const userDataObj = {
             name: trim(name || userData.name, setSomethingWrong),
@@ -68,6 +71,10 @@ export const updateInformation = async (
             gender: informationNewUser.gender || userData.gender,
             profilePicture: pic || userData.profilePicture,
             uid: uid,
+            informationEditedCount: {
+                counter: userData.informationEditedCount.counter + 1,
+                lastUpdated: currentDate
+            }
         }
 
         batch.set(userRef, userDataObj)

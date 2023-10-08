@@ -9,7 +9,8 @@ export const AppSettingsProvider = ({ children }) => {
         companyName: "Barbearia nome",
         city: "Nova Ponte",
         address: "Alameda dos Pinheiros, 100",
-        neighborhood: "Nome do Bairoo"
+        neighborhood: "Nome do Bairo",
+        limitEditInformationPerMonth: 4
     };
 
     return (

@@ -10,8 +10,6 @@ import { Loading } from "../Loading"
 
 import firestore from '@react-native-firebase/firestore';
 
-import { formatPhoneNumber } from "../../utils/formatPhoneNumber"
-
 import { handleError } from "../../handlers/handleError"
 
 import { SomethingWrongContext } from "../../context/SomethingWrongContext"
@@ -67,7 +65,7 @@ export const Contact = ({ modalContact, setModalVisible }) => {
                                         </Text>
                                         <Text style={styles.info}>
                                             <Text style={{ fontFamily: globalStyles.fontFamilyBold }}>Número: </Text>
-                                            {formatPhoneNumber(barber.phone)}
+                                            {barber.phone}
                                         </Text>
                                     </View>
                                 )

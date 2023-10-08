@@ -149,9 +149,7 @@ export const Professionals = ({ preferProfessional }) => {
       </View>
       {
         availableProfessional.map((professional, index) => {
-          const name = getNameLastName(availableProfessional[0].name, setSomethingWrong).length > 20 ?
-            getNameLastName(availableProfessional[0].name, setSomethingWrong).slice(0, 10) + "..." :
-            getNameLastName(availableProfessional[0].name, setSomethingWrong)
+          const name = getNameLastName(availableProfessional[0].name, setSomethingWrong)
 
           return (
             <TouchableOpacity

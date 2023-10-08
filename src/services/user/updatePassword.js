@@ -28,7 +28,6 @@ export const updatePassword = async (
         // If the updatePassword() call fails due to "auth/requires-recent-login" error,
         // sign in again and retry the updatePassword() call.
         user.updatePassword(password).catch(async (error) => {
-            console.log(error.message);
             if (
                 error.message
                 ===

@@ -7,6 +7,7 @@ import { Loading } from "../components/Loading"
 import { WarningChangeInformation } from "../components/modals/WarningChangeInformation"
 import { DefaultModal } from "../components/modals/DefaultModal"
 import { InformativeModel } from "../components/modals/InformativeModel"
+import { Contact } from "../components/modals/Contact"
 
 import { handleNewPicture } from "../handlers/handleNewPicture"
 import { handleConfirmNewInformationFillProfile } from "../handlers/handleConfirmNewInformationFillProfile"
@@ -22,6 +23,9 @@ import { SomethingWrongContext } from "../context/SomethingWrongContext"
 import CheckBox from '@react-native-community/checkbox';
 
 import { formatInputPhoneNumber } from "../utils/formatInputPhoneNumber"
+import { AppSettingsContext } from "../context/AppSettings"
+
+import { verifyIfUserCanEditInformation } from "../validation/verifyIfUserCanEditInformation"
 
 export const FillProfile = ({ navigation, route }) => {
     const { isToCreateUser, emailNewUser, passwordNewUser } = route.params ? route.params : {}
@@ -37,11 +41,13 @@ export const FillProfile = ({ navigation, route }) => {
     const [modalInfo, setModalInfo] = useState(null)
     const [modalInformative, setModalInformative] = useState(null)
 
+    const [contact, setContact] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const [modalConfirmationNewInfo, setModalConfirmationNewInfo] = useState(false)
 
     const { userData, setUserData } = useContext(UserContext)
     const { setSomethingWrong } = useContext(SomethingWrongContext)
+    const { settings } = useContext(AppSettingsContext)
 
     const handlePhoneNumber = (phone) => {
         if (phone.length > 15) {
@@ -54,7 +60,18 @@ export const FillProfile = ({ navigation, route }) => {
         setInformationNewUser({ ...informationNewUser, phone: formatInputPhoneNumber(phone) })
     }
 
+    const userEditedCounter = +settings.limitEditInformationPerMonth - userData?.informationEditedCount?.counter
+
     const handleConfirmNewInformation = () => {
+        if (!verifyIfUserCanEditInformation(
+            userEditedCounter,
+            setModalInfo,
+            setContact,
+            navigation,
+            informationNewUser,
+            setSomethingWrong
+        )) return
+
         handleConfirmNewInformationFillProfile(
             informationNewUser,
             setModalInfo,
@@ -70,6 +87,15 @@ export const FillProfile = ({ navigation, route }) => {
     }
 
     const handleConfirmEmailPhoneChange = () => {
+        if (!verifyIfUserCanEditInformation(
+            userEditedCounter,
+            setModalInfo,
+            setContact,
+            navigation,
+            informationNewUser,
+            setSomethingWrong
+        )) return
+
         handleConfirmEmailPhoneChangeFillProfile(
             informationNewUser,
             userData,
@@ -80,6 +106,7 @@ export const FillProfile = ({ navigation, route }) => {
             setSomethingWrong
         )
     }
+
 
     if (isLoading) return <Loading flexSize={1} />
 
@@ -110,15 +137,27 @@ export const FillProfile = ({ navigation, route }) => {
             <DefaultModal
                 modalContent={modalInfo}
             />
+            <Contact modalContact={contact} setModalVisible={setContact} />
             <InformativeModel
                 modalContent={modalInformative}
             />
 
             {
                 !isToCreateUserState &&
-                <Text style={{ color: "#000000", fontFamily: globalStyles.fontFamilyBold, marginVertical: 20, fontSize: globalStyles.fontSizeSmall }}>
-                    AVISO: <Text style={{ fontSize: globalStyles.fontSizeSmall, fontFamily: globalStyles.fontFamilyBold }}>Os campos vazios NÂO serão alterados</Text>
-                </Text>
+                <>
+                    <Text style={{ color: "#000000", fontFamily: globalStyles.fontFamilyBold, marginVertical: 20, fontSize: globalStyles.fontSizeSmall, width: "100%" }}>
+                        AVISO: <Text style={{ fontSize: globalStyles.fontSizeSmall, fontFamily: globalStyles.fontFamilyBold }}>Os campos vazios NÂO serão alterados</Text>
+                    </Text>
+                </>
+            }
+
+            {
+                (!isToCreateUserState && userEditedCounter <= 2) &&
+                (
+                    (userEditedCounter === 0) ?
+                        <Text style={styles.alertTop}>Você não pode mais fazer alterar seus dados</Text> :
+                        <Text style={styles.alertTop}>{`Você só pode alterar seus dados mais ${userEditedCounter} ${userEditedCounter < 2 ? "vez" : "vezes"}`} </Text>
+                )
             }
 
             <View style={informationNewUser?.profilePicture ? { marginTop: 30, } : { backgroundColor: "#FFFFFF", borderRadius: 150, marginTop: 30 }}>
@@ -215,8 +254,13 @@ export const FillProfile = ({ navigation, route }) => {
 
             </View>
 
+            {
+                (!isToCreateUserState && userData.informationEditedCount < settings.limitEditInformationPerMonth) &&
+                <Text style={styles.alertBottom}>Não recomendamos que você fique alterando sesus dados constantemente</Text>
+            }
+
             <Button
-                text={"Confirmar"}
+                text={!isToCreateUserState ? "Atualizar" : "Confirmar"}
                 action={isToCreateUserState ?
                     handleConfirmNewInformation :
                     handleConfirmEmailPhoneChange
@@ -278,4 +322,20 @@ const styles = StyleSheet.create({
         fontSize: globalStyles.fontSizeSmall,
         fontFamily: globalStyles.fontFamilyMedium,
     },
+
+    alertTop: {
+        color: "#000000",
+        fontSize: globalStyles.fontSizeVerySmall,
+        fontFamily: globalStyles.fontFamilyBold,
+        width: "100%",
+    },
+
+    alertBottom: {
+        color: "#00000060",
+        fontSize: globalStyles.fontSizeVerySmall,
+        fontFamily: globalStyles.fontFamilyBold,
+        textAlign: "center",
+        marginBottom: 10,
+        width: "80%",
+    }
 })

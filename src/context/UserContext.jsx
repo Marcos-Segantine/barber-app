@@ -43,7 +43,7 @@ export const UserProvider = ({ children }) => {
       try {
         if (user) {
 
-          const userRef = await firestore().collection("users").where("email", "==", user.email).get()
+          const userRef = await firestore().collection("users").where("email", "==", user.email).get({ source: "server" })
           if (!userRef.docs.length) return
 
           // Get the user data from the first user document.
@@ -54,7 +54,7 @@ export const UserProvider = ({ children }) => {
           if (!userDataCollection) return
 
           // Set the userData state with the user data.
-          userDataCollection && setUserData(
+          setUserData(
             {
               name: userDataCollection.name,
               email: userDataCollection.email,
@@ -63,6 +63,7 @@ export const UserProvider = ({ children }) => {
               profilePicture: userDataCollection.profilePicture,
               gender: userDataCollection.gender,
               uid: userDataCollection.uid,
+              informationEditedCount: userDataCollection.informationEditedCount
             }
           );
         } else setUserData(null);
