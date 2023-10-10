@@ -25,6 +25,7 @@ import { Loading } from "../components/Loading";
 import { ShowProfessionalsDaySchedules } from "../components/ShowProfessionalsDaySchedules";
 import { NoSchedule } from "../components/NoSchedule";
 import { SchedulesLimitAnimation } from "../components/SchedulesLimitAnimation";
+import { AlertValidatePhoneNumber } from "../components/modals/AlertValidatePhoneNumber";
 
 import { listenerGetLastedScheduleOfClient } from "../services/user/listenerGetLastedScheduleOfClient";
 
@@ -35,6 +36,7 @@ export const Home = ({ navigation }) => {
   const [preferProfessional, setPreferProfessional] = useState(false);
   const [canScrollToEnd, setCanScrollToEnd] = useState(false)
   const [schedulesUserCount, setSchedulesUserCount] = useState(null)
+  const [phoneNumberValidated, setPhoneNumberValidated] = useState(false)
 
   const { userData } = useContext(UserContext);
   const { setSomethingWrong } = useContext(SomethingWrongContext)
@@ -94,6 +96,10 @@ export const Home = ({ navigation }) => {
         bounces={false}
       >
         <HeaderScreens screenName={settings?.companyName} />
+        <AlertValidatePhoneNumber
+          visible={phoneNumberValidated}
+          setVisible={setPhoneNumberValidated}
+        />
 
         {scheduleClientInfo ? (
           <>

@@ -8,12 +8,12 @@
  */
 
 import { Modal, StyleSheet, View, Text } from "react-native"
+import { useEffect, useState } from "react"
 
 import { Button } from "../Button"
 
 import { globalStyles } from "../../assets/globalStyles"
 import { ConfirmationChangeInfoImage } from "../../assets/imgs/ConfirmationChangeInfoImage"
-import { useEffect, useState } from "react"
 
 export const WarningChangeInformation = ({
     modalConfirmationNewInfo,
