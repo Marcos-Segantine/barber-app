@@ -15,6 +15,7 @@ import { OurServices } from "../screens/OurServices"
 import { ConfirmSchedule } from "../screens/ConfirmSchedule"
 import { PrivacyPolicies } from "../screens/PrivacyPolicies"
 import { Security } from "../screens/Security"
+import { GetCode } from "../screens/GetCode"
 
 const { Screen, Navigator } = createNativeStackNavigator()
 
@@ -44,6 +45,7 @@ export const Routes = () => {
             <Screen name="ConfirmSchedule" component={ConfirmSchedule} />
             <Screen name="PrivacyPolicies" component={PrivacyPolicies} />
             <Screen name="Security" component={Security} />
+            <Screen name="GetCode" component={GetCode} />
 
         </Navigator>
     )

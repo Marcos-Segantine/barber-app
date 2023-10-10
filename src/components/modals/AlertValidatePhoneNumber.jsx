@@ -26,12 +26,13 @@ export const AlertValidatePhoneNumber = ({ visible, setVisible }) => {
 
                 <Button
                     text={"Continuar"}
+                    action={() => navigation.navigate("GetCode")}
                 />
                 <Button
                     text={"Agora não"}
                     addStyles={{ marginTop: 10, backgroundColor: globalStyles.champagneColor }}
                     addStylesText={{ color: globalStyles.orangeColor }}
-                    action={() => setVisible(false)}
+                    action={() => setVisible(!visible)}
                 />
             </View>
         </Modal>

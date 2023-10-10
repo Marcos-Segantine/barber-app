@@ -36,7 +36,7 @@ export const Home = ({ navigation }) => {
   const [preferProfessional, setPreferProfessional] = useState(false);
   const [canScrollToEnd, setCanScrollToEnd] = useState(false)
   const [schedulesUserCount, setSchedulesUserCount] = useState(null)
-  const [phoneNumberValidated, setPhoneNumberValidated] = useState(false)
+  const [showModalPhoneNotValidated, setShowModalPhoneNotValidated] = useState(false)
 
   const { userData } = useContext(UserContext);
   const { setSomethingWrong } = useContext(SomethingWrongContext)
@@ -62,6 +62,13 @@ export const Home = ({ navigation }) => {
     userData && userSchedulesCount(userData.uid, setSchedulesUserCount, setSomethingWrong)
 
   }, [userData]);
+
+  useEffect(() => {
+    if (!userData?.showModalPhoneNotValidated) {
+      setShowModalPhoneNotValidated(true)
+    }
+
+  }, [userData])
 
   const preferProfessionalStyle__Yes = preferProfessional
     ? [
@@ -97,8 +104,8 @@ export const Home = ({ navigation }) => {
       >
         <HeaderScreens screenName={settings?.companyName} />
         <AlertValidatePhoneNumber
-          visible={phoneNumberValidated}
-          setVisible={setPhoneNumberValidated}
+          visible={showModalPhoneNotValidated}
+          setVisible={setShowModalPhoneNotValidated}
         />
 
         {scheduleClientInfo ? (
