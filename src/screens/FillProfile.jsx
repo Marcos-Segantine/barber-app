@@ -222,8 +222,8 @@ export const FillProfile = ({ navigation, route }) => {
                         <CheckBox
                             tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
                             disabled={false}
-                            value={informationNewUser.gender === "male"}
-                            onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "male", })}
+                            value={informationNewUser.gender.toLowerCase() === "masculino"}
+                            onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "masculino", })}
                         />
 
                         <Text style={styles.text}>Masculino</Text>
@@ -233,8 +233,8 @@ export const FillProfile = ({ navigation, route }) => {
                         <CheckBox
                             tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
                             disabled={false}
-                            value={informationNewUser.gender === "fame"}
-                            onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "fame" })}
+                            value={informationNewUser.gender.toLowerCase() === "feminino"}
+                            onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "feminino" })}
                         />
 
                         <Text style={styles.text}>Feminino</Text>
@@ -244,8 +244,8 @@ export const FillProfile = ({ navigation, route }) => {
                         <CheckBox
                             tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
                             disabled={false}
-                            value={informationNewUser.gender === "other"}
-                            onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "other" })}
+                            value={informationNewUser.gender.toLowerCase() === "outros"}
+                            onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "outros" })}
                         />
 
                         <Text style={styles.text}>Outro</Text>
