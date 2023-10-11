@@ -6,6 +6,7 @@ import { ComeBack } from "../components/ComeBack"
 import { Loading } from "../components/Loading"
 import { DefaultModal } from "../components/modals/DefaultModal"
 import { Contact } from "../components/modals/Contact"
+import { GetNewPhoneNumber } from "../components/modals/GetNewPhoneNumber"
 
 import { globalStyles } from "../assets/globalStyles"
 import { GetCodePhoneValidation } from "../assets/imgs/GetCodePhoneValidation"
@@ -27,69 +28,87 @@ export const GetCode = ({ navigation }) => {
     const [modalContent, setModalContent] = useState(null)
     const [isToShowContactModal, setIsToShowContactModal] = useState(false)
     const [inputFocused, setInputFocused] = useState(null)
+    const [changePhoneNumber, setChangePhoneNumber] = useState(false)
+    const [timer, setTimer] = useState(0)
 
     const inputRefs = Array.from({ length: 6 }, () => useRef(null));
 
     const { userData } = useContext(UserContext)
     const { setSomethingWrong } = useContext(SomethingWrongContext)
 
+    const verifyPhoneNumber = async () => {
+        try {
+
+            const phone = userData.phone.replace(/[^0-9]/g, '')
+
+            const confirmation = await auth().verifyPhoneNumber("+55" + phone).catch(({ code, message }) => {
+                if (code === "auth/too-many-requests") {
+                    setIsLoading(false)
+
+                    setModalContent({
+                        image: <StopProcessError />,
+                        mainMessage: "Erro de Validação",
+                        message: "Observamos várias tentativas de verificação do seu número. Por razões de segurança, temporariamente bloquearemos o acesso.",
+                        firstButtonText: "Página Inicial",
+                        firstButtonAction: () => {
+                            setModalContent(null)
+                            navigation.navigate("Home")
+                        },
+                        secondButtonText: "Contato",
+                        secondButtonAction: () => {
+                            setIsLoading(false)
+                            setIsToShowContactModal(true)
+                        }
+                    })
+                }
+
+                else {
+                    setSomethingWrong(true)
+                    handleError("GetCode - verifyPhoneNumber", message)
+                }
+
+            })
+
+            if (!confirmation) return
+
+            setConfirm(confirmation);
+            setIsLoading(false)
+            setTimer(300)
+
+        } catch ({ message }) {
+            setSomethingWrong(true)
+            handleError("GetCode", message)
+
+        }
+    }
+
     useEffect(() => {
-
-        (async () => {
-            try {
-
-                const phone = userData.phone.replace(/[^0-9]/g, '')
-
-                const confirmation = await auth().verifyPhoneNumber("+55" + phone).catch(({ code, message }) => {
-                    if (code === "auth/too-many-requests") {
-                        setIsLoading(false)
-
-                        setModalContent({
-                            image: <StopProcessError />,
-                            mainMessage: "Erro de Validação",
-                            message: "Observamos várias tentativas de verificação do seu número. Por razões de segurança, temporariamente bloquearemos o acesso.",
-                            firstButtonText: "Página Inicial",
-                            firstButtonAction: () => {
-                                setModalContent(null)
-                                navigation.navigate("Home")
-                            },
-                            secondButtonText: "Contato",
-                            secondButtonAction: () => {
-                                setIsLoading(false)
-                                setIsToShowContactModal(true)
-                            }
-                        })
-                    }
-
-                    else {
-                        setSomethingWrong(true)
-                        handleError("GetCode - verifyPhoneNumber", message)
-                    }
-
-                })
-
-                if (!confirmation) return
-
-                setConfirm(confirmation);
-                setIsLoading(false)
-
-            } catch ({ message }) {
-                setSomethingWrong(true)
-                handleError("GetCode", message)
-
-            }
-
-        })();
+        verifyPhoneNumber()
 
     }, [])
-9
+
+    useEffect(() => {
+        verifyPhoneNumber()
+
+    }, [userData.phone])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (timer === 0) return
+            setTimer(timer - 1)
+        }, 1000)
+
+        return () => clearInterval(interval)
+
+    }, [timer])
+
     const confirmCode = async () => {
         try {
 
-            const credential = auth.PhoneAuthProvider.credential(confirm.verificationId, code);
+            const credential = auth.PhoneAuthProvider.credential(confirm.verificationId, code.join(""));
             await auth().currentUser.linkWithCredential(credential);
 
-            userPhoneNumberValidated(userData.uid)
+            userPhoneNumberValidated(userData.uid, userData.phone)
             navigation.navigate("Home")
 
         } catch ({ code, message }) {
@@ -110,7 +129,7 @@ export const GetCode = ({ navigation }) => {
             else if (message === "[auth/unknown] User has already been linked to the given provider.") {
 
                 setIsLoading(false)
-                userPhoneNumberValidated(userData.uid)
+                userPhoneNumberValidated(userData.uid, userData.phone)
 
                 setModalContent({
                     image: <StopProcessError />,
@@ -188,6 +207,11 @@ export const GetCode = ({ navigation }) => {
                 setModalVisible={setIsToShowContactModal}
                 action={contactAction}
             />
+            <GetNewPhoneNumber
+                visible={changePhoneNumber}
+                setVisible={setChangePhoneNumber}
+                setTimer={setTimer}
+            />
 
             <View style={{ width: "100%", alignItems: "center" }}>
                 <Text style={styles.description}>Enviamos um código para o número {phoneHidden}.</Text>
@@ -217,11 +241,11 @@ export const GetCode = ({ navigation }) => {
                 </View>
 
                 <View style={styles.contentHelpers}>
-                    <TouchableOpacity>
-                        <Text style={styles.helpersText}>Trocar de número</Text>
+                    <TouchableOpacity onPress={timer === 0 ? () => setChangePhoneNumber(true) : null}>
+                        <Text style={timer === 0 ? styles.helpersText : [styles.helpersText, { color: globalStyles.orangeColorDarker }]}>Trocar de número</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text style={styles.helpersText}>Não recebi o código</Text>
+                    <TouchableOpacity onPress={timer === 0 ? () => verifyPhoneNumber() : null}>
+                        <Text style={timer === 0 ? styles.helpersText : [styles.helpersText, { color: globalStyles.orangeColorDarker }]}>Não recebi o código</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -242,7 +266,7 @@ const styles = StyleSheet.create({
     input: {
         backgroundColor: "white",
         width: (width - (width * (20 / 100))) / 6,
-        height: 50,
+        height: (width - (width * (20 / 100))) / 6,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: "white",
