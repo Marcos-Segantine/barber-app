@@ -1,3 +1,4 @@
+import { useContext, useEffect } from "react"
 import { Modal, View, Text, StyleSheet } from "react-native"
 
 import { Button } from "../Button"
@@ -7,8 +8,24 @@ import { globalStyles } from "../../assets/globalStyles"
 
 import { useNavigation } from "@react-navigation/native"
 
+import { getPreviousScreensName } from "../../utils/getPreviousScreensName"
+
+import { SomethingWrongContext } from "../../context/SomethingWrongContext"
+
 export const AlertValidatePhoneNumber = ({ visible, setVisible }) => {
     const navigation = useNavigation()
+
+    const { setSomethingWrong } = useContext(SomethingWrongContext)
+
+    const [previousScreen, lastScreen] = getPreviousScreensName(navigation, setSomethingWrong)
+
+    useEffect(() => {
+        
+        if (lastScreen === "GetCode") {
+            setVisible(false)
+        }
+
+    }, [lastScreen])
 
     return (
         <Modal

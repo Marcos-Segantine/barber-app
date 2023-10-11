@@ -14,7 +14,7 @@ import { handleError } from "../../handlers/handleError"
 
 import { SomethingWrongContext } from "../../context/SomethingWrongContext"
 
-export const Contact = ({ modalContact, setModalVisible }) => {
+export const Contact = ({ modalContact, setModalVisible, action = null }) => {
     // const [isLoading, setIsLoading] = useState(true)
     const [contacts, setContacts] = useState(null)
 
@@ -77,7 +77,7 @@ export const Contact = ({ modalContact, setModalVisible }) => {
 
                 <Button
                     text={"Voltar"}
-                    action={() => setModalVisible(false)}
+                    action={!!action ? action : () => setModalVisible(false)}
                     addStyles={{ width: "100%" }}
                 />
             </View>

@@ -64,7 +64,7 @@ export const Home = ({ navigation }) => {
   }, [userData]);
 
   useEffect(() => {
-    if (!userData?.showModalPhoneNotValidated) {
+    if (!userData?.phoneNumberValidated) {
       setShowModalPhoneNotValidated(true)
     }
 
