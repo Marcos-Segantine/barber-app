@@ -62,6 +62,8 @@ export const updateInformation = async (
         const date = new Date()
         const currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
 
+        const phoneChanged = !!informationNewUser.phone
+
         // Create an object with the updated user data
         const userDataObj = {
             name: trim(name || userData.name, setSomethingWrong),
@@ -74,7 +76,8 @@ export const updateInformation = async (
             informationEditedCount: {
                 counter: userData.informationEditedCount.counter + 1,
                 lastUpdated: currentDate
-            }
+            },
+            phoneNumberValidated: phoneChanged ? false : userData.phoneNumberValidated
         }
 
         batch.set(userRef, userDataObj)
@@ -84,6 +87,11 @@ export const updateInformation = async (
         await batch.commit()
 
         setIsLoading(false)
+
+        if (phoneChanged) {
+            navigation.navigate("GetCode")
+            return
+        }
 
         // Navigate to the appropriate screen based on whether it's a new user or not
         if (isToCreateUser) navigation.navigate("Home")

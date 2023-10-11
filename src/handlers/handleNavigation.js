@@ -50,6 +50,11 @@ export const handleNavigation = (
 
             return true
         }
+        else if (lastScreen === "GetCode") {
+            navigation.navigate("Home")
+
+            return true
+        }
         else if (lastScreen === "Home") {
             return true
         }

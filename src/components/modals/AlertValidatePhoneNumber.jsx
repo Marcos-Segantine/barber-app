@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Modal, View, Text, StyleSheet } from "react-native"
 
 import { Button } from "../Button"
@@ -13,6 +13,8 @@ import { getPreviousScreensName } from "../../utils/getPreviousScreensName"
 import { SomethingWrongContext } from "../../context/SomethingWrongContext"
 
 export const AlertValidatePhoneNumber = ({ visible, setVisible }) => {
+    const [isToShowModal, setIsToShowModal] = useState(false)
+
     const navigation = useNavigation()
 
     const { setSomethingWrong } = useContext(SomethingWrongContext)
@@ -20,16 +22,22 @@ export const AlertValidatePhoneNumber = ({ visible, setVisible }) => {
     const [previousScreen, lastScreen] = getPreviousScreensName(navigation, setSomethingWrong)
 
     useEffect(() => {
-        
-        if (lastScreen === "GetCode") {
-            setVisible(false)
-        }
 
-    }, [lastScreen])
+        if ((
+            lastScreen === "GetCode" ||
+            (previousScreen === "FillProfile" && lastScreen === "GetCode") ||
+            (previousScreen === "GetCode" && lastScreen === "Home") ||
+            (lastScreen === "FillProfile")
+        )) {
+            setIsToShowModal(false)
+        }
+        else setIsToShowModal(true)
+
+    }, [lastScreen, previousScreen])
 
     return (
         <Modal
-            visible={visible}
+            visible={visible && isToShowModal}
             animationType="slide"
             transparent={true}
         >

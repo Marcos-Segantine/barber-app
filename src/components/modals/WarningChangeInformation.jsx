@@ -8,12 +8,15 @@
  */
 
 import { Modal, StyleSheet, View, Text } from "react-native"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 
 import { Button } from "../Button"
 
 import { globalStyles } from "../../assets/globalStyles"
 import { ConfirmationChangeInfoImage } from "../../assets/imgs/ConfirmationChangeInfoImage"
+import { getPreviousScreensName } from "../../utils/getPreviousScreensName"
+import { useNavigation } from "@react-navigation/native"
+import { SomethingWrongContext } from "../../context/SomethingWrongContext"
 
 export const WarningChangeInformation = ({
     modalConfirmationNewInfo,
@@ -21,6 +24,20 @@ export const WarningChangeInformation = ({
     handleNewInformation
 }) => {
     const [time, setTime] = useState(15)
+    const [isToShowModal, setIsToShowModal] = useState(false)
+
+    const navigation = useNavigation()
+
+    const { setSomethingWrong } = useContext(SomethingWrongContext)
+
+    const [previousScreen, lastScreen] = getPreviousScreensName(navigation, setSomethingWrong)
+
+    useEffect(() => {
+        if (lastScreen === "GetCode" && previousScreen === "FillProfile") {
+            setIsToShowModal(false)
+        } else setIsToShowModal(true)
+
+    }, [previousScreen, lastScreen])
 
     useEffect(() => {
         if (modalConfirmationNewInfo) {
@@ -41,7 +58,7 @@ export const WarningChangeInformation = ({
 
     return (
         <Modal
-            visible={modalConfirmationNewInfo}
+            visible={modalConfirmationNewInfo && isToShowModal}
             transparent={true}
             animationType={"fade"}
         >
@@ -50,7 +67,7 @@ export const WarningChangeInformation = ({
                     <ConfirmationChangeInfoImage />
 
                     <Text style={styles.mainMessage}>ATENÇÃO !!</Text>
-                    <Text style={styles.message}>Ao atualizar seu email e/ou número de telefone, insira dados válidos para evitar a perda da sua conta. Lembre-se de realizar uma nova verificação do seu email.</Text>
+                    <Text style={styles.message}>Ao alterar seu email e/ou número de telefone, certifique-se de inserir dados válidos para que você não corra o risco de perder o seu acesso.</Text>
 
                     <Button
                         text={time === 0 ? "Entendi" : `Entendi (${time})`}
@@ -97,7 +114,7 @@ const styles = StyleSheet.create({
         fontSize: globalStyles.fontSizeSmall,
         marginVertical: 15,
         fontFamily: globalStyles.fontFamilyBold,
-        maxWidth: "80%",
+        maxWidth: "90%",
         textAlign: 'center',
     },
 })

@@ -11,6 +11,7 @@ import { GetNewPhoneNumber } from "../components/modals/GetNewPhoneNumber"
 import { globalStyles } from "../assets/globalStyles"
 import { GetCodePhoneValidation } from "../assets/imgs/GetCodePhoneValidation"
 import { StopProcessError } from "../assets/imgs/StopProcessError"
+import { ScheduleUnavailableNow } from "../assets/imgs/ScheduleUnavailableNow"
 
 import { UserContext } from "../context/UserContext"
 
@@ -61,7 +62,27 @@ export const GetCode = ({ navigation }) => {
                         }
                     })
                 }
+                else if (message === "[auth/missing-client-identifier] This request is missing a valid app identifier, meaning that neither SafetyNet checks nor reCAPTCHA checks succeeded. Please try again, or check the logcat for more details.") {
+                    setIsLoading(false)
 
+                    setModalContent({
+                        image: <StopProcessError />,
+                        mainMessage: "Erro na Verificação",
+                        message: "Encontramos um erro ao tentar fazer a verificação reCAPTCHA, por favor não feche a nova página que abrir. Caso precise de ajuda pode entrar em contato conosco",
+                        firstButtonText: "Tentar Novamente",
+                        firstButtonAction: () => {
+                            setIsLoading(true)
+                            setModalContent(null)
+                            verifyPhoneNumber()
+                        },
+                        secondButtonText: "Contato",
+                        secondButtonAction: () => {
+                            setIsLoading(false)
+                            setIsToShowContactModal(true)
+                        }
+                    })
+
+                }
                 else {
                     setSomethingWrong(true)
                     handleError("GetCode - verifyPhoneNumber", message)
@@ -83,7 +104,7 @@ export const GetCode = ({ navigation }) => {
     }
 
     useEffect(() => {
-        verifyPhoneNumber()
+        // verifyPhoneNumber()
 
     }, [])
 
@@ -132,7 +153,7 @@ export const GetCode = ({ navigation }) => {
                 userPhoneNumberValidated(userData.uid, userData.phone)
 
                 setModalContent({
-                    image: <StopProcessError />,
+                    image: <ScheduleUnavailableNow />,
                     mainMessage: "Houve um Engano",
                     message: "Parece que você já fez a validação do seu número de telefone, desculpe o incoveniente.",
                     firstButtonText: "Página Inicial",
@@ -161,6 +182,15 @@ export const GetCode = ({ navigation }) => {
                 handleError("GetCode", message)
             }
         }
+    }
+
+    const secondsToMinutes = (seconds) => {
+        var minutes = Math.floor(seconds / 60);
+        var remainingSeconds = seconds % 60;
+
+        // Format the output as "minutes:seconds"
+        var formattedTime = minutes + ":" + (remainingSeconds < 10 ? "0" : "") + remainingSeconds;
+        return formattedTime;
     }
 
     const contactAction = () => {
@@ -218,7 +248,7 @@ export const GetCode = ({ navigation }) => {
                 <Text style={styles.description}>Ensira-o no campo abaixo</Text>
 
                 <TouchableOpacity onPress={handleClear} style={{ marginTop: 10, width: "100%" }}>
-                    <Text style={{ fontSize: globalStyles.fontSizeVerySmall, fontFamily: globalStyles.fontFamilyBold, color: "#000000", textAlign: "right" }}>Limpar</Text>
+                    <Text style={{ fontSize: globalStyles.fontSizeVerySmall, fontFamily: globalStyles.fontFamilyBold, color: "#000000", textAlign: "right" }}>Apagar</Text>
                 </TouchableOpacity>
 
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", marginTop: 20 }}>
@@ -248,6 +278,11 @@ export const GetCode = ({ navigation }) => {
                         <Text style={timer === 0 ? styles.helpersText : [styles.helpersText, { color: globalStyles.orangeColorDarker }]}>Não recebi o código</Text>
                     </TouchableOpacity>
                 </View>
+
+                {
+                    timer !== 0 &&
+                    <Text style={styles.timer}>{secondsToMinutes(timer)}</Text>
+                }
 
                 <Button
                     text={"Confirmar"}
@@ -294,5 +329,13 @@ const styles = StyleSheet.create({
         fontFamily: globalStyles.fontFamilyRegular,
         color: "#000000",
         width: "100%"
+    },
+
+    timer: {
+        color: "#000000",
+        fontSize: globalStyles.fontSizeVerySmall,
+        fontFamily: globalStyles.fontFamilyBold,
+        width: "100%",
+        marginTop: 10
     }
 })
