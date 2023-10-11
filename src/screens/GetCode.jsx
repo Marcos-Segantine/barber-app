@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react"
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native"
+import { useContext, useEffect, useRef, useState } from "react"
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Dimensions } from "react-native"
 
 import { Button } from "../components/Button"
 import { ComeBack } from "../components/ComeBack"
@@ -22,10 +22,13 @@ import { userPhoneNumberValidated } from "../services/auth/userPhoneNumberValida
 
 export const GetCode = ({ navigation }) => {
     const [confirm, setConfirm] = useState(null)
-    const [code, setCode] = useState(null)
+    const [code, setCode] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [modalContent, setModalContent] = useState(null)
     const [isToShowContactModal, setIsToShowContactModal] = useState(false)
+    const [inputFocused, setInputFocused] = useState(null)
+
+    const inputRefs = Array.from({ length: 6 }, () => useRef(null));
 
     const { userData } = useContext(UserContext)
     const { setSomethingWrong } = useContext(SomethingWrongContext)
@@ -79,7 +82,7 @@ export const GetCode = ({ navigation }) => {
         })();
 
     }, [])
-
+9
     const confirmCode = async () => {
         try {
 
@@ -146,9 +149,33 @@ export const GetCode = ({ navigation }) => {
         navigation.navigate("Home")
     }
 
+    const handleCode = (currentCode) => {
+        const input = code
+        if (input.length > 5) return
+
+        input.push(currentCode.split("").splice(-1)[0])
+        setCode([...input])
+
+        handleFocusInput()
+    }
+
+    const handleFocusInput = (index) => {
+        const position = code.length
+        if (position === 6) return
+
+        setInputFocused(index || position);
+        inputRefs[position].current?.focus();
+    }
+
+    const handleClear = () => {
+        setCode([]);
+        setInputFocused(0);
+        inputRefs[0].current?.focus();
+    }
+
     const phoneHidden = userData?.phone.replace(/[^0-9]/g, '').split('').map((number, index) => index < 8 ? "*" : number).join('')
 
-    if (isLoading) return <Loading flexSize={1} />
+    if (isLoading) return <Loading flexSize={1} text={"Este procedimento pode levar um tempo para ser concluído."} />
 
     return (
         <View style={[globalStyles.container, { flex: 1 }]}>
@@ -165,13 +192,29 @@ export const GetCode = ({ navigation }) => {
             <View style={{ width: "100%", alignItems: "center" }}>
                 <Text style={styles.description}>Enviamos um código para o número {phoneHidden}.</Text>
                 <Text style={styles.description}>Ensira-o no campo abaixo</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder={"Código"}
-                    placeholderTextColor={"#00000050"}
-                    keyboardType="numeric"
-                    onChangeText={text => setCode(text)}
-                />
+
+                <TouchableOpacity onPress={handleClear} style={{ marginTop: 10, width: "100%" }}>
+                    <Text style={{ fontSize: globalStyles.fontSizeVerySmall, fontFamily: globalStyles.fontFamilyBold, color: "#000000", textAlign: "right" }}>Limpar</Text>
+                </TouchableOpacity>
+
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", marginTop: 20 }}>
+                    {
+                        Array.from({ length: 6 }, (_, index) => index).map((index) => (
+                            <TextInput
+                                key={index}
+                                ref={inputRefs[index]}
+                                value={code[index] || ""}
+                                style={inputFocused === index ? [styles.input, { borderColor: globalStyles.orangeColor }] : styles.input}
+                                onFocus={() => handleFocusInput(index)}
+                                keyboardType="numeric"
+                                textAlign="center"
+                                maxLength={1}
+                                onChangeText={text => handleCode(text)}
+                            />
+                        ))
+                    }
+
+                </View>
 
                 <View style={styles.contentHelpers}>
                     <TouchableOpacity>
@@ -193,18 +236,19 @@ export const GetCode = ({ navigation }) => {
     )
 }
 
+const { width } = Dimensions.get('screen')
+
 const styles = StyleSheet.create({
     input: {
-        width: "100%",
-        backgroundColor: "#fafafa",
+        backgroundColor: "white",
+        width: (width - (width * (20 / 100))) / 6,
+        height: 50,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "transparent",
-        marginTop: 20,
-        paddingHorizontal: 20,
+        borderColor: "white",
         color: "#000000",
-        flexDirection: 'row',
-        alignItems: 'center',
+        fontSize: globalStyles.fontSizeMedium,
+        fontFamily: globalStyles.fontFamilyBold,
     },
 
     contentHelpers: {
