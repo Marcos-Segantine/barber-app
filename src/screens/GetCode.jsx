@@ -24,6 +24,8 @@ import { userPhoneNumberValidated } from "../services/auth/userPhoneNumberValida
 
 import { getWidthHeightScreen } from "../utils/getWidthHeightScreen"
 
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
 export const GetCode = ({ navigation }) => {
     const [confirm, setConfirm] = useState(null)
     const [code, setCode] = useState([])
@@ -47,6 +49,8 @@ export const GetCode = ({ navigation }) => {
             const confirmation = await auth().verifyPhoneNumber("+55" + phone).catch(({ code, message }) => {
                 if (code === "auth/too-many-requests") {
                     setIsLoading(false)
+
+                    AsyncStorage.setItem("@barber_app__phone_verification_time", `${new Date().getHours()}:${new Date().getMinutes()}`)
 
                     setModalContent({
                         image: <StopProcessError />,
@@ -223,7 +227,7 @@ export const GetCode = ({ navigation }) => {
         setModalContent({
             image: <StopProcessError />,
             mainMessage: "Aguarde um Momento",
-            message: `Espere por mais ${timer} ${timer > 120 ? "minutos" : timer > 60 ? "minuto" : "segundos"}`,
+            message: "Por favor, espere 5 minutos antes de tentar novamente. Agradecemos sua compreensão.",
             firstButtonText: "Entendido",
             firstButtonAction: () => setModalContent(null)
         })
@@ -341,6 +345,7 @@ const styles = StyleSheet.create({
         fontSize: globalStyles.fontSizeVerySmall,
         fontFamily: globalStyles.fontFamilyBold,
         width: "100%",
-        marginTop: 10
+        marginTop: 10,
+        textAlign: "right"
     }
 })

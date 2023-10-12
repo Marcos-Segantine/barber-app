@@ -29,7 +29,11 @@ import { AlertValidatePhoneNumber } from "../components/modals/AlertValidatePhon
 
 import { listenerGetLastedScheduleOfClient } from "../services/user/listenerGetLastedScheduleOfClient";
 
+import { getPreviousScreensName } from "../utils/getPreviousScreensName";
+
 import { userSchedulesCount } from "../validation/userSchedulesCount";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const Home = ({ navigation }) => {
   const [scheduleClientInfo, setScheduleClientInfo] = useState(undefined);
@@ -64,11 +68,36 @@ export const Home = ({ navigation }) => {
   }, [userData]);
 
   useEffect(() => {
-    if (!userData?.phoneNumberValidated) {
-      setShowModalPhoneNotValidated(true)
-    }
+    (async () => {
+
+      const [previousScreen, lastScreen] = getPreviousScreensName(navigation, setSomethingWrong)
+
+      const time = await AsyncStorage.getItem("@barber_app__phone_verification_time")
+      if (time) {
+
+        const hour = time.split(":").map(Number)[0]
+        const currentHour = +new Date().getHours()
+
+        if (
+          !userData?.phoneNumberValidated &&
+          previousScreen === "Welcome" && lastScreen === "Home" &&
+          currentHour > (hour + 6)
+        ) {
+          setShowModalPhoneNotValidated(true)
+        }
+      } else {
+        if (
+          !userData?.phoneNumberValidated &&
+          previousScreen === "Welcome" && lastScreen === "Home"
+        ) {
+          setShowModalPhoneNotValidated(true)
+        }
+      }
+
+    })();
 
   }, [userData])
+
 
   const preferProfessionalStyle__Yes = preferProfessional
     ? [

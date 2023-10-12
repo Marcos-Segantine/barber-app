@@ -50,7 +50,7 @@ export const GetNewPhoneNumber = ({ visible, setVisible, setTimer }) => {
             setModalContent({
                 image: <StopProcessError />,
                 mainMessage: "Número Inválido",
-                message: "O número que você digitou é inváldio, por favor tente novamente",
+                message: "O número de telefone inserido não é válido. Por favor, verifique o número de telefone que você inseriu. Lembre de colocar o DDD. Exemplo: (99) 99999-9999",
                 firstButtonText: "Tentar Novamente",
                 firstButtonAction: () => setModalContent(null),
                 secondButtonText: "Voltar",
