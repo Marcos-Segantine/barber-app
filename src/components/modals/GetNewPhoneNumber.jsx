@@ -3,18 +3,80 @@ import { useState, useContext } from "react"
 
 import { globalStyles } from "../../assets/globalStyles"
 import { GetNewPhoneNumberImage } from "../../assets/imgs/GetNewPhoneNumberImage"
+import { StopProcessError } from "../../assets/imgs/StopProcessError"
 
 import { Button } from "../Button"
+import { DefaultModal } from "./DefaultModal"
 
 import { formatInputPhoneNumber } from "../../utils/formatInputPhoneNumber"
+
+import { isValidPhoneNumber } from "../../validation/isValidPhoneNumber"
+import { verifyIfDataAlreadyExist } from "../../validation/verifyIfDataAlreadyExist"
+
 import { UserContext } from "../../context/UserContext"
+import { SomethingWrongContext } from "../../context/SomethingWrongContext"
 
 export const GetNewPhoneNumber = ({ visible, setVisible, setTimer }) => {
     const [newPhone, setNewPhone] = useState("")
+    const [modalContent, setModalContent] = useState(null)
 
     const { userData, setUserData } = useContext(UserContext)
+    const { setSomethingWrong } = useContext(SomethingWrongContext)
 
     const handleConfirm = () => {
+        if (newPhone?.trim().length === 0) {
+            setModalContent({
+                image: <StopProcessError />,
+                mainMessage: "Campo Vazio",
+                firstButtonText: "Tentar Novamente",
+                firstButtonAction: () => setModalContent(null),
+                secondButtonText: "Voltar",
+                secondButtonAction: () => {
+                    setModalContent(null)
+                    setVisible(false)
+                }
+            })
+
+            return
+        }
+
+        const isPhoneValid = isValidPhoneNumber(newPhone, setSomethingWrong)
+        if (!isPhoneValid) {
+            setModalContent({
+                image: <StopProcessError />,
+                mainMessage: "Número Inválido",
+                message: "O número que você digitou é inváldio, por favor tente novamente",
+                firstButtonText: "Tentar Novamente",
+                firstButtonAction: () => setModalContent(null),
+                secondButtonText: "Voltar",
+                secondButtonAction: () => {
+                    setModalContent(null)
+                    setVisible(false)
+                }
+            })
+
+            return
+        }
+
+        const phoneAlreadyExist = verifyIfDataAlreadyExist("phone", newPhone, setSomethingWrong)
+        if (!phoneAlreadyExist) {
+            setModalContent({
+                image: <StopProcessError />,
+                mainMessage: "Número Indisponível",
+                message: "O número que você digitou já entá em uso, por favor tente um outro número",
+                firstButtonText: "Tentar Novamente",
+                firstButtonAction: () => setModalContent(null),
+                secondButtonText: "Voltar",
+                secondButtonAction: () => {
+                    setModalContent(null)
+                    setVisible(false)
+                }
+            })
+
+
+            return
+        }
+
         setUserData({ ...userData, phone: newPhone })
         setTimer(300)
         setVisible(false)
@@ -38,6 +100,7 @@ export const GetNewPhoneNumber = ({ visible, setVisible, setTimer }) => {
             transparent={true}
         >
             <View style={styles.container}>
+                <DefaultModal modalContent={modalContent} />
                 <GetNewPhoneNumberImage width={"100%"} height={"55%"} />
 
                 <Text style={styles.text}>Por favor, digite o seu novo número de telefone</Text>

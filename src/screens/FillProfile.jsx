@@ -107,7 +107,6 @@ export const FillProfile = ({ navigation, route }) => {
         )
     }
 
-
     if (isLoading) return <Loading flexSize={1} />
 
     return (

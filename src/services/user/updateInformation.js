@@ -77,7 +77,7 @@ export const updateInformation = async (
                 counter: userData.informationEditedCount.counter + 1,
                 lastUpdated: currentDate
             },
-            phoneNumberValidated: phoneChanged ? false : userData.phoneNumberValidated
+            phoneNumberValidated: phoneChanged ? false : !!userData.phoneNumberValidated
         }
 
         batch.set(userRef, userDataObj)

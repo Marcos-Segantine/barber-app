@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react"
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Dimensions } from "react-native"
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from "react-native"
 
 import { Button } from "../components/Button"
 import { ComeBack } from "../components/ComeBack"
@@ -105,11 +105,6 @@ export const GetCode = ({ navigation }) => {
 
     useEffect(() => {
         // verifyPhoneNumber()
-
-    }, [])
-
-    useEffect(() => {
-        verifyPhoneNumber()
 
     }, [userData.phone])
 
@@ -224,13 +219,13 @@ export const GetCode = ({ navigation }) => {
 
     const phoneHidden = userData?.phone.replace(/[^0-9]/g, '').split('').map((number, index) => index < 8 ? "*" : number).join('')
 
-    if (isLoading) return <Loading flexSize={1} text={"Este procedimento pode levar um tempo para ser concluído."} />
+    // if (isLoading) return <Loading flexSize={1} text={"Este procedimento pode levar um tempo para ser concluído."} />
 
     return (
-        <View style={[globalStyles.container, { flex: 1 }]}>
+        <ScrollView contentContainerStyle={globalStyles.container}>
             <ComeBack text={"Código de Verificação"} />
 
-            <GetCodePhoneValidation width={"100%"} height={"60%"} />
+            <GetCodePhoneValidation width={"100%"} height={300} />
             <DefaultModal modalContent={modalContent} />
             <Contact
                 modalContact={isToShowContactModal}
@@ -243,55 +238,53 @@ export const GetCode = ({ navigation }) => {
                 setTimer={setTimer}
             />
 
-            <View style={{ width: "100%", alignItems: "center" }}>
-                <Text style={styles.description}>Enviamos um código para o número {phoneHidden}.</Text>
-                <Text style={styles.description}>Ensira-o no campo abaixo</Text>
+            <Text style={styles.description}>Enviamos um código para o número {phoneHidden}.</Text>
+            <Text style={styles.description}>Ensira-o no campo abaixo</Text>
 
-                <TouchableOpacity onPress={handleClear} style={{ marginTop: 10, width: "100%" }}>
-                    <Text style={{ fontSize: globalStyles.fontSizeVerySmall, fontFamily: globalStyles.fontFamilyBold, color: "#000000", textAlign: "right" }}>Apagar</Text>
-                </TouchableOpacity>
+            <TouchableOpacity onPress={handleClear} style={{ marginTop: 10, width: "100%" }}>
+                <Text style={{ fontSize: globalStyles.fontSizeVerySmall, fontFamily: globalStyles.fontFamilyBold, color: "#000000", textAlign: "right" }}>Apagar</Text>
+            </TouchableOpacity>
 
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", marginTop: 20 }}>
-                    {
-                        Array.from({ length: 6 }, (_, index) => index).map((index) => (
-                            <TextInput
-                                key={index}
-                                ref={inputRefs[index]}
-                                value={code[index] || ""}
-                                style={inputFocused === index ? [styles.input, { borderColor: globalStyles.orangeColor }] : styles.input}
-                                onFocus={() => handleFocusInput(index)}
-                                keyboardType="numeric"
-                                textAlign="center"
-                                maxLength={1}
-                                onChangeText={text => handleCode(text)}
-                            />
-                        ))
-                    }
-
-                </View>
-
-                <View style={styles.contentHelpers}>
-                    <TouchableOpacity onPress={timer === 0 ? () => setChangePhoneNumber(true) : null}>
-                        <Text style={timer === 0 ? styles.helpersText : [styles.helpersText, { color: globalStyles.orangeColorDarker }]}>Trocar de número</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={timer === 0 ? () => verifyPhoneNumber() : null}>
-                        <Text style={timer === 0 ? styles.helpersText : [styles.helpersText, { color: globalStyles.orangeColorDarker }]}>Não recebi o código</Text>
-                    </TouchableOpacity>
-                </View>
-
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", marginTop: 20 }}>
                 {
-                    timer !== 0 &&
-                    <Text style={styles.timer}>{secondsToMinutes(timer)}</Text>
+                    Array.from({ length: 6 }, (_, index) => index).map((index) => (
+                        <TextInput
+                            key={index}
+                            ref={inputRefs[index]}
+                            value={code[index] || ""}
+                            style={inputFocused === index ? [styles.input, { borderColor: globalStyles.orangeColor }] : styles.input}
+                            onFocus={() => handleFocusInput(index)}
+                            keyboardType="numeric"
+                            textAlign="center"
+                            maxLength={1}
+                            onChangeText={text => handleCode(text)}
+                        />
+                    ))
                 }
 
-                <Button
-                    text={"Confirmar"}
-                    addStyles={{ marginTop: 30 }}
-                    action={() => confirmCode()}
-                />
-
             </View>
-        </View>
+
+            <View style={styles.contentHelpers}>
+                <TouchableOpacity onPress={() => setChangePhoneNumber(true)}>
+                    <Text style={styles.helpersText}>Trocar de número</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={timer === 0 ? () => verifyPhoneNumber() : null}>
+                    <Text style={timer === 0 ? styles.helpersText : [styles.helpersText, { color: globalStyles.orangeColorDarker }]}>Não recebi o código</Text>
+                </TouchableOpacity>
+            </View>
+
+            {
+                timer !== 0 &&
+                <Text style={styles.timer}>{secondsToMinutes(timer)}</Text>
+            }
+
+            <Button
+                text={"Confirmar"}
+                addStyles={{ marginTop: 30 }}
+                action={() => confirmCode()}
+            />
+
+        </ScrollView>
     )
 }
 
