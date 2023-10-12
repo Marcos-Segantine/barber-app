@@ -24,6 +24,11 @@ export const GetNewPhoneNumber = ({ visible, setVisible, setTimer }) => {
     const { setSomethingWrong } = useContext(SomethingWrongContext)
 
     const handleConfirm = () => {
+        if (newPhone === userData.phone) {
+            setVisible(false)
+            setNewPhone("")
+            return
+        }
         if (newPhone?.trim().length === 0) {
             setModalContent({
                 image: <StopProcessError />,

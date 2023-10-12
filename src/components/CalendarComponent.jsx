@@ -4,8 +4,10 @@
  * @returns {JSX.Element} - The rendered calendar component.
  */
 
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
+
+import { getWidthHeightScreen } from "../utils/getWidthHeightScreen";
 
 import { ScheduleContext } from "../context/ScheduleContext";
 import { SomethingWrongContext } from "../context/SomethingWrongContext";
@@ -114,10 +116,8 @@ export const CalendarComponent = ({ preferProfessional }) => {
     textDayHeaderFontFamily: globalStyles.fontFamilyBold,
   };
 
-  const { width } = Dimensions.get('screen')
-
   const styleCalendar = {
-    width: width - 20,
+    width: getWidthHeightScreen("width") - 20,
     padding: 5,
     borderRadius: 20,
   };

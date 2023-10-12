@@ -22,6 +22,8 @@ import { SomethingWrongContext } from "../context/SomethingWrongContext"
 
 import { userPhoneNumberValidated } from "../services/auth/userPhoneNumberValidated"
 
+import { getWidthHeightScreen } from "../utils/getWidthHeightScreen"
+
 export const GetCode = ({ navigation }) => {
     const [confirm, setConfirm] = useState(null)
     const [code, setCode] = useState([])
@@ -104,7 +106,7 @@ export const GetCode = ({ navigation }) => {
     }
 
     useEffect(() => {
-        // verifyPhoneNumber()
+        verifyPhoneNumber()
 
     }, [userData.phone])
 
@@ -148,7 +150,7 @@ export const GetCode = ({ navigation }) => {
                 userPhoneNumberValidated(userData.uid, userData.phone)
 
                 setModalContent({
-                    image: <ScheduleUnavailableNow />,
+                    image: <ScheduleUnavailableNow width={"100%"} />,
                     mainMessage: "Houve um Engano",
                     message: "Parece que você já fez a validação do seu número de telefone, desculpe o incoveniente.",
                     firstButtonText: "Página Inicial",
@@ -217,15 +219,25 @@ export const GetCode = ({ navigation }) => {
         inputRefs[0].current?.focus();
     }
 
+    const handleCannotResendVerification = () => {
+        setModalContent({
+            image: <StopProcessError />,
+            mainMessage: "Aguarde um Momento",
+            message: `Espere por mais ${timer} ${timer > 120 ? "minutos" : timer > 60 ? "minuto" : "segundos"}`,
+            firstButtonText: "Entendido",
+            firstButtonAction: () => setModalContent(null)
+        })
+    }
+
     const phoneHidden = userData?.phone.replace(/[^0-9]/g, '').split('').map((number, index) => index < 8 ? "*" : number).join('')
 
-    // if (isLoading) return <Loading flexSize={1} text={"Este procedimento pode levar um tempo para ser concluído."} />
+    if (isLoading) return <Loading flexSize={1} text={"Este procedimento pode levar um tempo para ser concluído."} />
 
     return (
         <ScrollView contentContainerStyle={globalStyles.container}>
             <ComeBack text={"Código de Verificação"} />
 
-            <GetCodePhoneValidation width={"100%"} height={300} />
+            <GetCodePhoneValidation width={"100%"} height={getWidthHeightScreen("height", 50)} />
             <DefaultModal modalContent={modalContent} />
             <Contact
                 modalContact={isToShowContactModal}
@@ -268,7 +280,7 @@ export const GetCode = ({ navigation }) => {
                 <TouchableOpacity onPress={() => setChangePhoneNumber(true)}>
                     <Text style={styles.helpersText}>Trocar de número</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={timer === 0 ? () => verifyPhoneNumber() : null}>
+                <TouchableOpacity onPress={timer === 0 ? () => verifyPhoneNumber() : handleCannotResendVerification}>
                     <Text style={timer === 0 ? styles.helpersText : [styles.helpersText, { color: globalStyles.orangeColorDarker }]}>Não recebi o código</Text>
                 </TouchableOpacity>
             </View>
@@ -293,8 +305,8 @@ const { width } = Dimensions.get('screen')
 const styles = StyleSheet.create({
     input: {
         backgroundColor: "white",
-        width: (width - (width * (20 / 100))) / 6,
-        height: (width - (width * (20 / 100))) / 6,
+        width: getWidthHeightScreen("width", 20) / 6,
+        height: getWidthHeightScreen("width", 20) / 6,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: "white",
