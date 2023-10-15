@@ -44,6 +44,15 @@ export const Schedules = ({ preferProfessional }) => {
 
   }, [schedule.professional, schedule.day]);
 
+  useEffect(() => {
+    if (availableTimes === null) return
+
+    if (!availableTimes.includes(schedule.schedule)) {
+      setSchedule({ ...schedule, schedule: null })
+    }
+
+  }, [availableTimes])
+
   const handleDayPress = useCallback(
     _.debounce(time => {
       setSchedule({ ...schedule, schedule: time })

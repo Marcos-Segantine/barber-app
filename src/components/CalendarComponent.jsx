@@ -83,11 +83,6 @@ export const CalendarComponent = ({ preferProfessional }) => {
 
   }, [preferProfessional])
 
-  useEffect(() => {
-    setSchedule({ ...schedule, schedule: null })
-
-  }, [schedule.day])
-
   const deniedDay = preferProfessional || { [`${year}-${month}-${day}`]: { disabled: true, disableTouchEvent: true } };
 
   // Set the marked dates for the calendar
