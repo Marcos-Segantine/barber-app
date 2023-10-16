@@ -8,9 +8,12 @@ import { StyleSheet, Text, View } from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { getWidthHeightScreen } from "../utils/getWidthHeightScreen";
+import { getWeekdayFromMonth } from "../utils/getWeekdayFromMonth";
+import { getMonth, getYear } from "../utils/dateHelper";
 
 import { ScheduleContext } from "../context/ScheduleContext";
 import { SomethingWrongContext } from "../context/SomethingWrongContext";
+import { AppSettingsContext } from "../context/AppSettings";
 
 import { Calendar, LocaleConfig } from "react-native-calendars";
 
@@ -18,6 +21,8 @@ import { globalStyles } from "../assets/globalStyles";
 
 import _ from "loadsh";
 import { getDaysBlocked } from "../services/schedules/getDaysBlocked";
+import { Loading } from "./Loading";
+
 
 LocaleConfig.locales["pt-br"] = {
   monthNames: [
@@ -62,9 +67,13 @@ LocaleConfig.locales["pt-br"] = {
 
 export const CalendarComponent = ({ preferProfessional }) => {
   const [daysBlocked, setDaysBlocked] = useState(null);
+  const [lastMonthSelected, setLastMonthSelected] = useState(null);
+  const [weekdaysBlocked, setWeekdaysBlocked] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const { schedule, setSchedule } = useContext(ScheduleContext);
   const { setSomethingWrong } = useContext(SomethingWrongContext);
+  const { settings } = useContext(AppSettingsContext)
 
   const year = new Date().getFullYear();
   const month = new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth() + 1}`;
@@ -81,7 +90,80 @@ export const CalendarComponent = ({ preferProfessional }) => {
 
     })();
 
-  }, [preferProfessional])
+  }, [preferProfessional]);
+
+  useEffect(() => {
+
+    setIsLoading(true)
+
+    const formatDeniedDays = (data) => {
+      const result = {}
+
+      for (const day of data) {
+        result[day] = {
+          disableTouchEvent: true,
+          disabled: true
+        }
+      }
+
+      return result
+    }
+
+    if (lastMonthSelected === null) {
+      const date = new Date()
+      const currentYear = date.getFullYear()
+      const currentMonth = date.getMonth() + 1
+      const monthFormatted = currentMonth < 10 ? `0${currentMonth}` : currentMonth
+
+      const data = []
+
+      for (const weekday of settings.blockedWeekdays) {
+        data.push(getWeekdayFromMonth(weekday, monthFormatted, currentYear))
+
+        const result = []
+
+        for (const dates of data) {
+
+          for (const day of dates) {
+            const dayFormatted = day < 10 ? `0${day}` : day
+            result.push(`${currentYear}-${monthFormatted}-${dayFormatted}`)
+
+          }
+        }
+
+        setWeekdaysBlocked(formatDeniedDays(result));
+      }
+
+      setIsLoading(false)
+
+    }
+    else {
+
+      const data = []
+
+      for (const weekday of settings.blockedWeekdays) {
+        data.push(getWeekdayFromMonth(weekday, getMonth(lastMonthSelected), getYear(lastMonthSelected)))
+
+        const result = []
+
+        for (const dates of data) {
+
+          for (const day of dates) {
+            const currentYear = getYear(lastMonthSelected)
+            const currentMonth = getMonth(lastMonthSelected)
+            const dayFormatted = day < 10 ? `0${day}` : day
+
+            result.push(`${currentYear}-${currentMonth}-${dayFormatted}`)
+          }
+        }
+
+        setWeekdaysBlocked(formatDeniedDays(result));
+      }
+
+      setIsLoading(false)
+    }
+
+  }, [lastMonthSelected])
 
   const deniedDay = preferProfessional || { [`${year}-${month}-${day}`]: { disabled: true, disableTouchEvent: true } };
 
@@ -89,6 +171,7 @@ export const CalendarComponent = ({ preferProfessional }) => {
   const markedDatesCalendar = {
     ...deniedDay,
     ...daysBlocked,
+    ...weekdaysBlocked,
     [schedule.day]: {
       selected: true,
       marked: true,
@@ -136,8 +219,10 @@ export const CalendarComponent = ({ preferProfessional }) => {
         minDate={String(new Date())}
         markedDates={markedDatesCalendar}
         onDayPress={(day) => handleDayPress(day.dateString)}
+        onMonthChange={(month) => setLastMonthSelected(month.dateString)}
         style={styleCalendar}
         theme={themeCalendar}
+        displayLoadingIndicator={isLoading}
       />
     </>
   );

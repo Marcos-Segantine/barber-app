@@ -10,7 +10,8 @@ export const AppSettingsProvider = ({ children }) => {
         city: "Nova Ponte",
         address: "Alameda dos Pinheiros, 100",
         neighborhood: "Nome do Bairo",
-        limitEditInformationPerMonth: 4
+        limitEditInformationPerMonth: 4,
+        blockedWeekdays: ["0"]
     };
 
     return (
