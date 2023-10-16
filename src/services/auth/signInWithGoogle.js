@@ -51,7 +51,7 @@ export const signInWithGoogle = async (
 
   } catch ({ message }) {
 
-    if (error.message === "Sign in action cancelled") {
+    if (message === "Sign in action cancelled") {
       setIsLoading(false)
       return
 
