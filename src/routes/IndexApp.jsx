@@ -18,8 +18,8 @@ export const IndexApp = () => {
         <UserProvider>
           <MenuItemProvider>
             <ScheduleProvider>
-              <NetInformation />
               <AppSettingsProvider>
+                <NetInformation />
                 <Routes />
 
               </AppSettingsProvider>

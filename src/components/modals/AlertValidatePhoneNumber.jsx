@@ -17,7 +17,7 @@ export const AlertValidatePhoneNumber = ({ visible, setVisible }) => {
 
     const navigation = useNavigation()
 
-    const { setSomethingWrong } = useContext(SomethingWrongContext)
+    const { somethingWrong, setSomethingWrong } = useContext(SomethingWrongContext)
 
     const [previousScreen, lastScreen] = getPreviousScreensName(navigation, setSomethingWrong)
 
@@ -34,6 +34,11 @@ export const AlertValidatePhoneNumber = ({ visible, setVisible }) => {
         else setIsToShowModal(true)
 
     }, [lastScreen, previousScreen])
+
+    useEffect(() => {
+        if(somethingWrong) setVisible(false)
+
+    }, [somethingWrong])
 
     return (
         <Modal

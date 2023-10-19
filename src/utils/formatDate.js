@@ -15,18 +15,20 @@ const monthsName = [
     "Dezembro",
 ]
 
-export const formatDate = (date, setSomethingWrong) => {
+export const formatDate = (date, setSomethingWrong, showYear) => {
     try {
 
         if (!date) return
 
         const month = new Date().getMonth()
         const day = date.slice(8)
-        const year = date.slice(0, 4);
 
-        const dateFormatted = `${day} de ${monthsName[month]}, ${year}`
+        if (showYear) {
+            const year = date.slice(0, 4);
+            return `${day} de ${monthsName[month]}, ${year}`
+        }
 
-        return dateFormatted
+        return `${day} de ${monthsName[month]}`
 
     } catch ({ message }) {
         setSomethingWrong(true)

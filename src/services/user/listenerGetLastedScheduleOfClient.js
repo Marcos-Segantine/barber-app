@@ -25,7 +25,7 @@ export const listenerGetLastedScheduleOfClient = (
 
             // Listen for changes in the document
             docRef.onSnapshot(() => {
-                takeLastScheduleOfUser(userData, setScheduleClientInfo, setSomethingWrong);
+                takeLastScheduleOfUser(userData.uid, setSomethingWrong, setScheduleClientInfo);
             });
         }
     } catch ({ message }) {

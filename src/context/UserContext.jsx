@@ -15,6 +15,9 @@ import firestore from '@react-native-firebase/firestore';
 import { handleError } from '../handlers/handleError';
 
 import { SomethingWrongContext } from './SomethingWrongContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { takeLastScheduleOfUser } from '../services/user/takeLastScheduleOfUser';
 
 export const UserContext = createContext(null);
 
@@ -67,6 +70,9 @@ export const UserProvider = ({ children }) => {
               phoneNumberValidated: userDataCollection.phoneNumberValidated
             }
           );
+
+          AsyncStorage.setItem("@barber_app__lastSchedule", JSON.stringify(await takeLastScheduleOfUser(userDataCollection.uid, setSomethingWrong)) || "null")
+
         } else setUserData(null);
 
       } catch ({ message }) {

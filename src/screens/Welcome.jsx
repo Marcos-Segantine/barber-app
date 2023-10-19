@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   Image,
+  ActivityIndicator
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 
@@ -68,6 +69,11 @@ export const Welcome = ({ navigation }) => {
         source={require("../assets/imgs/welcome.jpg")}
       />
 
+      <View style={{ backfaceVisibility: "hidden", width: "100%", alignItems: "flex-end", position: "absolute", top: "8%", right: 5 }}>
+        <ActivityIndicator animating={true} size={50} color={"white"} />
+
+      </View>
+
       <View style={styles.content}>
         <Text style={styles.title}>Bem-vindo à</Text>
         <Text style={styles.companyName}>{settings?.companyName}</Text>
@@ -85,6 +91,7 @@ const styles = StyleSheet.create({
   img: {
     width: "100%",
     height: "100%",
+    position: "relative",
   },
 
   content: {
