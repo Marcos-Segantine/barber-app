@@ -18,6 +18,7 @@ import {
   getHour,
   getYear,
 } from "../../utils/dateHelper"
+import { setLastScheduleInDevice } from '../../utils/setLastScheduleInDevice';
 
 import { sendScheduleUidToDB } from './sendScheduleUidToDB';
 import { verifySchedulesUid } from './verifySchedulesUid';
@@ -104,6 +105,7 @@ export const addScheduleWhenDayNotUse = async (
           navigation.navigate("Home");
         }
       })
+      await setLastScheduleInDevice(userUid, setSomethingWrong, false)
       setIsLoading(false)
 
       return

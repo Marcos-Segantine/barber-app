@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { formatDate } from "../../utils/formatDate";
 import { getDayOfWeek } from "../../utils/getDayFromWeek";
+import { formatServicePrice } from "../../utils/formatServicePrice";
 
 export const NetInformation = () => {
     const [isConnected, setIsConnected] = useState(null);
@@ -28,8 +29,9 @@ export const NetInformation = () => {
 
     // Subscribe to network state changes
     useEffect(() => {
-        const unsubscribe = NetInfo.addEventListener((state) => {
+        const unsubscribe = NetInfo.addEventListener(async (state) => {
             setIsConnected(state.isConnected);
+            setLastSchedule(JSON.parse(await AsyncStorage.getItem("@barber_app__lastSchedule")))
         });
         return () => {
             unsubscribe();
@@ -40,7 +42,6 @@ export const NetInformation = () => {
 
         (async () => {
 
-            setLastSchedule(JSON.parse(await AsyncStorage.getItem("@barber_app__lastSchedule")))
 
         })();
 
@@ -90,10 +91,17 @@ export const NetInformation = () => {
                                         </> :
                                         <>
                                             <Text style={[styles.description, { width: "100%", marginBottom: 5 }]}>Serviços: </Text>
-                                            <View style={{ flexDirection: "row", alignItems: "center", marginLeft: "10%" }}>
-                                                <View style={{ backgroundColor: "#000000", borderRadius: 200, width: 10, height: 10 }}></View>
-                                                <Text style={styles.value}>Corte</Text>
-                                            </View>
+                                            {
+                                                lastSchedule.services.map((service, index) => {
+                                                    return (
+                                                        <View key={index} style={{ flexDirection: "row", alignItems: "center", marginLeft: "10%" }}>
+                                                            <View style={{ backgroundColor: "#000000", borderRadius: 200, width: 10, height: 10 }}></View>
+                                                            <Text style={styles.value}>{service.name} - {formatServicePrice(service.price, setSomeThingWrong)}</Text>
+                                                        </View>
+
+                                                    )
+                                                })
+                                            }
                                         </>
                                 )
                             }

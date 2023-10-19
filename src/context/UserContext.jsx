@@ -18,6 +18,7 @@ import { SomethingWrongContext } from './SomethingWrongContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { takeLastScheduleOfUser } from '../services/user/takeLastScheduleOfUser';
+import { setLastScheduleInDevice } from '../utils/setLastScheduleInDevice';
 
 export const UserContext = createContext(null);
 
@@ -71,7 +72,7 @@ export const UserProvider = ({ children }) => {
             }
           );
 
-          AsyncStorage.setItem("@barber_app__lastSchedule", JSON.stringify(await takeLastScheduleOfUser(userDataCollection.uid, setSomethingWrong)) || "null")
+          await setLastScheduleInDevice(userDataCollection.uid, setSomethingWrong, false)
 
         } else setUserData(null);
 

@@ -9,6 +9,7 @@
 import firestore from '@react-native-firebase/firestore';
 
 import { getYear, getDay, getMonth } from '../../utils/dateHelper';
+import { setLastScheduleInDevice } from '../../utils/setLastScheduleInDevice';
 
 import { handleError } from '../../handlers/handleError';
 
@@ -66,6 +67,8 @@ export const cancelSchedule = async (
     batch.update(schedulesMonthRef, schedulesMonthData);
     batch.update(unavailableTimesRef, unavailableData);
     batch.update(schedulesUidRef, { schedules: [...schedulesUidUpdated] });
+
+    if (newSchedules.length === 0) await setLastScheduleInDevice(userUid, setSomethingWrong, true)
 
     await batch.commit();
 
