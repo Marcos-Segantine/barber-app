@@ -15,8 +15,9 @@ import { verifyIfDataAlreadyExist } from "../../validation/verifyIfDataAlreadyEx
 
 import { UserContext } from "../../context/UserContext"
 import { SomethingWrongContext } from "../../context/SomethingWrongContext"
+import { updateInformation } from "../../services/user/updateInformation"
 
-export const GetNewPhoneNumber = ({ visible, setVisible, setTimer }) => {
+export const GetNewPhoneNumber = ({ visible, setVisible, setTimer, setIsLoading }) => {
     const [newPhone, setNewPhone] = useState("")
     const [modalContent, setModalContent] = useState(null)
 
@@ -82,8 +83,14 @@ export const GetNewPhoneNumber = ({ visible, setVisible, setTimer }) => {
             return
         }
 
-        setUserData({ ...userData, phone: newPhone })
-        setTimer(300)
+        if (newPhone !== userData.phone) {
+            setUserData({ ...userData, phone: newPhone, phoneNumberValidated: false })
+            updateUserDataDB({ ...userData, phone: newPhone, phoneNumberValidated: false }, setSomethingWrong)
+            setTimer(300)
+            setIsLoading(true)
+        }
+
+        setNewPhone("")
         setVisible(false)
     }
 

@@ -26,6 +26,8 @@ import { getWidthHeightScreen } from "../utils/getWidthHeightScreen"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
+import { verifyIfUserAlreadyMakePhoneValidationVerification } from "../validation/verifyIfUserAlreadyMakePhoneValidationVerification"
+
 export const GetCode = ({ navigation }) => {
     const [confirm, setConfirm] = useState(null)
     const [code, setCode] = useState([])
@@ -34,7 +36,7 @@ export const GetCode = ({ navigation }) => {
     const [isToShowContactModal, setIsToShowContactModal] = useState(false)
     const [inputFocused, setInputFocused] = useState(null)
     const [changePhoneNumber, setChangePhoneNumber] = useState(false)
-    const [timer, setTimer] = useState(0)
+    const [timer, setTimer] = useState(null)
 
     const inputRefs = Array.from({ length: 6 }, () => useRef(null));
 
@@ -110,14 +112,21 @@ export const GetCode = ({ navigation }) => {
     }
 
     useEffect(() => {
+        verifyIfUserAlreadyMakePhoneValidationVerification(setTimer)
+    }, [])
+
+    useEffect(() => {
         verifyPhoneNumber()
 
     }, [userData.phone])
 
     useEffect(() => {
-        const interval = setInterval(() => {
+        const interval = setInterval(async () => {
             if (timer === 0) return
             setTimer(timer - 1)
+            if ([1, 2, 3, 4, 5].includes(timer / 60)) {
+                AsyncStorage.setItem("@barber_app__timeToWaitAfterAnotherRequisition", String(timer / 60))
+            }
         }, 1000)
 
         return () => clearInterval(interval)
@@ -252,6 +261,7 @@ export const GetCode = ({ navigation }) => {
                 visible={changePhoneNumber}
                 setVisible={setChangePhoneNumber}
                 setTimer={setTimer}
+                setIsLoading={setIsLoading}
             />
 
             <Text style={styles.description}>Enviamos um código para o número {phoneHidden}.</Text>

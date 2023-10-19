@@ -11,12 +11,14 @@ import { useNavigation } from "@react-navigation/native"
 import { getPreviousScreensName } from "../../utils/getPreviousScreensName"
 
 import { SomethingWrongContext } from "../../context/SomethingWrongContext"
+import { UserContext } from "../../context/UserContext"
 
 export const AlertValidatePhoneNumber = ({ visible, setVisible }) => {
     const [isToShowModal, setIsToShowModal] = useState(false)
 
     const navigation = useNavigation()
 
+    const { userData } = useContext(UserContext)
     const { somethingWrong, setSomethingWrong } = useContext(SomethingWrongContext)
 
     const [previousScreen, lastScreen] = getPreviousScreensName(navigation, setSomethingWrong)
@@ -36,9 +38,14 @@ export const AlertValidatePhoneNumber = ({ visible, setVisible }) => {
     }, [lastScreen, previousScreen])
 
     useEffect(() => {
-        if(somethingWrong) setVisible(false)
+        if (somethingWrong) setVisible(false)
 
     }, [somethingWrong])
+
+    useEffect(() => {
+        if (userData.phoneNumberValidated) setVisible(false)
+
+    }, [userData])
 
     return (
         <Modal
