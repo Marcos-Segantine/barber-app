@@ -18,6 +18,7 @@ import { trim } from '../../utils/trim';
 import { capitalizeName } from '../../utils/capitalizeName';
 
 import { handleError } from '../../handlers/handleError';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const updateInformation = async (
     informationNewUser,
@@ -52,6 +53,8 @@ export const updateInformation = async (
         if (informationNewUser.profilePicture) {
             const referenceProfilePicture = storage().ref('clients/profilePictures/' + uid);
             await referenceProfilePicture.putString(informationNewUser.profilePicture, 'base64')
+
+            await AsyncStorage.setItem("@barber_app__profile_picture", informationNewUser.profilePicture)
         }
 
         // Get the download URL of the profile picture if it exists

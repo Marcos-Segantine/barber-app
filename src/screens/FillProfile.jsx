@@ -27,6 +27,8 @@ import { AppSettingsContext } from "../context/AppSettings"
 
 import { verifyIfUserCanEditInformation } from "../validation/verifyIfUserCanEditInformation"
 
+import { ProfilePicture } from "../components/ProfilePicture"
+
 export const FillProfile = ({ navigation, route }) => {
     const { isToCreateUser, emailNewUser, passwordNewUser } = route.params ? route.params : {}
     const [isToCreateUserState, setIsToCreateUserState] = useState(isToCreateUser || false)
@@ -159,33 +161,16 @@ export const FillProfile = ({ navigation, route }) => {
                 )
             }
 
-            <View style={informationNewUser?.profilePicture ? { marginTop: 30, } : { backgroundColor: "#FFFFFF", borderRadius: 150, marginTop: 30 }}>
-                {
-                    informationNewUser?.profilePicture &&
-                    <Image
-                        source={{ uri: `data:image/png;base64,${informationNewUser?.profilePicture}` }}
-                        style={{ width: 250, height: 250, borderRadius: 150 }}
-                    />
-                }
-
-                {
-                    userData?.profilePicture && !informationNewUser?.profilePicture &&
-                    <Image src={userData.profilePicture} style={{ width: 200, height: 200, borderRadius: 150 }} />
-                }
-
-                {
-                    !userData?.profilePicture && !informationNewUser?.profilePicture &&
-                    <Image source={DefaultPicture} />
-                }
-
-                <TouchableOpacity
-                    style={styles.contentEditPicture}
-                    activeOpacity={.8}
-                    onPress={() => handleNewPicture(setInformationNewUser, informationNewUser, setModalInfo, setModalInformative, setSomethingWrong)}
-                >
-                    <EditProfilePicture width={40} height={40} />
-                </TouchableOpacity>
-            </View>
+            <ProfilePicture
+                canEditProfile={true}
+                argsToEditPicture={{
+                    setInformationNewUser: setInformationNewUser,
+                    informationNewUser: informationNewUser,
+                    setModalInfo: setModalInfo,
+                    setModalInformative: setModalInformative,
+                    setSomethingWrong: setSomethingWrong
+                }}
+            />
 
             <View style={styles.contentInput}>
                 <TextInput

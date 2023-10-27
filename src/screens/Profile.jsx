@@ -8,13 +8,13 @@ import { HeaderScreens } from "../components/HeaderScreens"
 import { LinkProfile } from "../components/LinkProfile"
 import { Menu } from "../components/Menu"
 import { DefaultModal } from "../components/modals/DefaultModal"
+import { ProfilePicture } from "../components/ProfilePicture"
 
 import { ProfileIcon } from "../assets/icons/ProfileIcon"
 import { CheckIcon } from "../assets/icons/CheckIcon"
 import { PadlockIcon } from "../assets/icons/PadlockIcon"
 import { globalStyles } from "../assets/globalStyles"
 import { LogOutIcon } from "../assets/icons/LogOutIcon"
-import DefaultPicture from "../assets/icons/DefaultPicture.png"
 import { LogOut } from "../assets/imgs/LogOut"
 
 import { logOut } from "../services/user/logOut"
@@ -55,12 +55,7 @@ export const Profile = ({ navigation }) => {
 
                 <View style={{ alignItems: 'center' }}>
                     <View>
-                        {
-                            userData?.profilePicture ?
-                                <Image src={userData.profilePicture} style={{ width: 200, height: 200, borderRadius: 150 }} /> :
-                                <Image source={DefaultPicture} />
-
-                        }
+                        <ProfilePicture />
                     </View>
 
                     <Text style={styles.userName}>{userData && getNameLastName(userData.name, setSomethingWrong, false)}</Text>
