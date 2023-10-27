@@ -27,7 +27,8 @@ export const getUserDataContext = async (setUserData, userEmail, setSomethingWro
                     gender: userDataCollection.gender,
                     uid: userDataCollection.uid,
                     informationEditedCount: userDataCollection.informationEditedCount,
-                    phoneNumberValidated: userDataCollection.phoneNumberValidated
+                    phoneNumberValidated: userDataCollection.phoneNumberValidated,
+                    lastActivity: userDataCollection.lastActivity
                 }
 
                 setUserData(data)

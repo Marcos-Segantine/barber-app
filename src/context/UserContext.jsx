@@ -68,7 +68,8 @@ export const UserProvider = ({ children }) => {
               gender: userDataCollection.gender,
               uid: userDataCollection.uid,
               informationEditedCount: userDataCollection.informationEditedCount,
-              phoneNumberValidated: userDataCollection.phoneNumberValidated
+              phoneNumberValidated: userDataCollection.phoneNumberValidated,
+              lastActivity: userDataCollection.lastActivity
             }
           );
 

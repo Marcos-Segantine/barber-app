@@ -23,7 +23,6 @@ import { getAllProfessionals } from "../services/schedules/getAllProfessionals";
 
 import { getDay } from "../utils/dateHelper";
 import { getMonthName } from "../utils/getMonthName";
-import { getNameLastName } from "../utils/getNameLastName";
 
 export const Professionals = ({ preferProfessional }) => {
   const [availableProfessional, setAvailableProfessional] = useState(null);
@@ -74,9 +73,6 @@ export const Professionals = ({ preferProfessional }) => {
 
   // Render selected professional if only one is available
   if (availableProfessional?.length === 1) {
-    const name = getNameLastName(availableProfessional[0].name, setSomethingWrong)
-    const nameFormatted = name.length > 20 ? name.slice(0, 10) + "..." : name
-
     return (
       <View style={{ width: "100%" }}>
         <Text style={[styles.text, { color: globalStyles.orangeColor, fontWeight: 'bold', marginTop: 10, marginBottom: -20, textAlign: "right" }]}>
@@ -87,7 +83,7 @@ export const Professionals = ({ preferProfessional }) => {
           style={[professionalSelectedStyle, { marginTop: 50 }]}
           activeOpacity={0.8}
         >
-          <Text style={styles.professionalName}>{nameFormatted}</Text>
+          <Text style={styles.professionalName}>{availableProfessional[0].name}</Text>
 
           {availableProfessional[0].profilePicture ? (
             <Image
@@ -149,8 +145,6 @@ export const Professionals = ({ preferProfessional }) => {
       </View>
       {
         availableProfessional.map((professional, index) => {
-          const name = getNameLastName(availableProfessional[0].name, setSomethingWrong)
-
           return (
             <TouchableOpacity
               style={
@@ -162,7 +156,7 @@ export const Professionals = ({ preferProfessional }) => {
               onPress={() => handleProfessionalSelected(professional)}
               key={index}
             >
-              <Text style={styles.professionalName}>{name}</Text>
+              <Text style={styles.professionalName}>{availableProfessional[0].name}</Text>
 
               {professional.profilePicture ? (
                 <Image
@@ -202,6 +196,7 @@ const styles = StyleSheet.create({
 
   img: {
     width: 125,
+    maxWidth: "40%",
     height: 125,
     borderRadius: 150,
   },
@@ -210,6 +205,8 @@ const styles = StyleSheet.create({
     fontSize: globalStyles.fontSizeMedium,
     fontFamily: globalStyles.fontFamilyBold,
     color: "#000000",
+    width: "60%",
+    flexWrap: "wrap"
   },
 
   text: {

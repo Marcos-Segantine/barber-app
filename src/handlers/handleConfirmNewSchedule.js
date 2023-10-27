@@ -73,6 +73,7 @@ export const handleConfirmNewSchedule = async (
                 navigation
             );
 
+        updateLastActivity(clientUid, setSomethingWrong)
         setScheduleInfo({})
 
     } catch ({ message }) {
