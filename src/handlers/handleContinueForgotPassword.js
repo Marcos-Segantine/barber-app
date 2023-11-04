@@ -73,7 +73,7 @@ export const handleContinueForgotPassword = async (
 
         // Check if email exist
         if (email) {
-            const user = await getUserByEmail(email);
+            const user = await getUserByEmail(email, setSomethingWrong);
 
             if (user === null) {
                 setModalInfo({

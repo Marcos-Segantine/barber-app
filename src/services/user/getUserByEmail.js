@@ -9,16 +9,17 @@ import firestore from '@react-native-firebase/firestore';
 
 import { handleError } from '../../handlers/handleError';
 
-export const getUserByEmail = async (email) => {
+export const getUserByEmail = async (email, setSomethingWrong) => {
     try {
 
-        const usersRef = firestore().collection("users");
+        const usersRef = firestore().collection("users").where("email", "==", email);
         const userData = (await usersRef.get()).docs
 
         // If no user data is found, return null
         if (userData.length === 0) return null
         else return userData[0].data()
     } catch ({ message }) {
+        setSomethingWrong(true)
         handleError("getUserByEmail", message)
     }
 }

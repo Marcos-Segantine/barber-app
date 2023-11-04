@@ -195,7 +195,7 @@ export const CalendarComponent = ({ preferProfessional }) => {
   };
 
   const styleCalendar = {
-    width: getWidthHeightScreen("width") - 20,
+    width: getWidthHeightScreen("width", null, setSomethingWrong) - 20,
     padding: 5,
     borderRadius: 20,
   };

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react"
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from "react-native"
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native"
 
 import { Button } from "../components/Button"
 import { ComeBack } from "../components/ComeBack"
@@ -112,7 +112,7 @@ export const GetCode = ({ navigation }) => {
     }
 
     useEffect(() => {
-        verifyIfUserAlreadyMakePhoneValidationVerification(setTimer)
+        verifyIfUserAlreadyMakePhoneValidationVerification(setTimer, setSomethingWrong)
     }, [])
 
     useEffect(() => {
@@ -139,7 +139,7 @@ export const GetCode = ({ navigation }) => {
             const credential = auth.PhoneAuthProvider.credential(confirm.verificationId, code.join(""));
             await auth().currentUser.linkWithCredential(credential);
 
-            userPhoneNumberValidated(userData.uid, userData.phone)
+            userPhoneNumberValidated(userData.uid, userData.phone, setSomethingWrong)
             navigation.navigate("Home")
 
         } catch ({ code, message }) {
@@ -160,7 +160,7 @@ export const GetCode = ({ navigation }) => {
             else if (message === "[auth/unknown] User has already been linked to the given provider.") {
 
                 setIsLoading(false)
-                userPhoneNumberValidated(userData.uid, userData.phone)
+                userPhoneNumberValidated(userData.uid, userData.phone, setSomethingWrong)
 
                 setModalContent({
                     image: <ScheduleUnavailableNow width={"100%"} />,
@@ -313,8 +313,6 @@ export const GetCode = ({ navigation }) => {
         </ScrollView>
     )
 }
-
-const { width } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
     input: {

@@ -20,6 +20,7 @@ export const getUserByPhoneNumber = async (phone, setSomethingWrong) => {
 
     // Every user has a unique phone number, so is safe return the first user from `userData`
     return userData[0].data()
+    
   } catch ({ message }) {
     setSomethingWrong(true)
     handleError("getUserByPhoneNumber", message)
