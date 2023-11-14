@@ -156,7 +156,7 @@ export const Professionals = ({ preferProfessional }) => {
               onPress={() => handleProfessionalSelected(professional)}
               key={index}
             >
-              <Text style={styles.professionalName}>{availableProfessional[0].name}</Text>
+              <Text style={styles.professionalName}>{professional.name}</Text>
 
               {professional.profilePicture ? (
                 <Image

@@ -27,7 +27,6 @@ export const getAvailableTimesByProfessional = async (
         const unavailableTimesData = (await unavailableTimesRef.get({ source: "server" })).data()
         const blockedTimesData = (await blockedTimesRef.get({ source: "server" })).data()
 
-
         const date = new Date()
         const currentMonth = +date.getMonth() + 1;
         const currentDay = +date.getDate();

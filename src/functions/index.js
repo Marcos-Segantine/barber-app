@@ -69,18 +69,23 @@ exports.clearDatabase = onSchedule("every day 04:00", async () => {
       const blockedTimesData = (await blockedTimesRef.get()).data()
       const daysBlockedData = (await daysBlockedRef.get()).data()
 
-      for (const date in blockedTimesData) {
-        const [year, month, day] = date.split("-")
-        if (+day < currentDay) delete blockedTimesData[date]
+      if (blockedTimesData !== undefined) {
+        for (const date in blockedTimesData) {
+          const [year, month, day] = date.split("-")
+          if (+day < currentDay) delete blockedTimesData[date]
+        }
+
+        batch.set(blockedTimesRef, { ...blockedTimesData })
       }
 
-      for (const date in daysBlockedData) {
-        const [year, month, day] = date.split("-")
-        if (+day < currentDay) delete daysBlockedData[date]
-      }
+      if (daysBlockedRef) {
+        for (const date in daysBlockedData) {
+          const [year, month, day] = date.split("-")
+          if (+day < currentDay) delete daysBlockedData[date]
+        }
 
-      batch.set(blockedTimesRef, { ...blockedTimesData })
-      batch.set(daysBlockedRef, { ...daysBlockedData })
+        batch.set(daysBlockedRef, { ...daysBlockedData })
+      }
     }
 
     const schedulesByUserDataUpdated = schedulesByUserData.filter(schedule => {
