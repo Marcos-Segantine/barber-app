@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { TextInput, View, ScrollView, StyleSheet, TouchableOpacity, Image, Text } from "react-native"
+import { TextInput, View, ScrollView, StyleSheet, Text } from "react-native"
 
 import { Button } from "../components/Button"
 import { ComeBack } from "../components/ComeBack"
@@ -9,13 +9,10 @@ import { DefaultModal } from "../components/modals/DefaultModal"
 import { InformativeModel } from "../components/modals/InformativeModel"
 import { Contact } from "../components/modals/Contact"
 
-import { handleNewPicture } from "../handlers/handleNewPicture"
 import { handleConfirmNewInformationFillProfile } from "../handlers/handleConfirmNewInformationFillProfile"
 import { handleConfirmEmailPhoneChangeFillProfile } from "../handlers/handleConfirmEmailPhoneChangeFillProfile"
 
-import { EditProfilePicture } from "../assets/icons/EditProfilePicture"
 import { globalStyles } from "../assets/globalStyles"
-import DefaultPicture from "../assets/icons/DefaultPicture.png"
 
 import { UserContext } from "../context/UserContext"
 import { SomethingWrongContext } from "../context/SomethingWrongContext"
@@ -65,15 +62,17 @@ export const FillProfile = ({ navigation, route }) => {
     const userEditedCounter = +settings.limitEditInformationPerMonth - userData?.informationEditedCount?.counter
 
     const handleConfirmNewInformation = () => {
-        if (!verifyIfUserCanEditInformation(
-            userEditedCounter,
-            setModalInfo,
-            setContact,
-            navigation,
-            informationNewUser,
-            setSomethingWrong
-        )) return
-
+        if (!isToCreateUserState) {
+            if (!verifyIfUserCanEditInformation(
+                userEditedCounter,
+                setModalInfo,
+                setContact,
+                navigation,
+                informationNewUser,
+                setSomethingWrong
+            )) return
+        }
+        
         handleConfirmNewInformationFillProfile(
             informationNewUser,
             setModalInfo,
@@ -110,6 +109,139 @@ export const FillProfile = ({ navigation, route }) => {
     }
 
     if (isLoading) return <Loading flexSize={1} />
+
+    if (isToCreateUserState) {
+        return (
+            <ScrollView
+                contentContainerStyle={globalStyles.container}
+                overScrollMode="never"
+                bounces={false}
+            >
+                <ComeBack text={"Preencha seu perfil"} />
+
+                <WarningChangeInformation
+                    modalConfirmationNewInfo={modalConfirmationNewInfo}
+                    setModalConfirmationNewInfo={setModalConfirmationNewInfo}
+                    handleNewInformation={() => handleConfirmNewInformationFillProfile(
+                        informationNewUser,
+                        setModalInfo,
+                        passwordNewUser,
+                        navigation,
+                        setIsLoading,
+                        setSomethingWrong,
+                        userData,
+                        setUserData,
+                        isToCreateUserState,
+                        setIsToCreateUserState,
+                    )}
+                />
+                <DefaultModal
+                    modalContent={modalInfo}
+                />
+                <Contact modalContact={contact} setModalVisible={setContact} />
+                <InformativeModel
+                    modalContent={modalInformative}
+                />
+
+                {
+                    (!isToCreateUserState && userEditedCounter <= 2) &&
+                    (
+                        (userEditedCounter === 0) ?
+                            <Text style={styles.alertTop}>Você não pode mais fazer alterar seus dados</Text> :
+                            <Text style={styles.alertTop}>{`Você só pode alterar seus dados mais ${userEditedCounter} ${userEditedCounter < 2 ? "vez" : "vezes"}`} </Text>
+                    )
+                }
+
+                <ProfilePicture
+                    canEditProfile={true}
+                    argsToEditPicture={{
+                        setInformationNewUser: setInformationNewUser,
+                        informationNewUser: informationNewUser,
+                        setModalInfo: setModalInfo,
+                        setModalInformative: setModalInformative,
+                        setSomethingWrong: setSomethingWrong
+                    }}
+                />
+
+                <View style={styles.contentInput}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Nome completo"
+                        placeholderTextColor={"#00000050"}
+                        onChangeText={text => setInformationNewUser({ ...informationNewUser, name: text })}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Email - exemplo@exemplo.com"
+                        value={emailNewUser ? emailNewUser : informationNewUser.email}
+                        placeholderTextColor={"#00000050"}
+                        onChangeText={emailNewUser ?
+                            null :
+                            text => setInformationNewUser({ ...informationNewUser, email: text })
+                        }
+                        keyboardType="email-address"
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Número - (DD) DDDDD - DDDD"
+                        placeholderTextColor={"#00000050"}
+                        value={informationNewUser.phone}
+                        onChangeText={text => handlePhoneNumber(text)}
+                        keyboardType="numeric"
+                    />
+
+                    <Text style={{ color: "#000000", fontSize: globalStyles.fontSizeSmall, marginTop: 20, width: "100%", textAlign: "left", fontFamily: globalStyles.fontFamilyBold }}>Gênero</Text>
+
+                    <View style={styles.contentGenderOptions}>
+                        <View style={styles.contentCheckbox}>
+                            <CheckBox
+                                tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
+                                disabled={false}
+                                value={informationNewUser.gender.toLowerCase() === "masculino"}
+                                onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "masculino", })}
+                            />
+
+                            <Text style={styles.text}>Masculino</Text>
+                        </View>
+
+                        <View style={[styles.contentCheckbox, { justifyContent: "center" }]}>
+                            <CheckBox
+                                tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
+                                disabled={false}
+                                value={informationNewUser.gender.toLowerCase() === "feminino"}
+                                onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "feminino" })}
+                            />
+
+                            <Text style={styles.text}>Feminino</Text>
+                        </View>
+
+                        <View style={styles.contentCheckbox}>
+                            <CheckBox
+                                tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
+                                disabled={false}
+                                value={informationNewUser.gender.toLowerCase() === "outros"}
+                                onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "outros" })}
+                            />
+
+                            <Text style={styles.text}>Outro</Text>
+                        </View>
+                    </View>
+
+                </View>
+
+                {
+                    (!isToCreateUserState && userData?.informationEditedCount < settings.limitEditInformationPerMonth) &&
+                    <Text style={styles.alertBottom}>Não recomendamos que você fique alterando sesus dados constantemente</Text>
+                }
+
+                <Button
+                    text={"Confirmar"}
+                    action={handleConfirmNewInformation}
+                    addStyles={{ marginBottom: 30 }}
+                />
+            </ScrollView>
+        )
+    }
 
     return (
         <ScrollView
@@ -239,7 +371,7 @@ export const FillProfile = ({ navigation, route }) => {
             </View>
 
             {
-                (!isToCreateUserState && userData.informationEditedCount < settings.limitEditInformationPerMonth) &&
+                (!isToCreateUserState && userData?.informationEditedCount < settings.limitEditInformationPerMonth) &&
                 <Text style={styles.alertBottom}>Não recomendamos que você fique alterando sesus dados constantemente</Text>
             }
 

@@ -1,15 +1,17 @@
-import { Image } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useContext, useEffect, useState } from "react"
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import DefaultPicture from "../assets/icons/DefaultPicture.png"
 
 import { UserContext } from "../context/UserContext";
 
 import { handleNewPicture } from "../handlers/handleNewPicture";
 
-export const ProfilePicture = ({ canEditProfile = false, argsToEditPicture = null }) => {
+import { EditProfilePicture } from "../assets/icons/EditProfilePicture";
+import { globalStyles } from "../assets/globalStyles";
+import DefaultPicture from "../assets/icons/DefaultPicture.png"
+
+export const ProfilePicture = ({ canEditProfile = false, argsToEditPicture = null, isCreatingUser = false }) => {
     const [profilePictureCached, setProfilePictureCached] = useState(null)
 
     const { userData } = useContext(UserContext)
@@ -26,40 +28,115 @@ export const ProfilePicture = ({ canEditProfile = false, argsToEditPicture = nul
 
     if (argsToEditPicture?.informationNewUser?.profilePicture) {
         return (
-            <Image
-                source={{ uri: `data:image/png;base64,${argsToEditPicture?.informationNewUser?.profilePicture}` }}
-                style={{ width: 250, height: 250, borderRadius: 150 }}
-            />
+            <View style={styles.contentPicture}>
+                <Image
+                    source={{ uri: `data:image/png;base64,${argsToEditPicture?.informationNewUser?.profilePicture}` }}
+                    style={styles.img}
+                />
+
+                {
+                    (canEditProfile || isCreatingUser) &&
+                    (
+                        <TouchableOpacity
+                            style={styles.contentEditPicture}
+                            activeOpacity={.8}
+                            onPress={() => handleNewPicture(
+                                argsToEditPicture.setInformationNewUser,
+                                argsToEditPicture.informationNewUser,
+                                argsToEditPicture.setModalInfo,
+                                argsToEditPicture.setModalInformative,
+                                argsToEditPicture.setSomethingWrong,
+                            )}
+                        >
+                            <EditProfilePicture width={40} height={40} />
+                        </TouchableOpacity>
+                    )
+                }
+            </View>
         )
     }
-    else if (profilePictureCached) {
+    if (profilePictureCached) {
         return (
-            <Image
-                source={{ uri: `data:image/png;base64,${profilePictureCached}` }}
-                style={{ width: 250, height: 250, borderRadius: 150 }}
-            />
+            <View style={styles.contentPicture}>
+                <Image
+                    source={{ uri: `data:image/png;base64,${profilePictureCached}` }}
+                    style={styles.contentPicture}
+                />
+
+                {
+                    (canEditProfile || isCreatingUser) &&
+                    (
+                        <TouchableOpacity
+                            style={styles.contentEditPicture}
+                            activeOpacity={.8}
+                            onPress={() => handleNewPicture(
+                                argsToEditPicture.setInformationNewUser,
+                                argsToEditPicture.informationNewUser,
+                                argsToEditPicture.setModalInfo,
+                                argsToEditPicture.setModalInformative,
+                                argsToEditPicture.setSomethingWrong,
+                            )}
+                        >
+                            <EditProfilePicture width={40} height={40} />
+                        </TouchableOpacity>
+                    )
+                }
+            </View>
         )
-    }
-    else if (userData?.profilePicture && !argsToEditPicture?.informationNewUser?.profilePicture) {
-        return <Image src={userData.profilePicture} style={{ width: 200, height: 200, borderRadius: 150 }} />
-    }
-    else if (!userData?.profilePicture && !argsToEditPicture?.informationNewUser?.profilePicture) {
-        return <Image source={DefaultPicture} />
     }
 
     return (
-        <View style={argsToEditPicture?.informationNewUser?.profilePicture ? { marginTop: 30, } : { backgroundColor: "#FFFFFF", borderRadius: 150, marginTop: 30 }}>
+        <View style={styles.contentPicture}>
             {
-                canEditProfile &&
-                <TouchableOpacity
-                    style={styles.contentEditPicture}
-                    activeOpacity={.8}
-                    onPress={() => handleNewPicture({ ...argsToEditPicture })}
-                >
-                    <EditProfilePicture width={40} height={40} />
-                </TouchableOpacity>
+                profilePictureCached ?
+                    <Image source={{ uri: `data:image/png;base64,${profilePictureCached}` }} /> :
+                    <Image source={DefaultPicture} style={styles.img} />
             }
 
+            {
+                (canEditProfile || isCreatingUser) &&
+                (
+                    <TouchableOpacity
+                        style={styles.contentEditPicture}
+                        activeOpacity={.8}
+                        onPress={() => handleNewPicture(
+                            argsToEditPicture.setInformationNewUser,
+                            argsToEditPicture.informationNewUser,
+                            argsToEditPicture.setModalInfo,
+                            argsToEditPicture.setModalInformative,
+                            argsToEditPicture.setSomethingWrong,
+                        )}
+                    >
+                        <EditProfilePicture width={40} height={40} />
+                    </TouchableOpacity>
+                )
+            }
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    contentPicture: {
+        width: 200,
+        height: 200,
+        borderRadius: 150,
+        marginTop: 20,
+    },
+
+    contentEditPicture: {
+        width: 50,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: globalStyles.orangeColor,
+        position: "absolute",
+        bottom: 0,
+        right: 10,
+        borderRadius: 10,
+    },
+    img: {
+        width: "100%",
+        height: "100%",
+        borderRadius: 150,
+    },
+})

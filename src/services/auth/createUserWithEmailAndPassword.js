@@ -89,7 +89,7 @@ export const createUserWithEmailAndPassword = async (
     setModalInfo({
       image: <AccountCreated />,
       mainMessage: "Parabéns",
-      message: "Sua conta foi criada com sucesso, agora é só ir para a tela de autenticação e realizar o login",
+      message: "Sua conta foi criada com sucesso, confira seu endereço de email para verifica-lo e após isso você poderá acessar sua conta",
       firstButtonText: "Ir agora",
       firstButtonAction: () => {
         navigation.navigate("Login", { emailNewUser: informationNewUser.email, passwordNewUser: password })
