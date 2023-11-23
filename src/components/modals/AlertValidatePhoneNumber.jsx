@@ -43,7 +43,7 @@ export const AlertValidatePhoneNumber = ({ visible, setVisible }) => {
     }, [somethingWrong])
 
     useEffect(() => {
-        if (userData.phoneNumberValidated) setVisible(false)
+        if (userData?.phoneNumberValidated) setVisible(false)
 
     }, [userData])
 

@@ -84,6 +84,35 @@ export const ProfilePicture = ({ canEditProfile = false, argsToEditPicture = nul
             </View>
         )
     }
+    else if (userData?.profilePicture) {
+        return (
+            <View style={styles.contentPicture}>
+                <Image
+                    style={styles.img}
+                    source={{ uri: userData.profilePicture }}
+                />
+
+                {
+                    (canEditProfile || isCreatingUser) &&
+                    (
+                        <TouchableOpacity
+                            style={styles.contentEditPicture}
+                            activeOpacity={.8}
+                            onPress={() => handleNewPicture(
+                                argsToEditPicture.setInformationNewUser,
+                                argsToEditPicture.informationNewUser,
+                                argsToEditPicture.setModalInfo,
+                                argsToEditPicture.setModalInformative,
+                                argsToEditPicture.setSomethingWrong,
+                            )}
+                        >
+                            <EditProfilePicture width={40} height={40} />
+                        </TouchableOpacity>
+                    )
+                }
+            </View>
+        )
+    }
 
     return (
         <View style={styles.contentPicture}>
@@ -117,10 +146,9 @@ export const ProfilePicture = ({ canEditProfile = false, argsToEditPicture = nul
 
 const styles = StyleSheet.create({
     contentPicture: {
-        width: 200,
-        height: 200,
+        width: 250,
+        height: 250,
         borderRadius: 150,
-        marginTop: 20,
     },
 
     contentEditPicture: {

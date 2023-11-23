@@ -143,15 +143,6 @@ export const FillProfile = ({ navigation, route }) => {
                     modalContent={modalInformative}
                 />
 
-                {
-                    (!isToCreateUserState && userEditedCounter <= 2) &&
-                    (
-                        (userEditedCounter === 0) ?
-                            <Text style={styles.alertTop}>Você não pode mais fazer alterar seus dados</Text> :
-                            <Text style={styles.alertTop}>{`Você só pode alterar seus dados mais ${userEditedCounter} ${userEditedCounter < 2 ? "vez" : "vezes"}`} </Text>
-                    )
-                }
-
                 <ProfilePicture
                     canEditProfile={true}
                     argsToEditPicture={{
