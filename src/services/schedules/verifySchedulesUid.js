@@ -22,11 +22,13 @@ export const verifySchedulesUid = async (scheduleMonth, scheduleUid, setSomethin
         // Just return `true` because the schedule is available
         if (schedulesUidData === undefined) return true
 
-        const scheduleUidFormatted = scheduleUid.split('-').slice(1, 6).join('-')
+        const schedulesUidDataFormatted = schedulesUidData.schedules.map(scheduleUid => scheduleUid.split("-").slice(1).join("-"));
+
+        const scheduleUidFormatted = scheduleUid.split("-").slice(1).join("-");
 
         // Check if the schedule UID is included in the 'schedules' from `schedulesUidData`
         // If it exist means that the schedule is not available more
-        if (schedulesUidData.schedules.includes(scheduleUidFormatted)) return false
+        if (schedulesUidDataFormatted.includes(scheduleUidFormatted)) return false
 
         // If the given schedule UID is not included in the 'schedules' from `schedulesUidData`, the schedule is available
         return true
