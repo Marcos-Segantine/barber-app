@@ -60,24 +60,23 @@ export const getAvailableProfessional = async (
             // If there are no unavailable_times data  means that the professional is available
             if (unavailableTimesData === undefined) {
                 dataTemp.push(professional)
-                continue
-
+                continue   
             }
             // If there is no unavailable_times data for the day selected by user, means that the professional is available
             else if (unavailableTimesData[day] === undefined) {
                 dataTemp.push(professional)
                 continue
-
+                
             }
             // If there is no unavailable_times data for the current professional, means that the professional is available
-            else if (unavailableTimesData[day][professional.name] === undefined) {
+            else if (unavailableTimesData[day][professional.professionalUid] === undefined) {
                 dataTemp.push(professional)
                 continue
 
             }
 
             // Get the unavailable times for the current professional
-            const unavailableTimesCurrentProfessional = unavailableTimesData[day][professional.name]
+            const unavailableTimesCurrentProfessional = unavailableTimesData[day][professional.professionalUid]
 
             // If the professional is not unavailable at the given hour, add the professional and skip for the next one
             if (!unavailableTimesCurrentProfessional.includes(hour)) {
