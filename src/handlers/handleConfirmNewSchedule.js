@@ -15,6 +15,7 @@ import { getMonth, getDay, getYear } from "../utils/dateHelper";
 import { addScheduleWhenDayAlreadyUse } from "../services/schedules/addScheduleWhenDayAlreadyUse";
 import { addScheduleWhenDayNotUse } from "../services/schedules/addScheduleWhenDayNotUse";
 import { addScheduleWhenMonthIsNotUse } from "../services/schedules/addScheduleWhenMonthIsNotUse";
+import { updateLastActivity } from "../services/user/updateLastActivity";
 
 import firestore from "@react-native-firebase/firestore";
 
