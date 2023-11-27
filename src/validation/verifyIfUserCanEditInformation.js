@@ -8,10 +8,12 @@ export const verifyIfUserCanEditInformation = (
     setContact,
     navigation,
     informationNewUser,
+    setIsLoading,
     setSomethingWrong
 ) => {
     try {
         // Return true if user can change your information
+        setIsLoading(true)
 
         const fields = Object.keys(informationNewUser)
 
@@ -26,7 +28,10 @@ export const verifyIfUserCanEditInformation = (
             return
         }
 
-        if (userEditedCounter > 0) return true
+        if (userEditedCounter > 0) {
+            setIsLoading(false)
+            return true;
+        }
 
         setModalInfo({
             image: <StopProcessError />,
@@ -40,7 +45,8 @@ export const verifyIfUserCanEditInformation = (
             secondButtonText: "Cancelar",
             secondButtonAction: () => setModalInfo(null)
         })
-
+        
+        setIsLoading(false)
         return false
 
     } catch ({ message }) {

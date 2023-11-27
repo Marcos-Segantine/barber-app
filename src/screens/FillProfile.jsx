@@ -62,8 +62,6 @@ export const FillProfile = ({ navigation, route }) => {
     const userEditedCounter = +settings.limitEditInformationPerMonth - userData?.informationEditedCount?.counter
 
     const handleConfirmNewInformation = () => {
-        setIsLoading(true)
-
         if (!isToCreateUserState) {
             if (!verifyIfUserCanEditInformation(
                 userEditedCounter,
@@ -71,6 +69,7 @@ export const FillProfile = ({ navigation, route }) => {
                 setContact,
                 navigation,
                 informationNewUser,
+                setIsLoading,
                 setSomethingWrong
             )) return
         }
@@ -90,14 +89,13 @@ export const FillProfile = ({ navigation, route }) => {
     }
 
     const handleConfirmEmailPhoneChange = () => {
-        setIsLoading(true)
-
         if (!verifyIfUserCanEditInformation(
             userEditedCounter,
             setModalInfo,
             setContact,
             navigation,
             informationNewUser,
+            setIsLoading,
             setSomethingWrong
         )) return
 
@@ -108,6 +106,7 @@ export const FillProfile = ({ navigation, route }) => {
             setInformationNewUser,
             setModalConfirmationNewInfo,
             handleConfirmNewInformation,
+            setIsLoading,
             setSomethingWrong
         )
     }
@@ -439,6 +438,7 @@ const styles = StyleSheet.create({
         fontSize: globalStyles.fontSizeVerySmall,
         fontFamily: globalStyles.fontFamilyBold,
         width: "100%",
+        marginBottom: 15,
     },
 
     alertBottom: {

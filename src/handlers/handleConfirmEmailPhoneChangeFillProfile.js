@@ -24,10 +24,12 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
     setInformationNewUser,
     setModalConfirmationNewInfo,
     handleNewInformation,
+    setIsLoading,
     setSomethingWrong
 ) => {
 
     try {
+        setIsLoading(true)
 
         if (informationNewUser.email ||
             informationNewUser.phone
@@ -46,6 +48,8 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
                     firstButtonAction: () => setModalInfo(null),
                     firstButtonText: "Entendi",
                 })
+
+                setIsLoading(false)
                 return
             }
         }
@@ -57,6 +61,7 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
             else if (informationNewUser.phone === userData.phone) return true
             else if (informationNewUser.gender === userData.gender) return true
 
+            setIsLoading(false)
             return false
         }
 
@@ -71,6 +76,7 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
                 firstButtonText: "Entendi",
             })
 
+            setIsLoading(false)
             return
         }
 
@@ -92,6 +98,7 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
 
             setInformationNewUser({ ...informationNewUser, email: "" })
 
+            setIsLoading(false)
             return
         }
         else if (phoneAlreadyExist) {
@@ -108,6 +115,7 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
 
             setInformationNewUser({ ...informationNewUser, phone: "" })
 
+            setIsLoading(false)
             return
         }
 
@@ -116,6 +124,9 @@ export const handleConfirmEmailPhoneChangeFillProfile = async (
 
         // Updates the user information
         else handleNewInformation()
+
+        setIsLoading(false)
+
     } catch ({ message }) {
         setSomethingWrong(true)
         handleError("handleConfirmEmailPhoneChangeFillProfile", message)
