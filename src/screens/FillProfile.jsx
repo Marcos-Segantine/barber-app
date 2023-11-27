@@ -62,6 +62,8 @@ export const FillProfile = ({ navigation, route }) => {
     const userEditedCounter = +settings.limitEditInformationPerMonth - userData?.informationEditedCount?.counter
 
     const handleConfirmNewInformation = () => {
+        setIsLoading(true)
+
         if (!isToCreateUserState) {
             if (!verifyIfUserCanEditInformation(
                 userEditedCounter,
@@ -72,7 +74,7 @@ export const FillProfile = ({ navigation, route }) => {
                 setSomethingWrong
             )) return
         }
-        
+
         handleConfirmNewInformationFillProfile(
             informationNewUser,
             setModalInfo,
@@ -88,6 +90,8 @@ export const FillProfile = ({ navigation, route }) => {
     }
 
     const handleConfirmEmailPhoneChange = () => {
+        setIsLoading(true)
+
         if (!verifyIfUserCanEditInformation(
             userEditedCounter,
             setModalInfo,
