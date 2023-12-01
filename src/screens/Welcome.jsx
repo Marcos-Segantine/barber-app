@@ -70,7 +70,7 @@ export const Welcome = ({ navigation }) => {
 
   }, []);
 
-  if (blockedAccessData !== null) return <CannotUseApp />
+  if (blockedAccessData !== null) return <CannotUseApp data={blockedAccessData} />
 
   return (
     <SafeAreaView style={styles.container}>
