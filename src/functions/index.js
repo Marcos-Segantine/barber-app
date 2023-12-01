@@ -1,10 +1,3 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- */
-
 const functions = require('firebase-functions');
 const { setGlobalOptions } = require("firebase-functions/v2")
 const admin = require('firebase-admin');
@@ -16,11 +9,14 @@ admin.initializeApp();
 // Set the maximum instances to 10 for all functions
 setGlobalOptions({ maxInstances: 10 });
 
+let canUseAppCode = "true"
+
+exports.changeCanUseAppValue = functions.region("southamerica-east1").https.onRequest((request, response) => {
+  canUseAppCode = request.query.newValue
+});
+
 exports.canUseApp = functions.region("southamerica-east1").https.onRequest((request, response) => {
-  const responseData = {
-    response: true
-  };
-  response.json(responseData);
+  response.json({ response: canUseAppCode });
 });
 
 exports.clearDatabase = onSchedule("every day 04:00", async () => {

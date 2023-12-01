@@ -22,7 +22,7 @@ import { UserContext } from "../context/UserContext";
 import { handleError } from "../handlers/handleError";
 
 export const Welcome = ({ navigation }) => {
-  const [blockAccess, setBlockAccess] = useState(false);
+  const [blockedAccessData, setBlockedAccessData] = useState(null)
 
   const { setUserData } = useContext(UserContext)
   const { settings } = useContext(AppSettingsContext)
@@ -39,12 +39,28 @@ export const Welcome = ({ navigation }) => {
         }
         const data = await response.json();
 
-        if (data.response) {
+        if (data.response === "true") {
           verifyIfUserHasLogged(navigation, setUserData, setSomethingWrong);
         }
-        else {
-          setBlockAccess(true)
+        else if (data.response === "[maintenance]") {
+          setBlockedAccessData({
+            mainMessage: "No momento estamos em manutenção, agradecemos sua compreenção",
+            showContacts: false
+          })
         }
+        else if (data.response === "[update required]") {
+          setBlockedAccessData({
+            mainMessage: "Última atualização requerida!",
+            showContacts: false
+          })
+        }
+        else {
+          setBlockedAccessData({
+            mainMessage: "No momento você não pode acessar o aplicativo",
+            showContacts: true
+          })
+        }
+
       } catch ({ message }) {
         setSomethingWrong(true)
         handleError("Welcome", message)
@@ -54,7 +70,7 @@ export const Welcome = ({ navigation }) => {
 
   }, []);
 
-  if (blockAccess) return <CannotUseApp />
+  if (blockedAccessData !== null) return <CannotUseApp />
 
   return (
     <SafeAreaView style={styles.container}>
