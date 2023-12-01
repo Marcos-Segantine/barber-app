@@ -44,19 +44,19 @@ export const Welcome = ({ navigation }) => {
         }
         else if (data.response === "[maintenance]") {
           setBlockedAccessData({
-            mainMessage: "No momento estamos em manutenção, agradecemos sua compreenção",
+            mainMessage: "No momento estamos em manutenção, agradecemos sua compreenção.",
             showContacts: false
           })
         }
         else if (data.response === "[update required]") {
           setBlockedAccessData({
-            mainMessage: "Última atualização requerida!",
+            mainMessage: "Por favor atualize o aplicativo para a versão mais recente.",
             showContacts: false
           })
         }
         else {
           setBlockedAccessData({
-            mainMessage: "No momento você não pode acessar o aplicativo",
+            mainMessage: "No momento você não pode acessar o aplicativo.",
             showContacts: true
           })
         }
