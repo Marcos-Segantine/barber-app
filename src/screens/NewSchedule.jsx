@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import { useContext, useEffect, useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 
 import { ComeBack } from "../components/ComeBack"
 import { Button } from "../components/Button"
@@ -7,7 +7,6 @@ import { ShowProfessionalsDaySchedules } from "../components/ShowProfessionalsDa
 
 import { globalStyles } from "../assets/globalStyles"
 import { ScheduleContext } from "../context/ScheduleContext"
-import { useIsFocused } from "@react-navigation/native"
 
 export const NewSchedule = ({ navigation, route }) => {
     const [preferProfessional, setPreferProfessional] = useState(true)
@@ -18,20 +17,11 @@ export const NewSchedule = ({ navigation, route }) => {
 
     const { headerText, scheduleToUpdate, isToUpdateSchedule } = route.params || {}
 
-    const { schedule, setSchedule } = useContext(ScheduleContext)
+    const { schedule } = useContext(ScheduleContext)
 
     const allFieldsAreFilled = (schedule.professional && schedule.day && schedule.schedule) ? true : false
 
     const scrollViewRef = useRef();
-
-    const isFocused = useIsFocused();
-
-    useEffect(() => {
-        if (isFocused) {
-            setSchedule({})
-        }
-    }, [isFocused]);
-
 
     const handleConfirm = () => {
         navigation.navigate("OurServices", { scheduleToUpdate, isToUpdateSchedule, })
