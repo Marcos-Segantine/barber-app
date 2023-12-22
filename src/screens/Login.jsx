@@ -86,7 +86,7 @@ export const Login = ({ navigation, route }) => {
                     <EmailIcon />
 
                     <TextInput
-                        style={{ color: "#000000", width: "100%" }}
+                        style={{ color: "#000000", width: "100%", height: 50, paddingLeft: 5 }}
                         placeholder={"Email"}
                         value={email}
                         placeholderTextColor={"#00000050"}
@@ -100,7 +100,7 @@ export const Login = ({ navigation, route }) => {
                     <PadlockIcon />
 
                     <TextInput
-                        style={{ color: "#000000", width: "100%" }}
+                        style={{ color: "#000000", width: "100%", height: 50, paddingLeft: 5 }}
                         placeholder={"Senha"}
                         value={password}
                         placeholderTextColor={"#00000050"}

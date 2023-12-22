@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFFFFF80",
         borderRadius: 15,
         paddingLeft: 15,
+        height: 50
     },
 
     lineOr: {

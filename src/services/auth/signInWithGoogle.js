@@ -6,7 +6,7 @@
  * @param {Function} setIsLoading - function to set loading flag during sign in process
  */
 
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -30,8 +30,23 @@ export const signInWithGoogle = async (
 
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-    const { idToken } = await GoogleSignin.signIn();
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    const result = await GoogleSignin.signIn()
+      .catch((error) => {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+          setIsLoading(false)
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        } else {
+          setSomethingWrong(true)
+          handleError("signInWithGoogle", error.message)
+        }
+      })
+
+    if (result === undefined) {
+      return
+    }
+
+    const googleCredential = auth.GoogleAuthProvider.credential(result.idToken);
     const res = await auth().signInWithCredential(googleCredential);
 
     await AsyncStorage.setItem('@barber_app__email', res.user.email);

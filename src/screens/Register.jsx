@@ -70,7 +70,7 @@ export const Register = ({ navigation }) => {
                     <EmailIcon />
 
                     <TextInput
-                        style={{ color: "#000000", width: "100%" }}
+                        style={{ color: "#000000", width: "100%", height: 50 }}
                         placeholder={"Email"}
                         value={emailNewUser}
                         placeholderTextColor={"#00000050"}
@@ -84,7 +84,7 @@ export const Register = ({ navigation }) => {
                     <PadlockIcon />
 
                     <TextInput
-                        style={{ color: "#000000", width: "100%" }}
+                        style={{ color: "#000000", width: "100%", height: 50 }}
                         placeholder={"Senha"}
                         value={passwordNewUser}
                         placeholderTextColor={"#00000050"}

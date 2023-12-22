@@ -61,7 +61,7 @@ export const CreateNewPassword = ({ navigation, route }) => {
                     <PadlockIcon />
 
                     <TextInput
-                        style={{ color: "#000000", width: "100%" }}
+                        style={{ color: "#000000", width: "100%", height: 50 }}
                         placeholder={"Senha"}
                         value={password}
                         placeholderTextColor={"#00000050"}
@@ -85,7 +85,7 @@ export const CreateNewPassword = ({ navigation, route }) => {
                     <PadlockIcon />
 
                     <TextInput
-                        style={{ color: "#000000", width: "100%" }}
+                        style={{ color: "#000000", width: "100%", height: 50 }}
                         placeholder={"Senha"}
                         value={confirmPassword}
                         placeholderTextColor={"#00000050"}
