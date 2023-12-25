@@ -330,7 +330,12 @@ export const FillProfile = ({ navigation, route }) => {
                 <View style={styles.contentGenderOptions}>
                     <View style={styles.contentCheckbox}>
                         <CheckBox
-                            tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
+                            onTintColor={globalStyles.orangeColor}
+                            onFillColor={globalStyles.orangeColor}
+                            onCheckColor={"#FFFFFF"}
+                            onAnimationType={"one-stroke"}
+                            offAnimationType={"one-stroke"}
+                            animationDuration={0.3}
                             disabled={false}
                             value={informationNewUser.gender.toLowerCase() === "masculino"}
                             onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "masculino", })}
@@ -341,7 +346,12 @@ export const FillProfile = ({ navigation, route }) => {
 
                     <View style={[styles.contentCheckbox, { justifyContent: "center" }]}>
                         <CheckBox
-                            tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
+                            onTintColor={globalStyles.orangeColor}
+                            onFillColor={globalStyles.orangeColor}
+                            onCheckColor={"#FFFFFF"}
+                            onAnimationType={"one-stroke"}
+                            offAnimationType={"one-stroke"}
+                            animationDuration={0.3}
                             disabled={false}
                             value={informationNewUser.gender.toLowerCase() === "feminino"}
                             onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "feminino" })}
@@ -352,7 +362,12 @@ export const FillProfile = ({ navigation, route }) => {
 
                     <View style={styles.contentCheckbox}>
                         <CheckBox
-                            tintColors={{ true: globalStyles.orangeColor, false: globalStyles.orangeColor }}
+                            onTintColor={globalStyles.orangeColor}
+                            onFillColor={globalStyles.orangeColor}
+                            onCheckColor={"#FFFFFF"}
+                            onAnimationType={"one-stroke"}
+                            offAnimationType={"one-stroke"}
+                            animationDuration={0.3}
                             disabled={false}
                             value={informationNewUser.gender.toLowerCase() === "outros"}
                             onValueChange={() => setInformationNewUser({ ...informationNewUser, gender: "outros" })}
@@ -432,6 +447,7 @@ const styles = StyleSheet.create({
         color: "#000000",
         fontSize: globalStyles.fontSizeSmall,
         fontFamily: globalStyles.fontFamilyMedium,
+        marginLeft: 5,
     },
 
     alertTop: {
