@@ -34,7 +34,7 @@ export const MySchedules = ({ navigation }) => {
     return (
         <>
             <ScrollView
-                contentContainerStyle={[globalStyles.container, { justifyContent: schedulesUser.length ? "flex-start" : "space-between" }, { height: schedulesUser.length <= 1 && "100%" }]}
+                contentContainerStyle={[globalStyles.container, { justifyContent: schedulesUser.length ? "flex-start" : "space-between" }, { flex: schedulesUser.length <= 1 && 1 }]}
                 overScrollMode="never"
                 bounces={false}
             >
