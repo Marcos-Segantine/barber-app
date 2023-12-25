@@ -11,7 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1D9E139B2B34DCB600317BB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D9E139A2B34DCB600317BB9 /* GoogleService-Info.plist */; };
+		1DC8B7DE2B39F51100FD8A43 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1DC8B7DD2B39F51100FD8A43 /* GoogleService-Info.plist */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9704F9F412AD4C47BCC1D91A /* Satoshi-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 385CC16585AA4BBF8A0F0C37 /* Satoshi-Bold.otf */; };
 		B518E03261FC4B239D023D6B /* Satoshi-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E0BC47A10FB34FFBB92C7C4D /* Satoshi-Medium.otf */; };
@@ -44,7 +44,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = barber/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = barber/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = barber/main.m; sourceTree = "<group>"; };
-		1D9E139A2B34DCB600317BB9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1DC8B7DD2B39F51100FD8A43 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		385CC16585AA4BBF8A0F0C37 /* Satoshi-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Satoshi-Bold.otf"; path = "../src/assets/fonts/Satoshi-Bold.otf"; sourceTree = "<group>"; };
 		4AB2790C80CF4A90A48D6F0D /* Satoshi-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Satoshi-Regular.otf"; path = "../src/assets/fonts/Satoshi-Regular.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = barber/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -137,7 +137,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				1D9E139A2B34DCB600317BB9 /* GoogleService-Info.plist */,
+				1DC8B7DD2B39F51100FD8A43 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* barber */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* barberTests */,
@@ -272,7 +272,7 @@
 				BA3269E8A39543DCAC477D57 /* Satoshi-Light.otf in Resources */,
 				B518E03261FC4B239D023D6B /* Satoshi-Medium.otf in Resources */,
 				EFF419D068C1400693EC7834 /* Satoshi-Regular.otf in Resources */,
-				1D9E139B2B34DCB600317BB9 /* GoogleService-Info.plist in Resources */,
+				1DC8B7DE2B39F51100FD8A43 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

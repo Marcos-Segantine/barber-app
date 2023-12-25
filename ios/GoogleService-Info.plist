@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>735461604945-2bkbs07ao8btdcj5iusghrquhiqolrt7.apps.googleusercontent.com</string>
+	<string>923108786140-bni7vsa6heuk53ic8otd20gk09jutsdi.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.735461604945-2bkbs07ao8btdcj5iusghrquhiqolrt7</string>
+	<string>com.googleusercontent.apps.923108786140-bni7vsa6heuk53ic8otd20gk09jutsdi</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>923108786140-5to276up96fmlc1f6llmv4u5p7omiteu.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDxnwXgNjyTsjRn-RECmindXmknYHhPdwE</string>
+	<string>AIzaSyA3KEwot5H8qq9IvlhUwLDGnjOku6iyVy8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>735461604945</string>
+	<string>923108786140</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.barber</string>
 	<key>PROJECT_ID</key>
-	<string>bm-app-9c8d4</string>
+	<string>barber-ddb8a</string>
 	<key>STORAGE_BUCKET</key>
-	<string>bm-app-9c8d4.appspot.com</string>
+	<string>barber-ddb8a.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:735461604945:ios:d0a40a45911ad3ecb28270</string>
+	<string>1:923108786140:ios:275587c64d6dd804489919</string>
 </dict>
 </plist>

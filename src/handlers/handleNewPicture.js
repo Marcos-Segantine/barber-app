@@ -11,7 +11,9 @@ import { View, Text } from 'react-native';
 
 import ImagePicker from 'react-native-image-crop-picker';
 
-import { PermissionsAndroid } from 'react-native';
+import { Platform } from 'react-native';
+
+import { request, PERMISSIONS } from 'react-native-permissions';
 
 import { StopProcessError } from '../assets/imgs/StopProcessError';
 import { globalStyles } from '../assets/globalStyles';
@@ -45,7 +47,15 @@ export const handleNewPicture = (
                 // Request necessary camera permissions
                 requestPermissionsCameraStorage(setModalInfo, setModalInformative, setSomethingWrong)
             }
+            else if (Platform.OS === "ios" && message === "User did not grant library permission.") {
+                requestPermissionsCameraStorage(setModalInfo, setModalInformative, setSomethingWrong)
+            }
+            else if (Platform.OS === "ios" && message === "User cancelled image selection") {
+                return
+            }
             else {
+                console.log("COME HERE");
+                console.log(message);
                 setSomethingWrong(true)
                 handleError("handleNewPicture", message)
             }
@@ -58,39 +68,27 @@ export const handleNewPicture = (
 
 const requestPermissionsCameraStorage = async (setModalInfo, setModalInformative, setSomethingWrong) => {
     try {
+        const cameraPermission = Platform.select({
+            ios: PERMISSIONS.IOS.CAMERA,
+            android: PERMISSIONS.ANDROID.CAMERA,
+        });
+
+        const storagePermission = Platform.select({
+            ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+            android: PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
+        });
 
         // Request camera permission
-        const grantedCamera = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.CAMERA,
-            {
-                title: 'Permissão para acessar a câmera',
-                message:
-                    'O barberApp quer acessar sua camera',
-                buttonNeutral: 'Agora não',
-                buttonNegative: 'Cancelar',
-                buttonPositive: 'OK',
-            },
-        );
+        const grantedCamera = await request(cameraPermission);
 
         // Request storage permission
-        const grantedStorage = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-            {
-                title: 'Permissão para acessar seus arquivos',
-                message:
-                    'O barberApp quer acessar seus arquivos',
-                buttonNeutral: 'Agora não',
-                buttonNegative: 'Cancelar',
-                buttonPositive: 'OK',
-            },
-        );
+        const grantedStorage = await request(storagePermission);
 
-        if (!(grantedCamera === PermissionsAndroid.RESULTS.GRANTED && grantedStorage === PermissionsAndroid.RESULTS.GRANTED)) {
-
+        if (!(grantedCamera === 'granted' && grantedStorage === 'granted')) {
             setModalInfo({
                 image: <StopProcessError />,
                 mainMessage: "Permissões negadas",
-                message: "Parece que você não nos concedeu as devidas permissões para acessar a sua câmera e seus arquivos. Por favor va até as configurações do seu dispositivo e ative-as.",
+                message: "Parece que você não nos concedeu as devidas permissões para acessar a sua câmera e seus arquivos. Por favor, vá até as configurações do seu dispositivo e ative-as.",
                 firstButtonText: "Ok",
                 firstButtonAction: () => setModalInfo(null),
                 secondButtonText: "Como fazer?",
@@ -98,25 +96,25 @@ const requestPermissionsCameraStorage = async (setModalInfo, setModalInformative
                     setModalInfo(null)
                     setModalInformative({
                         mainMessage: "Siga o passo a passo de como ativar as permissões",
-                        content:
-                            (<View>
-                                <Text style={{ color: "#00000090", fontSize: globalStyles.fontSizeVerySmall }}>Estes passos podem ser um pouco diferente dependendo do seu dispositivo.</Text>
+                        content: (
+                            <View>
+                                <Text style={{ color: "#00000090", fontSize: globalStyles.fontSizeVerySmall }}>Estes passos podem ser um pouco diferentes dependendo do seu dispositivo.</Text>
                                 <Text style={{ color: "#000000", marginTop: 10 }}>1 - Abra as configurações de seu dispositivo.</Text>
-                                <Text style={{ color: "#000000", marginTop: 10 }}>2 - Procure por "Aplicativos" ou "Apps" no campo de pesquisa (geralmente o campo de pesquisa fica no topo da tela).</Text>
-                                <Text style={{ color: "#000000", marginTop: 10 }}>3 - Clique em "Gerenciar apps"(ou algo semelhante a isso).</Text>
-                                <Text style={{ color: "#000000", marginTop: 10 }}>4 - Procure pelo aplicativo "Barber" e clique nele.</Text>
-                                <Text style={{ color: "#000000", marginTop: 10 }}>5 - Agora clique em "Permissões".</Text>
-                                <Text style={{ color: "#000000", marginTop: 10 }}>6 - Ative as permissões de câmera e de armazenamento.</Text>
-                            </View>)
-                        ,
+                                <Text style={{ color: "#000000", marginTop: 10 }}>2 - {Platform.OS === 'ios' ? 'Procure por "Privacidade" e clique nele.' : 'Procure por "Aplicativos" ou "Apps" no campo de pesquisa (geralmente o campo de pesquisa fica no topo da tela).'} </Text>
+                                <Text style={{ color: "#000000", marginTop: 10 }}>3 - {Platform.OS === 'ios' ? 'Clique em "Câmera" e ative a permissão para o aplicativo Barber.' : 'Clique em "Gerenciar apps" (ou algo semelhante a isso).'} </Text>
+                                <Text style={{ color: "#000000", marginTop: 10 }}>4 - {Platform.OS === 'ios' ? 'Volte para "Privacidade" e clique em "Fotos".' : 'Procure pelo aplicativo "Barber" e clique nele.'}</Text>
+                                <Text style={{ color: "#000000", marginTop: 10 }}>5 - {Platform.OS === 'ios' ? 'Selecione "Todos as Fotos" e ative a permissão para o aplicativo Barber.' : 'Agora clique em "Permissões".'}</Text>
+                            </View>
+                        ),
                         firstButtonText: "Ok",
                         firstButtonAction: () => setModalInformative(null),
                     })
                 }
-            })
+            });
         }
+
     } catch ({ message }) {
-        setSomethingWrong(true)
-        handleError("requestPermissionsCameraStorage", message)
+        setSomethingWrong(true);
+        handleError("requestPermissionsCameraStorage", message);
     }
 };
