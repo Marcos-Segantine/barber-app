@@ -74,21 +74,16 @@ export const Home = ({ navigation }) => {
 
       const time = await AsyncStorage.getItem("@barber_app__phone_verification_time")
       if (time) {
-
-        const hour = time.split(":").map(Number)[0]
-        const currentHour = +new Date().getHours()
-
         if (
           !userData?.phoneNumberValidated &&
-          previousScreen === "Welcome" && lastScreen === "Home" &&
-          currentHour > (hour + 6)
+          (previousScreen === "Welcome" || previousScreen === "Login") && lastScreen === "Home"
         ) {
           setShowModalPhoneNotValidated(true)
         }
       } else {
         if (
           !userData?.phoneNumberValidated &&
-          previousScreen === "Welcome" && lastScreen === "Home"
+          (previousScreen === "Welcome" || previousScreen === "Login") && lastScreen === "Home"
         ) {
           setShowModalPhoneNotValidated(true)
         }
