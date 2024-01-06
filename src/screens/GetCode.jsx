@@ -15,11 +15,11 @@ import { ScheduleUnavailableNow } from "../assets/imgs/ScheduleUnavailableNow"
 import { AccountCreated } from "../assets/imgs/AccountCreated"
 
 import { UserContext } from "../context/UserContext"
+import { SomethingWrongContext } from "../context/SomethingWrongContext"
 
 import { handleError } from "../handlers/handleError"
 
 import auth from '@react-native-firebase/auth';
-import { SomethingWrongContext } from "../context/SomethingWrongContext"
 
 import { userPhoneNumberValidated } from "../services/auth/userPhoneNumberValidated"
 import { updateUserDataDB } from "../services/user/updateUserDataDB"
@@ -308,7 +308,7 @@ export const GetCode = ({ navigation }) => {
                 <TextInput
                     ref={inputRef}
                     value={code}
-                    style={{ backgroundColor: "red", position: "absolute" }}
+                    style={{ backgroundColor: "red", position: "absolute", transform: [{ scale: 0 }] }}
                     onChangeText={text => handleCode(text)}
                 />
 
