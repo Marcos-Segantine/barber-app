@@ -1,9 +1,9 @@
-import { StyleSheet, PixelRatio } from "react-native";
+import { PixelRatio } from "react-native";
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = size => size / fontScale;
 
-export const globalStyles = StyleSheet.create({
+export const globalStyles = {
     orangeColor: "#fc9501",
     orangeColorDarker: "#b16401",
     champagneColor: "#fff8ef",
@@ -22,4 +22,4 @@ export const globalStyles = StyleSheet.create({
         paddingHorizontal: 20,
         width: "100%"
     },
-})
+}
