@@ -1,11 +1,7 @@
-/**
- * Renders a calendar component.
- * @param {boolean} preferProfessional - Flag indicating if professional calendar is preferred.
- * @returns {JSX.Element} - The rendered calendar component.
- */
-
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { Calendar, LocaleConfig } from "react-native-calendars";
+import _ from "lodash";
 
 import { getWidthHeightScreen } from "../utils/getWidthHeightScreen";
 import { getWeekdayFromMonth } from "../utils/getWeekdayFromMonth";
@@ -15,14 +11,7 @@ import { ScheduleContext } from "../context/ScheduleContext";
 import { SomethingWrongContext } from "../context/SomethingWrongContext";
 import { AppSettingsContext } from "../context/AppSettings";
 
-import { Calendar, LocaleConfig } from "react-native-calendars";
-
 import { globalStyles } from "../assets/globalStyles";
-
-import _ from "loadsh";
-import { getDaysBlocked } from "../services/schedules/getDaysBlocked";
-import { Loading } from "./Loading";
-
 
 LocaleConfig.locales["pt-br"] = {
   monthNames: [
@@ -65,15 +54,19 @@ LocaleConfig.locales["pt-br"] = {
   dayNamesShort: ["Dom", "Seg", "Terç", "Qua", "Qui", "Sex", "Sáb"],
 };
 
-export const CalendarComponent = ({ preferProfessional }) => {
-  const [daysBlocked, setDaysBlocked] = useState(null);
-  const [lastMonthSelected, setLastMonthSelected] = useState(null);
-  const [weekdaysBlocked, setWeekdaysBlocked] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+interface CalendarComponentProps {
+  preferProfessional: boolean;
+}
+
+export const CalendarComponent: React.FC<CalendarComponentProps> = ({ preferProfessional }) => {
+  const [daysBlocked, setDaysBlocked] = useState<Record<string, any> | null>(null);
+  const [lastMonthSelected, setLastMonthSelected] = useState<string | null>(null);
+  const [weekdaysBlocked, setWeekdaysBlocked] = useState<Record<string, any>[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { schedule, setSchedule } = useContext(ScheduleContext);
   const { setSomethingWrong } = useContext(SomethingWrongContext);
-  const { settings } = useContext(AppSettingsContext)
+  const { settings } = useContext(AppSettingsContext);
 
   const year = new Date().getFullYear();
   const month = new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth() + 1}`;
@@ -82,93 +75,70 @@ export const CalendarComponent = ({ preferProfessional }) => {
   LocaleConfig.defaultLocale = "pt-br";
 
   useEffect(() => {
-
     (async () => {
-
-      if (preferProfessional === false) return
+      if (preferProfessional === false) return;
       setDaysBlocked(await getDaysBlocked(schedule.professionalUid, setSomethingWrong));
-
     })();
-
   }, [preferProfessional]);
 
   useEffect(() => {
+    setIsLoading(true);
 
-    setIsLoading(true)
-
-    const formatDeniedDays = (data) => {
-      const result = {}
-
+    const formatDeniedDays = (data: string[]) => {
+      const result: Record<string, any> = {};
       for (const day of data) {
         result[day] = {
           disableTouchEvent: true,
-          disabled: true
-        }
+          disabled: true,
+        };
       }
-
-      return result
-    }
+      return result;
+    };
 
     if (lastMonthSelected === null) {
-      const date = new Date()
-      const currentYear = date.getFullYear()
-      const currentMonth = date.getMonth() + 1
-      const monthFormatted = currentMonth < 10 ? `0${currentMonth}` : currentMonth
+      const date = new Date();
+      const currentYear = date.getFullYear();
+      const currentMonth = date.getMonth() + 1;
+      const monthFormatted = currentMonth < 10 ? `0${currentMonth}` : currentMonth.toString();
 
-      const data = []
+      const data: string[][] = [];
 
-      for (const weekday of settings.blockedWeekdays) {
-        data.push(getWeekdayFromMonth(weekday, monthFormatted, currentYear))
+      for (const weekday of settings.blockedWeekdays || []) {
+        data.push(getWeekdayFromMonth(weekday, monthFormatted, currentYear));
 
-        const result = []
-
+        const result: string[] = [];
         for (const dates of data) {
-
           for (const day of dates) {
-            const dayFormatted = day < 10 ? `0${day}` : day
-            result.push(`${currentYear}-${monthFormatted}-${dayFormatted}`)
-
+            const dayFormatted = day < 10 ? `0${day}` : day.toString();
+            result.push(`${currentYear}-${monthFormatted}-${dayFormatted}`);
           }
         }
-
         setWeekdaysBlocked(formatDeniedDays(result));
       }
+      setIsLoading(false);
+    } else {
+      const data: string[][] = [];
+      for (const weekday of settings.blockedWeekdays || []) {
+        data.push(getWeekdayFromMonth(weekday, getMonth(lastMonthSelected), getYear(lastMonthSelected)));
 
-      setIsLoading(false)
-
-    }
-    else {
-
-      const data = []
-
-      for (const weekday of settings.blockedWeekdays) {
-        data.push(getWeekdayFromMonth(weekday, getMonth(lastMonthSelected), getYear(lastMonthSelected)))
-
-        const result = []
-
+        const result: string[] = [];
         for (const dates of data) {
-
           for (const day of dates) {
-            const currentYear = getYear(lastMonthSelected)
-            const currentMonth = getMonth(lastMonthSelected)
-            const dayFormatted = day < 10 ? `0${day}` : day
-
-            result.push(`${currentYear}-${currentMonth}-${dayFormatted}`)
+            const currentYear = getYear(lastMonthSelected);
+            const currentMonth = getMonth(lastMonthSelected);
+            const dayFormatted = day < 10 ? `0${day}` : day.toString();
+            result.push(`${currentYear}-${currentMonth}-${dayFormatted}`);
           }
         }
-
         setWeekdaysBlocked(formatDeniedDays(result));
       }
-
-      setIsLoading(false)
+      setIsLoading(false);
     }
-
-  }, [lastMonthSelected])
+  }, [lastMonthSelected]);
 
   const deniedDay = preferProfessional || { [`${year}-${month}-${day}`]: { disabled: true, disableTouchEvent: true } };
 
-  // Set the marked dates for the calendar
-  const markedDatesCalendar = {
+  const markedDatesCalendar: Record<string, any> = {
     ...deniedDay,
     ...daysBlocked,
     ...weekdaysBlocked,
@@ -201,8 +171,8 @@ export const CalendarComponent = ({ preferProfessional }) => {
   };
 
   const handleDayPress = useCallback(
-    _.debounce(day => {
-      setSchedule({ ...schedule, day: day })
+    _.debounce((day) => {
+      setSchedule({ ...schedule, day: day });
     }, 500),
     [schedule.schedule, schedule.professionalUid]
   );
@@ -211,9 +181,8 @@ export const CalendarComponent = ({ preferProfessional }) => {
     <>
       <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
         <Text style={styles.text}>Escolha um dia</Text>
-        <Text style={[styles.text, { color: globalStyles.orangeColor, fontWeight: 'bold' }]}> 2 / 3</Text>
+        <Text style={[styles.text, { color: globalStyles.orangeColor, fontWeight: "bold" }]}> 2 / 3</Text>
       </View>
-
       <Calendar
         context={{ date: "" }}
         minDate={String(new Date())}
